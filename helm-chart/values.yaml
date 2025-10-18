@@ -1,0 +1,7 @@
+image:
+  repo: mchekini
+  name: scpi-inv-front
+  tag:  latest
+
+ingressPrefix: int
+  
