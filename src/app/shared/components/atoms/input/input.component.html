@@ -1,0 +1,16 @@
+<div class="w-full">
+  <input
+    [type]="type"
+    [value]="value"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [readonly]="readonly"
+    [class]="inputClasses"
+    (input)="onInputChange($event)"
+    (blur)="onBlur()"
+  />
+  
+  <p *ngIf="error && errorMessage" class="mt-1 text-sm text-red-500">
+    {{ errorMessage }}
+  </p>
+</div>
