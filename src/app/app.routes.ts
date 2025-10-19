@@ -29,13 +29,8 @@ export const routes: Routes = [
       
     ]
   },  
-   {
-    path: 'forbidden',
-    redirectTo: '',
-    pathMatch: 'full'
-  },
   {
     path: '**',
-    redirectTo: ''
+    redirectTo: '/forbiden'
   }
 ];
