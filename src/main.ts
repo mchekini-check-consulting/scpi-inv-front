@@ -1,8 +1,6 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideServerRendering } from '@angular/platform-server';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { appConfig } from './app/app.config';
+import { AppComponent } from './app/app.component';
 
-const serverConfig: ApplicationConfig = {
-  providers: [
-    provideServerRendering()
-  ]
-};
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
