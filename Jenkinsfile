@@ -15,7 +15,7 @@ node("ci-node") {
     sh "sudo docker build -t mchekini/scpi-inv-front:$GIT_COMMIT_HASH ."
   }
 
-  stage("Push Docker Imgae") {
+  stage("Push Docker image") {
     withCredentials([usernamePassword(credentialsId: 'mchekini', passwordVariable: 'password', usernameVariable: 'username')]) {
       sh "sudo docker login -u $username -p $password"
       sh "sudo docker push mchekini/scpi-inv-front:$GIT_COMMIT_HASH"
