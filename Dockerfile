@@ -1,2 +1,2 @@
 FROM nginx
-COPY dist/scpi-inv-front/browser /usr/share/nginx/html
+COPY dist/front/browser /usr/share/nginx/html
