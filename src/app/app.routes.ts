@@ -11,8 +11,10 @@ export const routes: Routes = [
       {
         path: '',
         component: HomeComponent
-      }
-      // Tu pourras ajouter d'autres routes homepage ici
+      },
+      // TODO: Ajouter des autres features ici
+     
+      
     ]
   },
   {
@@ -25,7 +27,7 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard.component')
             .then(m => m.DashboardComponent)
       }
-      // Tu pourras ajouter d'autres routes dashboard ici
+      // TODO: Ajouter des autres features ici
       
     ]
   },
