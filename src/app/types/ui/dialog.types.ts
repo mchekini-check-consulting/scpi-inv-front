@@ -1,0 +1,1 @@
+export type DialogSize = "md" | "lg" | "xl"
