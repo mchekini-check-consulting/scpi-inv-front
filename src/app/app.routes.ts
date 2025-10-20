@@ -12,7 +12,10 @@ export const routes: Routes = [
       {
         path: '',
         component: HomeComponent
-      }
+      },
+      // TODO: Ajouter des autres features ici
+
+
     ]
   },
   {
@@ -22,15 +25,16 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadComponent: () => 
+        loadComponent: () =>
           import('./features/dashboard/dashboard.component')
             .then(m => m.DashboardComponent)
       }
-      
+      // TODO: Ajouter des autres features ici
+
     ]
-  },  
+  },
   {
     path: '**',
-    redirectTo: '/forbiden'
+    redirectTo: ''
   }
 ];

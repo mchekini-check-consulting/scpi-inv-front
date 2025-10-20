@@ -2,13 +2,13 @@
   <header class="bg-primary shadow-sm border-b border-gray-200">
     <div class="container max-w-6xl mx-auto px-4 py-4">
       <nav class="flex items-center justify-between">
-        <!-- Logo -->
+
         <div class="text-2xl font-bold cursor-pointer">
           <span class="text-secondary">SCPI</span>
           <span class="text-tertiary"> Invest</span>
         </div>
 
-    
+
         <div class="flex items-center gap-3">
           <app-button variant="outline" size="md" (clicked)="onLogin()">
             Se connecter
@@ -56,7 +56,7 @@
   title="S'inscrire"
   size="md"
   (close)="closeRegisterDialog()">
-  
+
   <div class="space-y-4">
     <app-form-field
       label="Nom complet"
@@ -91,13 +91,13 @@
     </app-form-field>
 
     <div class="flex justify-end gap-3 pt-4">
-      <app-button 
-        variant="outline" 
+      <app-button
+        variant="outline"
         (clicked)="closeRegisterDialog()">
         Annuler
       </app-button>
-      
-      <app-button 
+
+      <app-button
         variant="primary">
         S'inscrire
       </app-button>
