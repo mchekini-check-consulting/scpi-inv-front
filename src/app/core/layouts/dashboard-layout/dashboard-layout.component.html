@@ -1,14 +1,19 @@
-<div class="dashboard-container">
-  <!-- Sidebar navigation -->
-  <aside class="sidebar">
-    <nav>
-      <h2>Dashboard</h2>
-      <!-- Tu ajouteras tes liens de navigation ici -->
-    </nav>
-  </aside>
+<div class="flex h-screen overflow-hidden">
+  
 
-  <!-- Main content -->
-  <main class="dashboard-content">
-    <router-outlet />
-  </main>
+  <app-sidebar />
+
+
+  <div class="flex-1 flex flex-col overflow-hidden">
+    
+    <!-- Header en haut -->
+    <app-header />
+    
+    <!-- Contenu avec scroll -->
+    <main class="flex-1 overflow-y-auto bg-gray-50">
+      <router-outlet />
+    </main>
+    
+  </div>
+
 </div>
