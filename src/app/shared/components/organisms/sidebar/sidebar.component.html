@@ -1,0 +1,26 @@
+<aside class="h-screen w-64 bg-primary text-gray-900 flex flex-col">
+  
+  <!-- Logo -->
+  <div class="p-6">
+    
+  </div>
+
+
+  <nav class="flex-1 p-4">
+    <ul class="space-y-2">
+      
+      <li *ngFor="let item of menuItems">
+        <app-menu-item 
+          [label]="item.label"
+          [route]="item.route"
+          [icon]="item.icon"
+          [exact]="item.exact || false">
+        </app-menu-item>
+      </li>
+
+    </ul>
+  </nav>
+
+ 
+
+</aside>

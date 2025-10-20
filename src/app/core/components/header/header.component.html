@@ -1,0 +1,24 @@
+<header class="bg-primary border-b border-primary px-4 py-0">
+  <div class="flex items-center justify-between">
+    
+    <button 
+      (click)="onMenuClick()"
+      class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+      <app-icon name="bars" customClass="text-gray-700 text-xl"></app-icon>
+    </button>
+
+
+    <button 
+      (click)="onAvatarClick()"
+      class="flex items-center gap-3 p-2 hover:bg-white rounded-lg transition-colors">
+      
+  
+      <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+        <app-icon name="user" customClass="text-secondary text-lg"></app-icon>
+      </div>
+      
+      <span class="font-medium text-gray-900">{{ userName }}</span>
+    </button>
+
+  </div>
+</header>

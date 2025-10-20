@@ -27,11 +27,11 @@ export class InputComponent implements ControlValueAccessor {
   @Input() readonly: boolean = false;
   @Input() error: boolean = false;
   @Input() errorMessage: string = '';
-  @Input() value: string = '';  // ← Ajoutez cette ligne
+  @Input() value: string = '';
   
   @Output() valueChange = new EventEmitter<string>();
   
-  // ControlValueAccessor methods
+
   onChange: any = () => {};
   onTouched: any = () => {};
 
@@ -64,7 +64,6 @@ export class InputComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
-  // ControlValueAccessor implementation
   writeValue(value: string): void {
     this.value = value || '';
   }

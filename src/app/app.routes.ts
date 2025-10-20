@@ -26,6 +26,12 @@ export const routes: Routes = [
         loadComponent: () => 
           import('./features/dashboard/dashboard.component')
             .then(m => m.DashboardComponent)
+      },
+      {
+        path: 'scpi',
+        loadComponent: () => 
+          import('./features/dashboard/scpi/scpi.component')
+            .then(m => m.ScpiComponent)
       }
       // TODO: Ajouter des autres features ici
       

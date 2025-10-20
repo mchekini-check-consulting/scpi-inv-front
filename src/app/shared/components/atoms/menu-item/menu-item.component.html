@@ -1,0 +1,14 @@
+
+  <a
+    [routerLink]="route"
+    routerLinkActive="bg-white text-secondary"
+    [routerLinkActiveOptions]="{ exact: route === '/dashboard' }"
+    class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary hover:text-white transition-colors"
+  >
+    
+
+    <app-icon [name]="icon" customClass="w-5 h-5"></app-icon>
+
+    <span class="font-medium">{{ label }}</span>
+  </a>
+
