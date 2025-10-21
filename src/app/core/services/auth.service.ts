@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { authConfig } from '../auth.config';
 import { Router } from '@angular/router';
+import { authConfig } from '../config/auth.config';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+
+  
+  private isLoggedOut = false;
+
   constructor(private oauthService: OAuthService, private router: Router) {
     this.oauthService.setStorage(localStorage);
     this.oauthService.configure(authConfig);
@@ -20,9 +24,7 @@ export class AuthService {
         localStorage.removeItem('redirectUrl');
         await this.router.navigateByUrl(redirectUrl);
       }
-    } else {
-      console.log('[AuthService] Pas de token (non connecté)');
-    }
+    } 
   }
 
   async login(): Promise<void> {
@@ -30,14 +32,14 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
-    const idToken = this.oauthService.getIdToken();
-    const logoutUrl = `${authConfig.logoutUrl}?id_token_hint=${idToken}&post_logout_redirect_uri=${window.location.origin}`;
-    console.log('[AuthService] Logout complet vers:', logoutUrl);
-
+    this.isLoggedOut = true;
+    this.oauthService.logOut();
+    this.oauthService.logOut(true);
+    // @ts-ignore
+    this.oauthService.clearHashAfterLogin();
     // Nettoyage local
     localStorage.clear();
     sessionStorage.clear();
-    this.oauthService.logOut({ logoutUrl });
   }
 
   isLoggedIn(): boolean {
@@ -59,7 +61,7 @@ export class AuthService {
     return allRoles.includes(role);
   }
 
-  private decodeJwt(token: string): any {
+   decodeJwt(token: string): any {
     try {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');

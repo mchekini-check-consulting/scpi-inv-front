@@ -1,40 +1,20 @@
-import { Routes } from '@angular/router';
-import { HomeComponent } from './features/home/home.component';
-import { HomeLayoutComponent } from './core/layouts/home-layout/home-layout.component';
-import { DashboardLayoutComponent } from './core/layouts/dashboard-layout/dashboard-layout.component';
+import {Routes} from '@angular/router';
+import {TemplateComponent} from "./core/template/container/template.component";
+import {ScpiCatalogComponent} from "./features/scpi-catalog/scpi-catalog.component";
 import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+
   {
-    path: '',
-    component: HomeLayoutComponent,
+    path: '', component: TemplateComponent, 
+     canActivate: [AuthGuard], data: { roles: ['user']},
     children: [
       {
-        path: '',
-        component: HomeComponent
-      },
-      // TODO: Ajouter des autres features ici
-
-
-    ]
-  },
-  {
-    path: 'dashboard',
-    component: DashboardLayoutComponent,
-    canActivate: [AuthGuard], data: { roles: ['user']},
-    children: [
-      {
-        path: 'dashboard',
-        loadComponent: () =>
-          import('./features/dashboard/dashboard.component')
-            .then(m => m.DashboardComponent)
+        path: 'scpi', component: ScpiCatalogComponent,
+        
       }
-      // TODO: Ajouter des autres features ici
-
-    ]
-  },
-  {
-    path: '**',
-    redirectTo: ''
+    ],
   }
+
+
 ];
