@@ -1,1 +1,0 @@
-export type LabelSize = 'sm' | 'md' | 'lg';
