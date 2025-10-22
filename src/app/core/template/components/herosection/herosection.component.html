@@ -1,0 +1,49 @@
+<div class="container">
+  <div class="home-section">
+    <section>
+      <h1>Bienvenue sur SCPI Invest</h1>
+      <p>Investissez dans l'immobilier facilement et en toute sérénité</p>
+      <div class="home-buttons">
+        <button onclick="document.getElementById('scpi-section').scrollIntoView({ behavior: 'smooth' })">Découvrir nos SCPI</button>
+      </div>
+    </section>
+
+    <div class="image-container">
+          <img src="../../img/scpi/5.webp" alt="mon_image">
+    </div>
+  </div>
+  
+<div class="section-title">
+  <h2>Nos Sociétés Civiles de Placement Immobilier</h2>
+  <p>Découvrez les meilleures opportunités d’investissement immobilier</p>
+</div>
+
+  <div class="section "id="scpi-section">
+
+<div class="grid gap-5 mt-10">
+  <div class="col-12 md:col-6 lg:col-3" *ngFor="let card of cards">
+    <p-card [style]="{ width: '100%', overflow: 'hidden' }">
+      <ng-template #header>
+        <img alt="Card" class="card-img-small" [src]="card.image" />
+      </ng-template>
+
+      <ng-template #title>{{ card.title }}</ng-template>
+      <ng-template #subtitle>{{ card.subtitle }}</ng-template>
+
+      <p>{{ card.content }}</p>
+
+      <ng-template #footer>
+        <div class="flex gap-2 mt-3">
+          <p-button label="En savoir plus" severity="secondary" [outlined]="true" class="w-full" />
+          <p-button label="Investir" class="w-full" />
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
+
+  </div>
+  
+</div>
+
+ 

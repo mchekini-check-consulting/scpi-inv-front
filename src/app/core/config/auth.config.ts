@@ -2,7 +2,7 @@ import { AuthConfig } from 'angular-oauth2-oidc';
 
 export const authConfig: AuthConfig = {
   issuer: 'https://keycloak.check-consulting.net/realms/scpi-realm',
-  redirectUri: window.location.origin + '/',
+  redirectUri: window.location.origin + '/dashboard',
   clientId: 'scpi-invest-front',
   responseType: 'code',
   scope: 'openid profile email roles',
@@ -13,6 +13,6 @@ export const authConfig: AuthConfig = {
   postLogoutRedirectUri: window.location.origin,
 
   customQueryParams: {
-    prompt: 'login' 
+    prompt: 'login'
   }
 };

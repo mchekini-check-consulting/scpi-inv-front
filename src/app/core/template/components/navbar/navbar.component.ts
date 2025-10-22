@@ -26,13 +26,17 @@ export class NavbarComponent implements OnInit {
   selectedLang: String = "Français";
   selectedFlag: string = 'img/Flag_fr.png';
 
-  username: string | undefined = '';
-
+  username: string = '';
+  profilePic: string | null = null;
+  avatarInitial: string = '';
+  avatarColor: string = '#607d8b';
+  
+  
   constructor(private translate: TranslateService, private authService: AuthService) {
     translate.setDefaultLang('fr');
-
+    
   }
-
+  
   toggleSidebar() {
     this.isSidebarMini = !this.isSidebarMini;
     const body = document.getElementsByTagName('body')[0];
@@ -49,8 +53,55 @@ export class NavbarComponent implements OnInit {
       {name: "English", code: "en", flag: 'img/Flag_gb.png'},
     ]);
     this.username = 'Mahdi CHEKINI';
+    
+   this.authService.userInfo$.subscribe(claims => {
+      if (claims) {
+        const prenom = claims.given_name || '';
+        const nom = claims.family_name || '';
+
+        this.username = `${prenom} ${nom}`.trim() || claims.preferred_username || 'Utilisateur';
+
+        if (claims.picture) {
+          this.profilePic = claims.picture;
+          this.avatarInitial = '';
+        } else {
+          this.profilePic = null;
+          const source = nom || prenom || '?';
+          this.avatarInitial = source.charAt(0).toUpperCase();
+          this.avatarColor = this.getAvatarColor(source);
+        }
+      } else {
+        this.username = 'Utilisateur';
+        this.profilePic = null;
+        this.avatarInitial = 'U';
+        this.avatarColor = '#9e9e9e';
+      }
+    }); 
+
 
   }
+
+ private getAvatarColor(seed: string): string {
+  const colors = [
+    '#F44336', 
+    '#E91E63', 
+    '#9C27B0',
+    '#3F51B5', 
+    '#2196F3',
+    '#009688', 
+    '#4CAF50', 
+    '#FF9800', 
+    '#795548'  
+  ];
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  const index = Math.abs(hash) % colors.length;
+  return colors[index];
+}
+
 
   switchLanguage(language: string) {
     const selectedLanguage = this.lang!.find(lang => lang.code === language);

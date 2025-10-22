@@ -2,29 +2,42 @@ import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Router } from '@angular/router';
 import { authConfig } from '../config/auth.config';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-  
   private isLoggedOut = false;
 
-  constructor(private oauthService: OAuthService, private router: Router) {
+
+  private emailCheckInterval: any = null;
+
+
+  userInfo$ = new BehaviorSubject<any>(null);
+
+  constructor(private oauthService: OAuthService, private router: Router, private http: HttpClient) {
     this.oauthService.setStorage(localStorage);
     this.oauthService.configure(authConfig);
     this.oauthService.setupAutomaticSilentRefresh();
+
   }
 
   async init(): Promise<void> {
     await this.oauthService.loadDiscoveryDocumentAndTryLogin();
 
+
     if (this.oauthService.hasValidAccessToken()) {
       const redirectUrl = localStorage.getItem('redirectUrl');
+      const claims = this.decodeJwt(this.oauthService.getAccessToken()!);
+      this.userInfo$.next(claims);
       if (redirectUrl) {
         localStorage.removeItem('redirectUrl');
         await this.router.navigateByUrl(redirectUrl);
       }
-    } 
+    } else {
+      this.userInfo$.next(null);
+    }
   }
 
   async login(): Promise<void> {
@@ -61,7 +74,7 @@ export class AuthService {
     return allRoles.includes(role);
   }
 
-   decodeJwt(token: string): any {
+  decodeJwt(token: string): any {
     try {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -76,4 +89,5 @@ export class AuthService {
       return null;
     }
   }
+
 }
