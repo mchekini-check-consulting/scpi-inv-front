@@ -12,7 +12,7 @@ import { environment } from '../environments/environment';
 export class AppComponent {
   title = 'scpi-front';
   ngOnInit() {
-    console.log('🌍 Environment:', environment.environmentName);
+
 
   }
 }

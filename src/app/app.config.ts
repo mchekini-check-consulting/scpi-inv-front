@@ -1,4 +1,4 @@
-import {ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from "@angular/core";
+import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from "@angular/core";
 import { provideRouter } from "@angular/router";
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
@@ -6,9 +6,19 @@ import Aura from '@primeng/themes/aura';
 import { routes } from "./app.routes";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {provideAnimationsAsync} from "@angular/platform-browser/animations/async";
-import {HttpClient, provideHttpClient} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+import { OAuthModule } from "angular-oauth2-oidc";
+import { AuthInterceptor } from "./core/interceptors/auth.interceptor";
+import { AuthService } from "./core/services/auth.service";
+
+
+export function initializeApp(authService: AuthService): () => Promise<void> {
+  return () => authService.init();
+}
+
+
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'i18n/', '.json');
@@ -18,8 +28,11 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
-    importProvidersFrom(BrowserAnimationsModule),
-    provideAnimationsAsync(),
+   provideHttpClient(withInterceptorsFromDi()),
+    importProvidersFrom(OAuthModule.forRoot()),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: APP_INITIALIZER, useFactory: initializeApp, deps: [AuthService], multi: true }, provideAnimationsAsync(),
+
     provideHttpClient(),
     providePrimeNG({
       theme: {
@@ -36,4 +49,3 @@ export const appConfig: ApplicationConfig = {
     }))
   ]
 };
-

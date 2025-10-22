@@ -54,9 +54,17 @@
         <li class="dropdown nav-item">
           <a href="#" data-toggle="dropdown">
             <div class="profile">
-              <div class="photo">
-                <img src="img/bg4.jpg" alt="Profile Picture" />
-              </div>
+             <div class="photo">
+                  <ng-container *ngIf="profilePic; else defaultAvatar">
+                    <img [src]="profilePic" alt="Profile Picture" />
+                  </ng-container>
+
+                  <ng-template #defaultAvatar>
+                    <div class="default-avatar" [ngStyle]="{ 'background-color': avatarColor }">
+                      {{ avatarInitial }}
+                    </div>
+                  </ng-template>
+                </div>
               <div class="username-text">
                 <p style="color: black">{{ username }}</p>
               </div>
