@@ -1,0 +1,66 @@
+import {Component, OnInit} from '@angular/core';
+import {RouterLink, RouterModule} from '@angular/router';
+import {CommonModule, NgFor} from '@angular/common';
+import {TranslateModule, TranslateService} from '@ngx-translate/core';
+
+interface Lang {
+  name: string;
+  code: string;
+  flag: string;
+}
+
+
+@Component({
+  selector: 'app-navbar',
+  imports: [NgFor, TranslateModule, CommonModule, RouterModule, RouterLink],
+  templateUrl: './navbar.component.html',
+  standalone: true,
+  styleUrl: './navbar.component.css'
+})
+export class NavbarComponent implements OnInit {
+
+  lang: Lang[] | undefined;
+  isSidebarMini = false;
+
+  selectedLang: String = "Français";
+  selectedFlag: string = 'img/Flag_fr.png';
+
+  username: string | undefined = '';
+
+  constructor(private translate: TranslateService) {
+    translate.setDefaultLang('fr');
+
+  }
+
+  toggleSidebar() {
+    this.isSidebarMini = !this.isSidebarMini;
+    const body = document.getElementsByTagName('body')[0];
+    if (this.isSidebarMini) {
+      body.classList.add('sidebar-mini');
+    } else {
+      body.classList.remove('sidebar-mini');
+    }
+  }
+
+  ngOnInit() {
+    this.lang = ([
+      {name: "Français", code: "fr", flag: 'img/Flag_fr.png'},
+      {name: "English", code: "en", flag: 'img/Flag_gb.png'},
+    ]);
+    this.username = 'Mahdi CHEKINI';
+
+  }
+
+  switchLanguage(language: string) {
+    const selectedLanguage = this.lang!.find(lang => lang.code === language);
+    if (selectedLanguage) {
+      this.selectedLang = selectedLanguage.name;
+      this.selectedFlag = selectedLanguage.flag;
+    }
+    this.translate.use(language);
+  }
+
+  logout() {
+
+  }
+}

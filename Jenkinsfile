@@ -11,7 +11,7 @@ node("ci-node") {
     sh "npm run build"
   }
 
-  stage("Build docker image") {
+  stage("Build Docker image") {
     sh "sudo docker build -t mchekini/scpi-inv-front:$GIT_COMMIT_HASH ."
   }
 
