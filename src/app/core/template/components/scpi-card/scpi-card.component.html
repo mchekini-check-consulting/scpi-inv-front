@@ -1,0 +1,88 @@
+<div
+  class="bg-white rounded-3xl border border-secondary overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full"
+>
+  <div class="flex flex-col h-full">
+    <div class="w-full h-20 overflow-hidden">
+      <img
+        [src]="
+          scpi.imageUrl ||
+          'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800'
+        "
+        [alt]="scpi.name"
+        class="w-full h-full object-cover"
+      />
+    </div>
+
+    <div class="relative flex flex-col flex-1 p-4">
+      <div class="absolute top-4 right-4">
+        <span
+          class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800"
+        >
+          Cashback {{ scpi.cashback }}%
+        </span>
+      </div>
+
+      <h3 class="text-2xl font-bold text-gray-900 mb-3 pr-20">
+        {{ scpi.name }}
+      </h3>
+
+      <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+        {{ scpi.advertising }}
+      </p>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div
+          class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center"
+        >
+          <svg
+            class="w-5 h-5 text-gray-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+            />
+          </svg>
+        </div>
+        <span class="text-xl font-bold text-gray-900">
+          {{ scpi.managementFees }}%
+        </span>
+      </div>
+
+      <div class="flex items-end justify-between mb-4">
+        <div class="flex flex-col">
+          <span class="text-gray-600 text-sm mb-1">Montant min:</span>
+          <span class="text-gray-900 text-2xl font-bold">
+            {{ scpi.minimumSubscription | number : "1.0-0" }}€
+          </span>
+        </div>
+
+        <div class="text-sm text-gray-500 text-right">
+          {{ scpi.manager }}
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button
+          type="button"
+          (click)="onViewMore()"
+          class="flex-1 px-3 py-2 text-sm font-semibold rounded-lg border-2 border-secondary text-gray-700 bg-white hover:bg-gray-50 transition-all duration-200"
+        >
+          Voir plus
+        </button>
+
+        <button
+          type="button"
+          (click)="onInvest()"
+          class="flex-1 px-3 py-2 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-secondary/80 transition-all duration-200"
+        >
+          Investir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
