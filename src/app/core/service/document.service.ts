@@ -2,13 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UploadResponse } from '../model/UploadResponse';
-import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentService {
-  private readonly API_URL = `${environment.apiUrl}/document`;
+  private API_URL = "/api/v1/document";;
 
   constructor(private http: HttpClient) {}
 
@@ -19,6 +18,7 @@ export class DocumentService {
 
     return this.http.post<UploadResponse>(`${this.API_URL}/upload`, formData);
   }
+
 
   downloadFile(fileName: string, type: any): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/download/${fileName}`, {
