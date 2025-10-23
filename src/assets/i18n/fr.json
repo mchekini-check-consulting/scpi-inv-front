@@ -1,0 +1,38 @@
+{
+  "UPLOAD": {
+    "TITLE": "Complete your subscription file",
+    "SUBTITLE": "Upload your documents to finalize your subscription.",
+    "DOCUMENT": {
+      "IDENTITY": "Identity document",
+      "ADDRESS": "Proof of address",
+      "TAX": "Tax notice",
+      "IDENTITY_DESC": "ID card, passport or residence permit",
+      "ADDRESS_DESC": "Electricity, gas, water bill or rent receipt (less than 3 months)",
+      "TAX_DESC": "Latest income tax notice"
+    },
+    "DROPZONE": {
+      "TEXT": "Drag and drop your document",
+      "OR": "or",
+      "CHOOSE_BUTTON": "Browse files",
+      "HINT": "PDF, JPG, PNG · Max 10 MB"
+    },
+    "BUTTON": {
+      "SAVE": "Save",
+      "CLOSE": "Close"
+    },
+    "TOAST": {
+      "FILE_SELECTED": "Selected file: {{fileName}}",
+      "FILE_REMOVED": "File removed.",
+      "UPLOAD_SUCCESS": "{{doc}} uploaded successfully!",
+      "UPLOAD_ALL_SUCCESS": "All files have been uploaded successfully!",
+      "UPLOAD_WARNING": "{{success}} file(s) uploaded, {{error}} failed",
+      "FILE_TOO_LARGE": "File too large (max 10 MB).",
+      "FILE_TYPE_ERROR": "Unsupported format (PDF, JPG, PNG).",
+      "NO_FILE": "No file to upload."
+    },
+    "PREVIEW": {
+      "TITLE": "Document preview",
+      "UNSUPPORTED": "This file type cannot be previewed."
+    }
+  }
+}
