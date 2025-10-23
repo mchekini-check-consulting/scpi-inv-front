@@ -1,3 +1,4 @@
+
 export enum DocumentType {
   IDENTITY = 'IDENTITY',
   ADDRESS = 'ADDRESS',
