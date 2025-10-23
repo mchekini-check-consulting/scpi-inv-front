@@ -1,0 +1,38 @@
+{
+  "UPLOAD": {
+    "TITLE": "Complétez votre dossier de souscription",
+    "SUBTITLE": "Importez vos documents pour finaliser votre souscription.",
+    "DOCUMENT": {
+      "IDENTITY": "Pièce d'identité",
+      "ADDRESS": "Justificatif de domicile",
+      "TAX": "Avis d'imposition",
+      "IDENTITY_DESC": "Carte d'identité, passeport ou titre de séjour",
+      "ADDRESS_DESC": "Facture d'électricité, de gaz, d'eau ou quittance de loyer (moins de 3 mois)",
+      "TAX_DESC": "Dernier avis d'imposition sur le revenu"
+    },
+    "DROPZONE": {
+      "TEXT": "Glissez-déposez votre document",
+      "OR": "ou",
+      "CHOOSE_BUTTON": "Parcourir les fichiers",
+      "HINT": "PDF, JPG, PNG · Max 10 Mo"
+    },
+    "BUTTON": {
+      "SAVE": "Enregistrer",
+      "CLOSE": "Fermer"
+    },
+    "TOAST": {
+      "FILE_SELECTED": "Fichier sélectionné : {{fileName}}",
+      "FILE_REMOVED": "Fichier retiré.",
+      "UPLOAD_SUCCESS": "{{doc}} uploadé avec succès !",
+      "UPLOAD_ALL_SUCCESS": "Tous les fichiers ont été uploadés avec succès !",
+      "UPLOAD_WARNING": "{{success}} fichier(s) uploadé(s), {{error}} échec(s)",
+      "FILE_TOO_LARGE": "Fichier trop volumineux (max 10 Mo).",
+      "FILE_TYPE_ERROR": "Format non pris en charge (PDF, JPG, PNG).",
+      "NO_FILE": "Aucun fichier à uploader."
+    },
+    "PREVIEW": {
+      "TITLE": "Aperçu du document",
+      "UNSUPPORTED": "Ce type de fichier ne peut pas être prévisualisé."
+    }
+  }
+}
