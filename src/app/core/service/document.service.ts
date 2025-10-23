@@ -7,7 +7,7 @@ import { UploadResponse } from '../model/UploadResponse';
   providedIn: 'root',
 })
 export class DocumentService {
-  private API_URL = "/api/v1/document";;
+  private API_URL = "/api/v1/document";
 
   constructor(private http: HttpClient) {}
 

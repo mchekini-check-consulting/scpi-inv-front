@@ -14,7 +14,7 @@ declare interface RouteInfo {
 
 export const ROUTES: RouteInfo[] = [
   {
-    path: "/scpi",
+    path: "/dashboard/scpi",
     title: "Liste des SCPI",
     key: "SIDEBAR.SCPI",
     icon: "pi pi-building-columns",
@@ -22,7 +22,7 @@ export const ROUTES: RouteInfo[] = [
     feature: "list-scpi",
   },
   {
-    path: "/portefeuille",
+    path: "/dashboard/portefeuille",
     title: "Portefeuille",
     key: "SIDEBAR.PORTEFEUILLE",
     icon: "pi pi-wallet",
@@ -30,7 +30,7 @@ export const ROUTES: RouteInfo[] = [
     feature: "portefeuille",
   },
   {
-    path: "/scheduled-payment",
+    path: "/dashboard/scheduled-payment",
     title: "Versements programmés",
     key: "SIDEBAR.VERSEMENT",
     icon: "pi pi-calendar-clock",
@@ -38,7 +38,7 @@ export const ROUTES: RouteInfo[] = [
     feature: "scheduled-payment",
   },
   {
-    path: "/simulation",
+    path: "/dashboard/simulation",
     title: "Mes simulations",
     key: "SIDEBAR.SIMULATION",
     icon: "pi pi-chart-line",
@@ -46,7 +46,7 @@ export const ROUTES: RouteInfo[] = [
     feature: "simulation",
   },
   {
-    path: "/profile",
+    path: "/dashboard/profile",
     title: "Documents Réglemenataires",
     key: "SIDEBAR.MY-PROFILE",
     icon: "pi pi-user",
