@@ -1,1 +1,53 @@
-<h1>  Catalogue des SCPIS </h1>
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Catalogue SCPI</h1>
+  </div>
+
+  <div *ngIf="isLoading" class="flex justify-center items-center py-20">
+    <div
+      class="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary"
+    ></div>
+  </div>
+
+  <div
+    *ngIf="error"
+    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
+  >
+    {{ error }}
+  </div>
+
+  <div *ngIf="!isLoading && !error">
+    <div
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mb-8 auto-rows-fr"
+    >
+      <app-scpi-card
+        *ngFor="let scpi of scpis"
+        [scpi]="scpi"
+        (viewMore)="handleViewMore(scpi)"
+        (invest)="handleInvest(scpi)"
+      >
+      </app-scpi-card>
+    </div>
+
+    <div class="flex justify-center mt-8">
+      <p-paginator
+        [first]="first"
+        [rows]="rows"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+        (onPageChange)="onPageChange($event)"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} SCPI"
+      >
+      </p-paginator>
+    </div>
+  </div>
+
+  <!-- Empty -->
+  <div
+    *ngIf="!isLoading && !error && scpis.length === 0"
+    class="text-center py-20"
+  >
+    <p class="text-gray-500 text-lg">Aucune SCPI disponible.</p>
+  </div>
+</div>
