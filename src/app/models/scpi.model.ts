@@ -3,10 +3,10 @@ export interface Scpi {
   name: string;
   imageUrl: string | null;
   minimumSubscription: number;
-  managementFees: number;
+  country: string;
   cashback: number;
   advertising: string;
-  manager: string;
+  distributionRate: number;
 }
 
 export interface ScpiPage {
