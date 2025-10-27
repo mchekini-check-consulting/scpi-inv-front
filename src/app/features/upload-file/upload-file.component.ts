@@ -1,9 +1,4 @@
-import {
-  Component,
-  QueryList,
-  ViewChildren,
-  inject,
-} from '@angular/core';
+import { Component, QueryList, ViewChildren, inject } from '@angular/core';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -35,13 +30,11 @@ export class UploadFileComponent {
   private uploadService = inject(DocumentService);
   private sanitizer = inject(DomSanitizer);
 
-  files: Record<string, File | null> = {
-    identity: null,
-    address: null,
-    tax: null,
+  files: Record<string, File[]> = {
+    identity: [],
+    address: [],
+    tax: [],
   };
-
-  
 
   readonly maxFileSize = 10 * 1024 * 1024;
   readonly accept = '.pdf,.jpg,.jpeg,.png';
@@ -63,29 +56,37 @@ export class UploadFileComponent {
   ];
 
   onSelect(event: any, key: string): void {
-    const file: File = event.files[0];
-    if (!file) return;
+    const selectedFiles: File[] = event.files || [];
 
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
 
-    if (!allowedTypes.includes(file.type)) {
-      this.toastr.error('Format non pris en charge (PDF, JPG, PNG).');
-      this.clearFileUpload(key);
-      return;
+    const validFiles: File[] = [];
+    for (const file of selectedFiles) {
+      if (!allowedTypes.includes(file.type)) {
+        this.toastr.error(
+          `Format non pris en charge pour ${file.name} (PDF, JPG, PNG).`
+        );
+        continue;
+      }
+
+      if (file.size > this.maxFileSize) {
+        this.toastr.error(`"${file.name}" est trop volumineux (max 10 Mo).`);
+        continue;
+      }
+
+      validFiles.push(file);
     }
 
-    if (file.size > this.maxFileSize) {
-      this.toastr.error('Fichier trop volumineux (max 10 Mo).');
+    if (validFiles.length > 0) {
+      this.files[key].push(...validFiles);
+    } else {
       this.clearFileUpload(key);
-      return;
     }
-
-    this.files[key] = file;
-    this.toastr.info(`Fichier sélectionné : ${file.name}`);
   }
 
   onClear(key: string): void {
-    this.files[key] = null;
+    this.files[key] = [];
+    this.clearFileUpload(key);
   }
 
   triggerChoose(event: Event, key: string): void {
@@ -97,12 +98,6 @@ export class UploadFileComponent {
     }
   }
 
-  clear(key: string): void {
-    this.files[key] = null;
-    this.clearFileUpload(key);
-    this.toastr.info('Fichier retiré.');
-  }
-
   private clearFileUpload(key: string): void {
     const uploader = this.fileUpload.find((f) => f.name === key);
     if (uploader) {
@@ -111,10 +106,12 @@ export class UploadFileComponent {
   }
 
   preview(key: string): void {
-    const file = this.files[key];
-    if (!file) return;
+    const files = this.files[key];
+    if (!files || files.length === 0) return;
 
+    const file = files[0];
     const reader = new FileReader();
+
     reader.onload = () => {
       const result = reader.result as string;
       const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(result);
@@ -132,59 +129,73 @@ export class UploadFileComponent {
     this.previewState = { visible: false, safeUrl: null, type: '' };
   }
 
- save(): void {
-  let pending = 0;
-  let successCount = 0;
-  let errorCount = 0;
+  save(): void {
+    const allFiles = Object.entries(this.files).flatMap(([key, files]) =>
+      files.map((file) => ({ key, file }))
+    );
 
-  this.documents.forEach((doc) => {
-    const file = this.files[doc.key];
-    if (file) {
-      pending++;
+    if (allFiles.length === 0) {
+      this.toastr.warning('Aucun fichier à uploader.');
+      return;
+    }
+
+    let pending = allFiles.length;
+    let successCount = 0;
+    let errorCount = 0;
+
+    allFiles.forEach(({ key, file }) => {
       this.uploadService
-        .uploadFile(file, doc.enumValue)
+        .uploadFile(file, this.documents.find((d) => d.key === key)?.enumValue!)
         .pipe(
           finalize(() => {
             pending--;
             if (pending === 0) {
               if (errorCount === 0) {
-                this.toastr.success('Tous les fichiers ont été uploadés avec succès !');
+                this.toastr.success(
+                  'Tous les fichiers ont été uploadés avec succès !'
+                );
               } else {
-                this.toastr.warning(`${successCount} fichier(s) uploadé(s), ${errorCount} échec(s)`);
+                this.toastr.error(
+                  `${successCount} fichier(s) uploadé(s), ${errorCount} échec(s)`
+                );
               }
             }
           })
         )
         .subscribe({
-          next: (res: UploadResponse) => {
-            successCount++;
-            this.toastr.success(`${doc.label} uploadé avec succès !`);
-            console.log('Upload success:', res);
-          },
-          error: (err) => {
-            errorCount++;
-            console.error('Upload error:', err);
-            
-            if (err.status === 201) {
-              successCount++;
-              this.toastr.success(`${doc.label} uploadé avec succès !`);
-            } else {
-              this.toastr.error(`Erreur lors de l'upload de ${doc.label}.`);
-            }
-          },
+          next: () => successCount++,
+          error: () => errorCount++,
         });
-    }
-  });
-
-  if (pending === 0) {
-    this.toastr.warning('Aucun fichier à uploader.');
+    });
   }
-}
 
   canSave(): boolean {
-    return Object.values(this.files).every((f) => f !== null);
+    return Object.values(this.files).every((f) => f && f.length > 0);
   }
 
+  previewFile(key: string, file: File): void {
+    if (!file) return;
 
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(result);
 
+      this.previewState = {
+        visible: true,
+        safeUrl,
+        type: file.type === 'application/pdf' ? 'pdf' : 'image',
+      };
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeFile(key: string, file: File): void {
+    if (!this.files[key]) return;
+    this.files[key] = this.files[key].filter((f) => f !== file);
+    if (this.files[key].length === 0) {
+      this.clearFileUpload(key);
+    }
+
+  }
 }
