@@ -5,7 +5,6 @@ import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { DocumentService } from '../../core/service/document.service';
-import { UploadResponse } from '../../core/model/UploadResponse';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -54,6 +53,8 @@ export class UploadFileComponent {
     },
     { key: 'tax', label: "Avis d'imposition", enumValue: 'AVIS_IMPOSITION' },
   ];
+
+   allUploaded = false;
 
   onSelect(event: any, key: string): void {
     const selectedFiles: File[] = event.files || [];
@@ -154,6 +155,7 @@ export class UploadFileComponent {
                 this.toastr.success(
                   'Tous les fichiers ont été uploadés avec succès !'
                 );
+                this.allUploaded = true; 
               } else {
                 this.toastr.error(
                   `${successCount} fichier(s) uploadé(s), ${errorCount} échec(s)`
