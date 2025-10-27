@@ -1,8 +1,10 @@
 <div class="kyc-container">
   <div class="kyc-wrapper">
     <ng-container *ngFor="let doc of documents">
-      <p-card class="kyc-card" [ngClass]="{'kyc-card--address': doc.key === 'address'}">
-        
+      <p-card
+        class="kyc-card"
+        [ngClass]="{ 'kyc-card--address': doc.key === 'address' }"
+      >
         <ng-template pTemplate="header">
           <div class="kyc-title">{{ doc.label }}</div>
           <div class="kyc-subtitle">
@@ -11,7 +13,8 @@
                 Carte d'identité, passeport ou titre de séjour
               </span>
               <span *ngSwitchCase="'address'">
-                Facture d'électricité, de gaz, d'eau ou quittance de loyer (moins de 3 mois)
+                Facture d'électricité, de gaz, d'eau ou quittance de loyer
+                (moins de 3 mois)
               </span>
               <span *ngSwitchCase="'tax'">
                 Dernier avis d'imposition sur le revenu
@@ -24,7 +27,7 @@
           #fileUploadRef
           [name]="doc.key"
           mode="advanced"
-          [multiple]="false"
+          [multiple]="true"
           [showUploadButton]="false"
           [showCancelButton]="false"
           [customUpload]="true"
@@ -36,21 +39,12 @@
           class="kyc-uploader"
         >
           <ng-template pTemplate="content">
-            
-            <div 
-              *ngIf="!files[doc.key]" 
-              class="dropzone"
-            >
+            <div *ngIf="!files[doc.key]?.length" class="dropzone">
               <div class="dropzone-icon">
                 <i class="pi pi-upload"></i>
               </div>
-              
-              <div class="dropzone-text">
-                Glissez-déposez votre document
-              </div>
-              
+              <div class="dropzone-text">Glissez-déposez vos documents</div>
               <span class="dropzone-ou">ou</span>
-              
               <button
                 type="button"
                 pButton
@@ -58,41 +52,35 @@
                 label="Parcourir les fichiers"
                 (click)="triggerChoose($event, doc.key)"
               ></button>
-              
-              <div class="dropzone-hint">
-                PDF, JPG, PNG · Max 10 Mo
-              </div>
+              <div class="dropzone-hint">PDF, JPG, PNG · Max 10 Mo</div>
             </div>
 
-            <div *ngIf="files[doc.key]" class="file-chip">
-              <i class="pi pi-file-pdf"></i>
-              
-              <span class="file-name" [title]="files[doc.key]?.name">
-                {{ files[doc.key]?.name }}
-              </span>
-              
-              <div class="file-chip-actions">
-                <button
-                  type="button"
-                  pButton
-                  class="p-button-text p-button-sm preview-btn"
-                  icon="pi pi-eye"
-                  (click)="preview(doc.key)"
-                ></button>
-                
-                <button
-                  type="button"
-                  pButton
-                  class="p-button-text p-button-sm remove-btn"
-                  icon="pi pi-times"
-                  (click)="clear(doc.key)"
-                ></button>
+            <div *ngIf="files[doc.key]?.length" class="file-list">
+              <div *ngFor="let file of files[doc.key]" class="file-chip">
+                <i class="pi pi-file-pdf"></i>
+                <span class="file-name" [title]="file.name">{{
+                  file.name
+                }}</span>
+                <div class="file-chip-actions">
+                  <button
+                    type="button"
+                    pButton
+                    class="p-button-text p-button-sm preview-btn"
+                    icon="pi pi-eye"
+                    (click)="previewFile(doc.key, file)"
+                  ></button>
+                  <button
+                    type="button"
+                    pButton
+                    class="p-button-text p-button-sm remove-btn"
+                    icon="pi pi-times"
+                    (click)="removeFile(doc.key, file)"
+                  ></button>
+                </div>
               </div>
             </div>
-            
           </ng-template>
         </p-fileUpload>
-        
       </p-card>
     </ng-container>
   </div>
@@ -130,10 +118,10 @@
 
   <ng-container *ngIf="previewState.type === 'image'">
     <div class="preview-image-wrapper">
-      <img 
-        [src]="previewState.safeUrl" 
-        alt="Aperçu du document" 
-        class="preview-image" 
+      <img
+        [src]="previewState.safeUrl"
+        alt="Aperçu du document"
+        class="preview-image"
       />
     </div>
   </ng-container>
@@ -148,19 +136,12 @@
     </div>
   </ng-container>
 
-  <ng-container *ngIf="previewState.type !== 'image' && previewState.type !== 'pdf'">
-    <div class="preview-unsupported">
-      <i class="pi pi-exclamation-circle"></i>
-      <p>Ce type de fichier ne peut pas être prévisualisé.</p>
-    </div>
-  </ng-container>
-
   <ng-template pTemplate="footer">
-    <button 
-      pButton 
-      label="Fermer" 
+    <button
+      pButton
+      label="Fermer"
       icon="pi pi-times"
-      class="p-button-text" 
+      class="p-button-text"
       (click)="closePreview()"
     ></button>
   </ng-template>
