@@ -4,6 +4,7 @@ import {ScpiCatalogComponent} from "./features/scpi-catalog/scpi-catalog.compone
 import { AuthGuard } from './core/guards/auth.guard';
 import {HomeComponent} from "./core/template/home/home.component";
 import { UploadFileComponent } from './features/upload-file/upload-file.component';
+import {RequestHistoryComponent} from "./features/request-history/request-history.component";
 
 export const routes: Routes = [
 
@@ -15,6 +16,7 @@ export const routes: Routes = [
     children: [
       { path: 'scpi', component: ScpiCatalogComponent },
       { path: 'profile', component: UploadFileComponent },
+      { path: 'request-history', component: RequestHistoryComponent },
 
 
     ],

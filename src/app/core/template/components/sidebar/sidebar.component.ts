@@ -52,6 +52,14 @@ export const ROUTES: RouteInfo[] = [
     icon: "pi pi-user",
     class: "",
     feature: "profile",
+  },
+  {
+    path: "/dashboard/request-history",
+    title: "Historique des demandes",
+    key: "SIDEBAR.REQUEST-HISTORY",
+    icon: "pi pi-list",
+    class: "",
+    feature: "request-history",
   }
 ];
 
