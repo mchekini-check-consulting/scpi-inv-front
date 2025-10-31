@@ -20,13 +20,7 @@
     <div
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mb-8 auto-rows-fr"
     >
-      <app-scpi-card
-        *ngFor="let scpi of scpis"
-        [scpi]="scpi"
-        (viewMore)="handleViewMore(scpi)"
-        (invest)="handleInvest(scpi)"
-      >
-      </app-scpi-card>
+      <app-scpi-card *ngFor="let scpi of scpis" [scpi]="scpi"> </app-scpi-card>
     </div>
 
     <div class="flex justify-center mt-8">
