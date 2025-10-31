@@ -1,7 +1,7 @@
 import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from "@angular/core";
 import {provideRouter, withHashLocation} from "@angular/router";
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeng/themes/aura';
+// import Aura from '@primeng/themes/aura';
 
 import { routes } from "./app.routes";
 import {BrowserAnimationsModule, provideAnimations} from "@angular/platform-browser/animations";
@@ -36,11 +36,11 @@ export const appConfig: ApplicationConfig = {
     { provide: APP_INITIALIZER, useFactory: initializeApp, deps: [AuthService], multi: true }, provideAnimationsAsync(),
 
     provideHttpClient(),
-    providePrimeNG({
-      theme: {
-        preset: Aura
-      }
-    }),
+    // providePrimeNG({
+    //   theme: {
+    //     preset: Aura
+    //   }
+    // }),
     provideToastr({
       timeOut: 3000,
       positionClass: 'toast-top-right',

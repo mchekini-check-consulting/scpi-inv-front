@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Scpi } from '../../../../models/scpi.model';
+import { Router, RouterLink } from '@angular/router';
 
 
 @Component({
@@ -12,14 +13,15 @@ import { Scpi } from '../../../../models/scpi.model';
 })
 export class ScpiCardComponent {
   @Input() scpi!: Scpi;
-  @Output() viewMore = new EventEmitter<void>();
-  @Output() invest = new EventEmitter<void>();
+  
+  constructor(private router: Router) {}
 
   onViewMore(): void {
-    this.viewMore.emit();
+    console.log("--->", this.scpi);
+    
   }
 
   onInvest(): void {
-    this.invest.emit();
+    this.router.navigate(['/dashboard/scpi', this.scpi.id, 'invest']);
   }
 }
