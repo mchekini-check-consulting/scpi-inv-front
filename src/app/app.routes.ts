@@ -7,6 +7,7 @@ import {UploadFileComponent} from './features/upload-file/upload-file.component'
 import {ScpiInvestComponent} from './features/scpi-invest/scpi-invest.component';
 import {ScpiDetailComponent} from './features/scpi-detail/scpi-detail.component';
 import {HistoryComponent} from "./features/history/history.component";
+import { ScpiInvestComponent } from './features/scpi-invest/scpi-invest.component';
 
 export const routes: Routes = [
 
@@ -18,6 +19,7 @@ export const routes: Routes = [
       { path: 'scpi', component: ScpiCatalogComponent },
       { path: 'scpi/:id/invest', component: ScpiInvestComponent },
       { path: 'scpi/:slug', component: ScpiDetailComponent },
+      { path: 'scpi/:id/invest', component: ScpiInvestComponent },
       { path: 'profile', component: UploadFileComponent },
       { path: 'history', component: HistoryComponent }
 
