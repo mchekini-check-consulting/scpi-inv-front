@@ -4,6 +4,7 @@ import {ScpiCatalogComponent} from "./features/scpi-catalog/scpi-catalog.compone
 import { AuthGuard } from './core/guards/auth.guard';
 import {HomeComponent} from "./core/template/home/home.component";
 import { UploadFileComponent } from './features/upload-file/upload-file.component';
+import { ScpiInvestComponent } from './features/scpi-invest/scpi-invest.component';
 
 export const routes: Routes = [
 
@@ -14,6 +15,7 @@ export const routes: Routes = [
     path: 'dashboard', component: TemplateComponent, canActivate: [AuthGuard],
     children: [
       { path: 'scpi', component: ScpiCatalogComponent },
+      { path: 'scpi/:id/invest', component: ScpiInvestComponent },
       { path: 'profile', component: UploadFileComponent },
 
 

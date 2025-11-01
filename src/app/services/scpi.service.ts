@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Scpi, ScpiPage } from '../models/scpi.model';
+import { ScpiInvestment } from '../models/scpi-investment.model';
 
 
 @Injectable({
@@ -26,5 +27,9 @@ export class ScpiService {
         };
       })
     );
+  }
+
+  getScpiInvestment(id: number): Observable<ScpiInvestment> {
+    return this.http.get<ScpiInvestment>(`${this.apiUrl}/${id}`);
   }
 }
