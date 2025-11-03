@@ -1,88 +1,122 @@
-<nav class="navbar navbar-expand-lg">
-  <div class="container-fluid">
-    <div class="navbar-wrapper">
-      <div class="navbar-minimize">
-        <button
-          id="minimizeSidebar"
-          (click)="toggleSidebar()"
-          class="btn btn-facebook btn-fill btn-round btn-icon d-none d-lg-block"
-        >
-          <i class="fa fa-ellipsis-v visible-on-sidebar-regular"></i>
-          <i class="fa fa-navicon visible-on-sidebar-mini"></i>
-        </button>
-      </div>
+<nav class="flex justify-between items-center w-full px-4 py-3 bg-white">
+  <div class="flex items-center">
+    <div class="navbar-minimize">
+      <button
+        id="minimizeSidebar"
+        (click)="toggleSidebar()"
+        class="btn btn-facebook btn-fill btn-round btn-icon d-none d-lg-block"
+      >
+        <i class="fa fa-ellipsis-v visible-on-sidebar-regular"></i>
+        <i class="fa fa-navicon visible-on-sidebar-mini"></i>
+      </button>
     </div>
-    <button
-      class="navbar-toggler navbar-toggler-right"
-      type="button"
-      data-toggle="collapse"
-      aria-controls="navigation-index"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-bar burger-lines"></span>
-      <span class="navbar-toggler-bar burger-lines"></span>
-      <span class="navbar-toggler-bar burger-lines"></span>
-    </button>
+  </div>
 
-    <div class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <ul class="navbar-nav">
-          <li class="dropdown nav-item">
-            <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-              <img [src]="selectedFlag" alt="Flag" />
-              <span class="nc-icon">{{ selectedLang }}</span>
+  <div class="flex items-center gap-6">
+    <ul class="flex items-center gap-6 list-none m-0 p-0">
+      
+      <li class="relative ml-5">
+        <a 
+          href="#" 
+          class="flex items-end justify-center gap-2 no-underline"
+          (mouseenter)="isLangDropdownOpen = true"
+          (mouseleave)="isLangDropdownOpen = false"
+          (click)="$event.preventDefault()"
+        >
+          <img [src]="selectedFlag" alt="Flag" class="h-[10px] w-auto mr-1" />
+          <span class="flex items-center leading-4">{{ selectedLang }}</span>
+        </a>
+
+        <ul 
+          *ngIf="isLangDropdownOpen"
+          class="absolute top-full right-0 left-auto px-0 mt-2 min-w-[250px] py-2 bg-white border border-gray-200 rounded-lg shadow-lg z-[99999] list-none"
+          (mouseenter)="isLangDropdownOpen = true"
+          (mouseleave)="isLangDropdownOpen = false"
+        >
+          <li *ngFor="let language of lang" class="list-none p-0 m-0">
+            
+            <a  class="block w-full px-4 py-2 text-sm text-gray-800 no-underline cursor-pointer hover:bg-gray-100 transition-colors"
+              (click)="switchLanguage(language.code); $event.preventDefault()"
+            >
+              <img
+                [src]="language.flag"
+                alt="Flag"
+                class="inline-block h-[10px] w-auto mr-2"
+              />
+              {{ language.name }}
             </a>
-
-            <ul class="dropdown-menu">
-              <li *ngFor="let language of lang">
-                <a
-                  class="dropdown-item"
-                  (click)="switchLanguage(language.code)"
-                >
-                  <img
-                    [src]="language.flag"
-                    alt="Flag"
-                    style="height: 10px; width: auto"
-                  />
-                  {{ language.name }}
-                </a>
-              </li>
-            </ul>
           </li>
         </ul>
-        <li class="dropdown nav-item">
-          <a href="#" data-toggle="dropdown">
-            <div class="profile">
-             <div class="photo">
-                  <ng-container *ngIf="profilePic; else defaultAvatar">
-                    <img [src]="profilePic" alt="Profile Picture" />
-                  </ng-container>
+      </li>
 
-                  <ng-template #defaultAvatar>
-                    <div class="default-avatar" [ngStyle]="{ 'background-color': avatarColor }">
-                      {{ avatarInitial }}
-                    </div>
-                  </ng-template>
+
+      <li class="relative">
+        <a 
+          href="#"
+          (mouseenter)="isProfileDropdownOpen = true"
+          (mouseleave)="isProfileDropdownOpen = false"
+          (click)="$event.preventDefault()"
+          class="no-underline"
+        >
+          <div class="flex items-center gap-0 cursor-pointer">
+            <div class="photo">
+              <ng-container *ngIf="profilePic; else defaultAvatar">
+                <img 
+                  [src]="profilePic" 
+                  alt="Profile Picture"
+                  class="w-[50px] h-[50px] rounded-full object-cover mr-4"
+                />
+              </ng-container>
+
+              <ng-template #defaultAvatar>
+                <div 
+                  [style.background-color]="avatarColor"
+                  class="w-[40px] h-[40px] mr-3 rounded-full text-white flex items-center justify-center font-semibold text-lg uppercase shadow-md"
+                >
+                  {{ avatarInitial }}
                 </div>
-              <div class="username-text">
-                <p style="color: black">{{ username }}</p>
-              </div>
+              </ng-template>
             </div>
-          </a>
-          <ul class="dropdown-menu">
-            <a class="dropdown-item" [routerLink]="'/profile'">
+            <div class="username-text flex">
+              <p class="text-base text-black m-0 relative translate-y-2">{{ username }}</p>
+            </div>
+          </div>
+        </a>
+        
+        <ul 
+          *ngIf="isProfileDropdownOpen"
+          class="absolute top-full right-0 mt-2 min-w-[200px] py-2 bg-white border border-gray-200 rounded-lg shadow-lg z-[99999] list-none"
+          (mouseenter)="isProfileDropdownOpen = true"
+          (mouseleave)="isProfileDropdownOpen = false"
+        >
+          <li class="list-none p-0 m-0">
+            <a 
+              class="block w-full px-4 py-2 text-sm text-gray-800 no-underline cursor-pointer hover:bg-gray-100 transition-colors" 
+              [routerLink]="'/profile'"
+            >
               <span class="sidebar-normal">Mon Profil</span>
             </a>
-            <a class="dropdown-item" href="#"
-            ><span class="sidebar-normal">Modifier mon Profil</span></a
+          </li>
+          <li class="list-none p-0 m-0">
+            <a 
+              class="block w-full px-4 py-2 text-sm text-gray-800 no-underline cursor-pointer hover:bg-gray-100 transition-colors" 
+              href="#"
+              (click)="$event.preventDefault()"
             >
-            <button (click)="logout()" class="dropdown-item text-danger">
-              <i class="nc-icon nc-button-power"></i> Se Déconnecter
+              <span class="sidebar-normal">Modifier mon Profil</span>
+            </a>
+          </li>
+          <li class="list-none p-0 m-0">
+            <button 
+              (click)="logout()" 
+              class="flex flex-row w-full items-center text-left px-4 py-2 text-sm text-red-600 cursor-pointer hover:bg-red-50 transition-colors bg-transparent border-0"
+            >
+              <i class="nc-icon nc-button-power"></i> <p>Se Déconnecter</p>
             </button>
-          </ul>
-        </li>
-      </ul>
-    </div>
+          </li>
+        </ul>
+      </li>
+      
+    </ul>
   </div>
 </nav>

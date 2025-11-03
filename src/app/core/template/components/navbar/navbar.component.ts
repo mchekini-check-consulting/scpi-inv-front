@@ -23,6 +23,9 @@ export class NavbarComponent implements OnInit {
   lang: Lang[] | undefined;
   isSidebarMini = false;
 
+  isLangDropdownOpen = false;
+  isProfileDropdownOpen = false;
+
   selectedLang: String = "Français";
   selectedFlag: string = 'img/Flag_fr.png';
 
