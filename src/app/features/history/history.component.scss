@@ -1,36 +1,54 @@
 .history-card {
   padding: 2rem;
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 1rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+.header {
+  margin-bottom: 1.5rem;
 
-  .title {
+  h2 {
     margin: 0;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     color: #333;
   }
 
-  .subtitle {
-    margin: 0.25rem 0 0;
-    font-size: 0.95rem;
+  p {
+    margin: 0.5rem 0 0;
     color: #666;
-  }
-
-  .status-dropdown {
-    margin-left: auto;
   }
 }
 
-::ng-deep .p-tag {
-  font-size: 0.85rem;
+.filter-section {
+  margin-bottom: 1rem;
+
+  .status-dropdown {
+    width: 250px;
+  }
+}
+
+::ng-deep .p-badge {
   padding: 0.4rem 0.75rem;
   border-radius: 1rem;
-  font-weight: 500;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.status-success {
+  background-color: #d4edda !important;
+  color: #155724 !important;
+}
+
+.status-failed {
+  background-color: #f8d7da !important;
+  color: #721c24 !important;
+}
+
+.status-pending {
+  background-color: #fff3cd !important;
+  color: #856404 !important;
 }
