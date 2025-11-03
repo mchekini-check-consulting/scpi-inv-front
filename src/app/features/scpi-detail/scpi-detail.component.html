@@ -1,0 +1,115 @@
+<div class="scpi-container" *ngIf="!isLoading && scpi; else loadingOrError">
+
+  <div class="scpi-header">
+    <div class="scpi-info">
+      <div class="scpi-icon" aria-hidden="true">
+        <i class="pi pi-building"></i>
+      </div>
+      <div class="scpi-titles">
+        <h2 class="scpi-title">{{ scpi.name }}</h2>
+        <p class="scpi-manager">{{ scpi.manager }}</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="scpi.advertising" class="info-banner">
+    <i class="pi pi-info-circle" aria-hidden="true"></i>
+    <p>{{ scpi.advertising }}</p>
+  </div>
+
+
+  <div class="indicators-grid">
+
+    <div class="indicator-card">
+      <div class="icon-wrapper" aria-hidden="true">
+        <i class="pi pi-briefcase"></i>
+      </div>
+      <div class="value">{{ scpi.manager }}</div>
+      <div class="label">Gérant</div>
+    </div>
+
+    <div class="indicator-card">
+      <div class="icon-wrapper" aria-hidden="true">
+        <i class="pi pi-wallet"></i>
+      </div>
+      <div class="value">{{ scpi.capitalization | formatField:'currency' }}</div>
+      <div class="label">Capitalisation</div>
+    </div>
+
+    <div class="indicator-card">
+      <div class="icon-wrapper" aria-hidden="true">
+        <i class="pi pi-tag"></i>
+      </div>
+      <div class="value">{{ scpi.sharePrice | formatField:'currency' }}</div>
+      <div class="label">Prix par part</div>
+    </div>
+
+    <div class="indicator-card">
+      <div class="icon-wrapper" aria-hidden="true">
+        <i class="pi pi-dollar"></i>
+      </div>
+      <div class="value">{{ scpi.minimumSubscription | formatField:'currency' }}</div>
+      <div class="label">Souscription minimum</div>
+    </div>
+
+
+    <div class="indicator-card">
+      <div class="icon-wrapper" aria-hidden="true">
+        <i class="pi pi-chart-line"></i>
+      </div>
+      <div class="value">{{ scpi.distributionRate | formatField:'percent' }}</div>
+      <div class="label">Taux de distribution</div>
+    </div>
+
+    <div class="indicator-card">
+      <div class="icon-wrapper" aria-hidden="true">
+        <i class="pi pi-percentage"></i>
+      </div>
+      <div class="value">{{ scpi.subscriptionFees | formatField:'percent' }}</div>
+      <div class="label">Frais de souscription</div>
+    </div>
+
+
+    <div class="indicator-card">
+      <div class="icon-wrapper" aria-hidden="true">
+        <i class="pi pi-cog"></i>
+      </div>
+      <div class="value">{{ scpi.managementFees | formatField:'percent' }}</div>
+      <div class="label">Frais de gestion</div>
+    </div>
+
+
+    <div class="indicator-card">
+      <div class="icon-wrapper" aria-hidden="true">
+        <i class="pi pi-clock"></i>
+      </div>
+      <div class="value">{{ scpi.enjoymentDelay | formatField:'month' }}</div>
+      <div class="label">Délai de jouissance</div>
+    </div>
+
+    <div class="indicator-card">
+      <div class="icon-wrapper" aria-hidden="true">
+        <i class="pi pi-calendar"></i>
+      </div>
+      <div class="value">{{ scpi.rentFrequency }}</div>
+      <div class="label">Fréquence des loyers</div>
+    </div>
+  </div>
+
+
+  <div class="boutton">
+    <button type="button" class="back-btn" (click)="goBack()">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+      <span>Retour au catalogue</span>
+    </button>
+  </div>
+</div>
+
+
+<ng-template #loadingOrError>
+  <div class="status-container">
+    <p *ngIf="isLoading" class="loading">Chargement des détails...</p>
+    <p *ngIf="error" class="error">{{ error }}</p>
+  </div>
+</ng-template>
