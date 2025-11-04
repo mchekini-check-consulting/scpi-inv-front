@@ -53,6 +53,7 @@ export const ROUTES: RouteInfo[] = [
     class: "",
     feature: "profile",
   }
+
 ];
 
 @Component({

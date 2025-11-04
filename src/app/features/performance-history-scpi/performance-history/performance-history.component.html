@@ -1,0 +1,23 @@
+<section class="perf-card">
+  <ng-container *ngIf="!insufficientHistory && data; else noData">
+    <p-chart [data]="data" [options]="options" class="chart"></p-chart>
+
+    <h3 class="chart-title">
+      Taux de distribution et rendement moyen sur 3 ans
+    </h3>
+  </ng-container>
+
+  <ng-template #noData>
+    <div class="no-data">
+      <p *ngIf="insufficientHistory">Historique insuffisant</p>
+      <p *ngIf="!insufficientHistory">
+        Aucune donnée disponible pour le moment.
+      </p>
+    </div>
+  </ng-template>
+</section>
+<ng-template #loading>
+  <div class="loading">
+    <p>Chargement des performances...</p>
+  </div>
+</ng-template>

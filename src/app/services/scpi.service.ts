@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { Scpi, ScpiDetail, ScpiPage } from '../models/scpi.model';
 import { ScpiInvestment } from '../models/scpi-investment.model';
 import { ScpiRepartition } from '../models/scpi-repartition.model';
+import { DistributionRateChartResponse } from '../models/distribution-rate.model';
 
 
 @Injectable({
@@ -31,12 +32,9 @@ export class ScpiService {
   }
 
 
-getScpiDetails(slug: string): Observable<ScpiDetail> {
-  return this.http.get<ScpiDetail>(`${this.apiUrl}/details/${slug}`);
-}
-
-
-
+  getScpiDetails(slug: string): Observable<ScpiDetail> {
+    return this.http.get<ScpiDetail>(`${this.apiUrl}/details/${slug}`);
+  }
 
   getScpiInvestment(id: number): Observable<ScpiInvestment> {
     return this.http.get<ScpiInvestment>(`${this.apiUrl}/${id}`);
@@ -45,4 +43,11 @@ getScpiDetails(slug: string): Observable<ScpiDetail> {
   getScpiRepartition(id: number): Observable<ScpiRepartition> {
     return this.http.get<ScpiRepartition>(`${this.apiUrl}/${id}/repartition`);
   }
+
+   getDistributionRatesChart(scpiId?: number): Observable<DistributionRateChartResponse> {
+    return this.http.get<DistributionRateChartResponse>(
+      `${this.apiUrl}/${scpiId}/distribution-rates`
+    );
+  }
 }
+ 
