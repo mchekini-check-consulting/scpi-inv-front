@@ -27,4 +27,23 @@ onViewMore(): void {
   onInvest(): void {
     this.router.navigate(['/dashboard/scpi', this.scpi.id, 'invest']);
   }
+
+getCountryCode(country: string): string {
+  const codes: { [key: string]: string } = {
+    'France': 'FR',
+    'Pays-Bas': 'NL',
+    'Allemagne': 'DE',
+    'Espagne': 'ES',
+    'Italie': 'IT',
+    'Belgique': 'BE',
+    'Portugal': 'PT',
+    'Luxembourg': 'LU',
+    'Suisse': 'CH',
+    'Royaume-Uni': 'GB',
+    'Irlande': 'IE',
+    'Europe': 'EU',
+  };
+  
+  return codes[country] || 'EU';
+}
 }
