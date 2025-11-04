@@ -19,6 +19,7 @@ export interface ScpiPage {
 
 
 export interface ScpiDetail {
+  id: number;
   name: string;
   manager: string;
   capitalization: number;

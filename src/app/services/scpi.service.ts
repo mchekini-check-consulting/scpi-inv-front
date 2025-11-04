@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Scpi, ScpiDetail, ScpiPage } from '../models/scpi.model';
 import { ScpiInvestment } from '../models/scpi-investment.model';
+import { ScpiRepartition } from '../models/scpi-repartition.model';
 
 
 @Injectable({
@@ -39,5 +40,9 @@ getScpiDetails(slug: string): Observable<ScpiDetail> {
 
   getScpiInvestment(id: number): Observable<ScpiInvestment> {
     return this.http.get<ScpiInvestment>(`${this.apiUrl}/${id}`);
+  }
+
+  getScpiRepartition(id: number): Observable<ScpiRepartition> {
+    return this.http.get<ScpiRepartition>(`${this.apiUrl}/${id}/repartition`);
   }
 }
