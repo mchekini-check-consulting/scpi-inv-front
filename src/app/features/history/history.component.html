@@ -1,59 +1,66 @@
 <div class="card history-card">
-  <p-toolbar class="toolbar">
-    <div class="p-toolbar-group-left">
-      <h2 class="title">📄 Historique des demandes</h2>
+  <div class="header-section">
+    <div class="header-left">
+      <h2 class="title">Historique des demandes</h2>
       <p class="subtitle">Suivez l'état de vos demandes de souscription SCPI</p>
     </div>
-    <div class="p-toolbar-group-right">
+    <div class="header-right">
+      <label class="filter-label">Filtrer par statut :</label>
       <p-dropdown
+        inputId="status-filter"
         [options]="statusOptions"
         [(ngModel)]="selectedStatus"
         (onChange)="filterByStatus()"
-        placeholder="Filtrer par statut"
+        placeholder="Tous les statuts"
         class="status-dropdown"
         [showClear]="true"
-        [style]="{ width: '250px' }"
         appendTo="body"
       ></p-dropdown>
     </div>
-  </p-toolbar>
+  </div>
 
-  <p-table
-    [value]="filteredHistories"
-    [paginator]="true"
-    [rows]="5"
-    [rowsPerPageOptions]="[5, 10, 20]"
-    responsiveLayout="scroll"
-    [tableStyle]="{ 'min-width': '100%' }"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th>ID Investissement</th>
-        <th>Date</th>
-        <th>Statut</th>
-        <th>Action</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-history>
-      <tr>
-        <td>{{ history.investmentId }}</td>
-        <td>{{ history.modificationDate | date:'dd/MM/yyyy' }}</td>
-        <td>
-          <p-tag
-            [value]="getStatusLabel(history.status)"
-            [severity]="getStatusSeverity(history.status)"
-            icon="{{ getStatusIcon(history.status) }}"
-          ></p-tag>
-        </td>
-        <td>
-          <button
-            pButton
-            icon="pi pi-eye"
-            class="p-button-rounded p-button-outlined p-button-sm"
-            label="Voir"
-          ></button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <ng-container *ngIf="filteredHistories.length > 0; else emptyState">
+    <p-table
+      [value]="filteredHistories"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 20]"
+      responsiveLayout="scroll"
+      [tableStyle]="{ 'min-width': '100%' }"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>N° de référence</th>
+          <th>Date</th>
+          <th>Statut</th>
+          <th>Action</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-history>
+        <tr>
+          <td>{{ history.investmentId }}</td>
+          <td>{{ history.modificationDate | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <p-tag
+              [value]="getStatusLabel(history.status)"
+              [severity]="getStatusSeverity(history.status)"
+              icon="{{ getStatusIcon(history.status) }}"
+            ></p-tag>
+          </td>
+          <td>
+            <button
+              pButton
+              icon="pi pi-eye"
+              class="p-button-rounded p-button-outlined p-button-sm"
+              label="Voir"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <p-message severity="info" text="Aucune demande trouvée pour ce statut."></p-message>
+  </ng-template>
 </div>

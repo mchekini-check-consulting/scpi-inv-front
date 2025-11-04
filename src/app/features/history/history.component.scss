@@ -5,28 +5,49 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 }
 
-.toolbar {
+.header-section {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  gap: 1rem;
 
-  .title {
-    margin: 0;
-    font-size: 1.6rem;
-    color: #333;
+  .header-left {
+    flex: 1 1 auto;
+
+    .title {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .subtitle {
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      color: #7f8c8d;
+    }
   }
 
-  .subtitle {
-    margin: 0.25rem 0 0;
-    font-size: 0.95rem;
-    color: #666;
-  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
 
-  .status-dropdown {
-    margin-left: auto;
+    .filter-label {
+      text-transform: none !important;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    ::ng-deep .p-dropdown {
+      width: 200px;
+    }
   }
 }
+
 
 ::ng-deep .p-tag {
   font-size: 0.85rem;

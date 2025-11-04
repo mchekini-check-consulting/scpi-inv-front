@@ -3,17 +3,26 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { TagModule } from 'primeng/tag';
+import { ToolbarModule } from 'primeng/toolbar';
+import { MessageModule } from 'primeng/message';
 import {HistoryService} from "../../services/history.service";
 import { History } from '../../models/history.model';
-import { FormsModule } from '@angular/forms';
-import {TagModule} from "primeng/tag";
-import {ToolbarModule} from "primeng/toolbar";
-
 
 @Component({
   selector: 'app-request-history',
   standalone: true,
-  imports: [CommonModule, TableModule, DropdownModule, ButtonModule, FormsModule, TagModule, ToolbarModule],
+  imports: [
+    CommonModule,
+    TableModule,
+    DropdownModule,
+    ButtonModule,
+    FormsModule,
+    TagModule,
+    ToolbarModule,
+    MessageModule
+  ],
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss'],
 })
@@ -54,15 +63,7 @@ export class HistoryComponent implements OnInit {
     }
   }
 
-  filterByStatus(): void {
-    if (this.selectedStatus === 'ALL') {
-      this.filteredHistories = this.histories;
-    } else {
-      this.filteredHistories = this.histories.filter(h => h.status === this.selectedStatus);
-    }
-  }
-
-  getStatusSeverity(status: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | undefined {
+  getStatusSeverity(status: string): 'success' | 'danger' | 'warn' | 'info' {
     switch (status) {
       case 'SUCCESS': return 'success';
       case 'FAILED': return 'danger';
@@ -77,6 +78,14 @@ export class HistoryComponent implements OnInit {
       case 'FAILED': return 'pi pi-times';
       case 'PENDING': return 'pi pi-clock';
       default: return 'pi pi-info-circle';
+    }
+  }
+
+  filterByStatus(): void {
+    if (this.selectedStatus === 'ALL') {
+      this.filteredHistories = this.histories;
+    } else {
+      this.filteredHistories = this.histories.filter(h => h.status === this.selectedStatus);
     }
   }
 }
