@@ -6,12 +6,14 @@ import { ButtonModule } from 'primeng/button';
 import {HistoryService} from "../../services/history.service";
 import { History } from '../../models/history.model';
 import { FormsModule } from '@angular/forms';
+import {TagModule} from "primeng/tag";
+import {ToolbarModule} from "primeng/toolbar";
 
 
 @Component({
   selector: 'app-request-history',
   standalone: true,
-  imports: [CommonModule, TableModule, DropdownModule, ButtonModule, FormsModule],
+  imports: [CommonModule, TableModule, DropdownModule, ButtonModule, FormsModule, TagModule, ToolbarModule],
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss'],
 })
@@ -57,6 +59,24 @@ export class HistoryComponent implements OnInit {
       this.filteredHistories = this.histories;
     } else {
       this.filteredHistories = this.histories.filter(h => h.status === this.selectedStatus);
+    }
+  }
+
+  getStatusSeverity(status: string): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' | undefined {
+    switch (status) {
+      case 'SUCCESS': return 'success';
+      case 'FAILED': return 'danger';
+      case 'PENDING': return 'warn';
+      default: return 'info';
+    }
+  }
+
+  getStatusIcon(status: string): string {
+    switch (status) {
+      case 'SUCCESS': return 'pi pi-check';
+      case 'FAILED': return 'pi pi-times';
+      case 'PENDING': return 'pi pi-clock';
+      default: return 'pi pi-info-circle';
     }
   }
 }

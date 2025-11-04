@@ -1,25 +1,30 @@
 <div class="card history-card">
-  <div class="header">
-    <h2>📄 Historique des demandes</h2>
-    <p>Suivez l'état de vos demandes de souscription SCPI</p>
-  </div>
-
-  <div class="filter-section">
-    <p-dropdown
-      [options]="statusOptions"
-      [(ngModel)]="selectedStatus"
-      (onChange)="filterByStatus()"
-      placeholder="Filtrer par statut"
-      class="status-dropdown"
-    ></p-dropdown>
-  </div>
+  <p-toolbar class="toolbar">
+    <div class="p-toolbar-group-left">
+      <h2 class="title">📄 Historique des demandes</h2>
+      <p class="subtitle">Suivez l'état de vos demandes de souscription SCPI</p>
+    </div>
+    <div class="p-toolbar-group-right">
+      <p-dropdown
+        [options]="statusOptions"
+        [(ngModel)]="selectedStatus"
+        (onChange)="filterByStatus()"
+        placeholder="Filtrer par statut"
+        class="status-dropdown"
+        [showClear]="true"
+        [style]="{ width: '250px' }"
+        appendTo="body"
+      ></p-dropdown>
+    </div>
+  </p-toolbar>
 
   <p-table
     [value]="filteredHistories"
     [paginator]="true"
     [rows]="5"
     [rowsPerPageOptions]="[5, 10, 20]"
-    [tableStyle]="{ 'min-width': '50rem' }"
+    responsiveLayout="scroll"
+    [tableStyle]="{ 'min-width': '100%' }"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -34,31 +39,18 @@
         <td>{{ history.investmentId }}</td>
         <td>{{ history.modificationDate | date:'dd/MM/yyyy' }}</td>
         <td>
-          <span
-            class="p-badge"
-            [ngClass]="{
-              'status-success': history.status === 'SUCCESS',
-              'status-failed': history.status === 'FAILED',
-              'status-pending': history.status === 'PENDING'
-            }"
-          >
-            <i
-              class="pi"
-              [ngClass]="{
-                'pi-check': history.status === 'SUCCESS',
-                'pi-times': history.status === 'FAILED',
-                'pi-clock': history.status === 'PENDING'
-              }"
-            ></i>
-            {{ getStatusLabel(history.status) }}
-          </span>
+          <p-tag
+            [value]="getStatusLabel(history.status)"
+            [severity]="getStatusSeverity(history.status)"
+            icon="{{ getStatusIcon(history.status) }}"
+          ></p-tag>
         </td>
         <td>
           <button
             pButton
-            label="Voir"
             icon="pi pi-eye"
-            class="p-button-sm p-button-text"
+            class="p-button-rounded p-button-outlined p-button-sm"
+            label="Voir"
           ></button>
         </td>
       </tr>
