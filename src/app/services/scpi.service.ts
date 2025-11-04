@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Scpi, ScpiPage } from '../models/scpi.model';
+import { Scpi, ScpiDetail, ScpiPage } from '../models/scpi.model';
 import { ScpiInvestment } from '../models/scpi-investment.model';
+import { ScpiRepartition } from '../models/scpi-repartition.model';
 
 
 @Injectable({
@@ -18,7 +19,7 @@ export class ScpiService {
       map(scpis => {
         const start = page * pageSize;
         const end = start + pageSize;
-        
+
         return {
           data: scpis.slice(start, end),
           total: scpis.length,
@@ -29,7 +30,19 @@ export class ScpiService {
     );
   }
 
+
+getScpiDetails(slug: string): Observable<ScpiDetail> {
+  return this.http.get<ScpiDetail>(`${this.apiUrl}/details/${slug}`);
+}
+
+
+
+
   getScpiInvestment(id: number): Observable<ScpiInvestment> {
     return this.http.get<ScpiInvestment>(`${this.apiUrl}/${id}`);
+  }
+
+  getScpiRepartition(id: number): Observable<ScpiRepartition> {
+    return this.http.get<ScpiRepartition>(`${this.apiUrl}/${id}/repartition`);
   }
 }

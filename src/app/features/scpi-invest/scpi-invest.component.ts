@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-scpi-invest',
   standalone: true,
