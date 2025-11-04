@@ -1,0 +1,110 @@
+$bg: #f9fafb;
+$text: #0f172a;
+$green: #2d5f2e;
+$green-600: #234a24;
+$green-100: #eaf4ea;
+$blue-600: #155eef;
+$gray-700: #374151;
+$gray-500: #6b7280;
+$bg: #f8fafc;
+
+.perf-wrapper {
+  font-family: "Inter", sans-serif;
+  padding: 2rem 3rem;
+  background: $bg;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.perf-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  .icon {
+    background: linear-gradient(135deg, $blue-600, $green);
+    color: white;
+    border-radius: 12px;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 10px rgba($blue-600, 0.25);
+  }
+
+  .titles {
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $text;
+    }
+
+    p {
+      color: $gray-500;
+      margin-top: 0.2rem;
+      font-size: 1rem;
+    }
+  }
+}
+
+.perf-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 10px 30px rgba($blue-600, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+
+  .chart {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+  }
+}
+
+.loading {
+  text-align: center;
+  color: $gray-500;
+  padding: 4rem;
+  font-weight: 500;
+}
+
+.no-data {
+  text-align: center;
+  padding: 3rem;
+  font-style: italic;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+  background-color: #f1f5f9;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 80%;
+  max-width: 400px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.no-data p {
+  margin: 0.5rem 0;
+}
+
+.perf-card .chart-title {
+  text-align: center;
+  margin-top: 12px;
+  font-weight: 700 !important;
+  margin-top: 2rem;
+  font-family: "Inter", sans-serif !important;
+  font-size: 1.1rem;
+  color: $green-600 !important;
+}

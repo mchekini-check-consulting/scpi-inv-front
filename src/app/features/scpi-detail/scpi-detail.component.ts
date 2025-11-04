@@ -9,11 +9,12 @@ import { ButtonModule } from 'primeng/button';
 import { FormatFieldPipe } from '../../core/pipe/format-field.pipe';
 import { ScpiRepartitionComponent } from '../../core/template/components/scpi-repartition/scpi-repartition.component';
 import { ScpiRepartition } from '../../models/scpi-repartition.model';
+import { PerformanceHistoryComponent } from '../performance-history-scpi/performance-history/performance-history.component';
 
 @Component({
   selector: 'app-scpi-detail',
   standalone: true,
-  imports: [CommonModule, AccordionModule, ButtonModule, FormatFieldPipe, ScpiRepartitionComponent],
+  imports: [CommonModule, AccordionModule, ButtonModule, FormatFieldPipe, ScpiRepartitionComponent,PerformanceHistoryComponent],
   templateUrl: './scpi-detail.component.html',
   styleUrls: ['./scpi-detail.component.scss'],
 })
