@@ -16,8 +16,8 @@
     <ul class="flex items-center gap-6 list-none m-0 p-0">
       
       <li class="relative ml-5">
-        <a 
-          href="#" 
+        <a
+          href="#"
           class="flex items-end justify-center gap-2 no-underline"
           (mouseenter)="isLangDropdownOpen = true"
           (mouseleave)="isLangDropdownOpen = false"
@@ -27,7 +27,7 @@
           <span class="flex items-center leading-4">{{ selectedLang }}</span>
         </a>
 
-        <ul 
+        <ul
           *ngIf="isLangDropdownOpen"
           class="absolute top-full right-0 left-auto px-0 mt-2 min-w-[250px] py-2 bg-white border border-gray-200 rounded-lg shadow-lg z-[99999] list-none"
           (mouseenter)="isLangDropdownOpen = true"
@@ -51,70 +51,42 @@
 
 
       <li class="relative">
-        <a 
-          href="#"
-          (mouseenter)="isProfileDropdownOpen = true"
-          (mouseleave)="isProfileDropdownOpen = false"
-          (click)="$event.preventDefault()"
-          class="no-underline"
+        <div
+          (click)="profileMenu.toggle($event)"
+          class="flex justify-center items-center gap-2 cursor-pointer"
         >
-          <div class="flex items-center gap-0 cursor-pointer">
-            <div class="photo">
-              <ng-container *ngIf="profilePic; else defaultAvatar">
-                <img 
-                  [src]="profilePic" 
-                  alt="Profile Picture"
-                  class="w-[50px] h-[50px] rounded-full object-cover mr-4"
-                />
-              </ng-container>
+          <div class="photo">
+            <ng-container *ngIf="profilePic; else defaultAvatar">
+              <img
+                [src]="profilePic"
+                alt="Profile Picture"
+                class="w-[40px] h-[40px] rounded-full object-cover"
+              />
+            </ng-container>
 
-              <ng-template #defaultAvatar>
-                <div 
-                  [style.background-color]="avatarColor"
-                  class="w-[40px] h-[40px] mr-3 rounded-full text-white flex items-center justify-center font-semibold text-lg uppercase shadow-md"
-                >
-                  {{ avatarInitial }}
-                </div>
-              </ng-template>
-            </div>
-            <div class="username-text flex">
-              <p class="text-base text-black m-0 relative translate-y-2">{{ username }}</p>
-            </div>
+            <ng-template #defaultAvatar>
+              <div
+                [style.background-color]="avatarColor"
+                class="w-[40px] h-[40px] rounded-full text-white flex items-center justify-center font-semibold text-lg uppercase shadow-md"
+              >
+                {{ avatarInitial }}
+              </div>
+            </ng-template>
           </div>
-        </a>
-        
-        <ul 
-          *ngIf="isProfileDropdownOpen"
-          class="absolute top-full right-0 mt-2 min-w-[200px] py-2 bg-white border border-gray-200 rounded-lg shadow-lg z-[99999] list-none"
-          (mouseenter)="isProfileDropdownOpen = true"
-          (mouseleave)="isProfileDropdownOpen = false"
-        >
-          <li class="list-none p-0 m-0">
-            <a 
-              class="block w-full px-4 py-2 text-sm text-gray-800 no-underline cursor-pointer hover:bg-gray-100 transition-colors" 
-              [routerLink]="'/profile'"
-            >
-              <span class="sidebar-normal">Mon Profil</span>
-            </a>
-          </li>
-          <li class="list-none p-0 m-0">
-            <a 
-              class="block w-full px-4 py-2 text-sm text-gray-800 no-underline cursor-pointer hover:bg-gray-100 transition-colors" 
-              href="#"
-              (click)="$event.preventDefault()"
-            >
-              <span class="sidebar-normal">Modifier mon Profil</span>
-            </a>
-          </li>
-          <li class="list-none p-0 m-0">
-            <button 
-              (click)="logout()" 
-              class="flex flex-row w-full items-center text-left px-4 py-2 text-sm text-red-600 cursor-pointer hover:bg-red-50 transition-colors bg-transparent border-0"
-            >
-              <i class="nc-icon nc-button-power"></i> <p>Se Déconnecter</p>
-            </button>
-          </li>
-        </ul>
+          <div class="username-text">
+            <p class="text-base text-black mb-4">
+              {{ username }}
+            </p>
+          </div>
+        </div>
+
+        <!-- PrimeNG Menu -->
+        <p-menu
+          #profileMenu
+          [model]="profileMenuItems"
+          [popup]="true"
+          appendTo="body"
+        ></p-menu>
       </li>
       
     </ul>
