@@ -8,6 +8,7 @@ import { DocumentService } from '../../core/service/document.service';
 import { finalize } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload-file',
@@ -28,6 +29,7 @@ export class UploadFileComponent {
   private toastr = inject(ToastrService);
   private uploadService = inject(DocumentService);
   private sanitizer = inject(DomSanitizer);
+  private router = inject(Router);
 
   files: Record<string, File[]> = {
     identity: [],
@@ -54,7 +56,7 @@ export class UploadFileComponent {
     { key: 'tax', label: "Avis d'imposition", enumValue: 'AVIS_IMPOSITION' },
   ];
 
-   allUploaded = false;
+  allUploaded = false;
 
   onSelect(event: any, key: string): void {
     const selectedFiles: File[] = event.files || [];
@@ -155,7 +157,15 @@ export class UploadFileComponent {
                 this.toastr.success(
                   'Tous les fichiers ont été uploadés avec succès !'
                 );
-                this.allUploaded = true; 
+                if (errorCount === 0) {
+                  setTimeout(() => {
+                    this.toastr.success(
+                      'Tous les fichiers ont été uploadés avec succès !'
+                    );
+                  }, 100);
+
+                  this.allUploaded = true;
+                }
               } else {
                 this.toastr.error(
                   `${successCount} fichier(s) uploadé(s), ${errorCount} échec(s)`
@@ -198,6 +208,9 @@ export class UploadFileComponent {
     if (this.files[key].length === 0) {
       this.clearFileUpload(key);
     }
+  }
 
+  goToDashboard(): void {
+    this.router.navigate(['/dashboard/scpi']);
   }
 }

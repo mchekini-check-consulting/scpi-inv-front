@@ -15,11 +15,12 @@ export const routes: Routes = [
   {
     path: 'dashboard', component: TemplateComponent, canActivate: [AuthGuard],
     children: [
-      { path: 'scpi', component: ScpiCatalogComponent },
+      { path: '', redirectTo: 'scpi', pathMatch: 'full' },
+      { path: 'scpi', component: ScpiCatalogComponent, pathMatch: 'full' },
       { path: 'scpi/:id/invest', component: ScpiInvestComponent },
       { path: 'scpi/:slug', component: ScpiDetailComponent },
       { path: 'profile', component: UploadFileComponent }
-
+       
     ],
   }
 
