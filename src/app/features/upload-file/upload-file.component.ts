@@ -1,4 +1,10 @@
-import { Component, QueryList, ViewChildren, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  QueryList,
+  ViewChildren,
+  inject,
+} from '@angular/core';
 import { FileUpload, FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -23,7 +29,7 @@ import { Router } from '@angular/router';
   templateUrl: './upload-file.component.html',
   styleUrls: ['./upload-file.component.scss'],
 })
-export class UploadFileComponent {
+export class UploadFileComponent implements OnInit {
   @ViewChildren('fileUploadRef') fileUpload!: QueryList<FileUpload>;
 
   private toastr = inject(ToastrService);
@@ -31,14 +37,17 @@ export class UploadFileComponent {
   private sanitizer = inject(DomSanitizer);
   private router = inject(Router);
 
+  loadingStatus = true;
+  allUploaded = false;
+
+  readonly maxFileSize = 10 * 1024 * 1024;
+  readonly accept = '.pdf,.jpg,.jpeg,.png';
+
   files: Record<string, File[]> = {
     identity: [],
     address: [],
     tax: [],
   };
-
-  readonly maxFileSize = 10 * 1024 * 1024;
-  readonly accept = '.pdf,.jpg,.jpeg,.png';
 
   previewState = {
     visible: false,
@@ -56,28 +65,37 @@ export class UploadFileComponent {
     { key: 'tax', label: "Avis d'imposition", enumValue: 'AVIS_IMPOSITION' },
   ];
 
-  allUploaded = false;
+  ngOnInit(): void {
+    this.checkIfDocumentsUploaded();
+  }
+
+  checkIfDocumentsUploaded(): void {
+    this.loadingStatus = true;
+    this.uploadService.getUploadStatus().subscribe({
+      next: (response) => {
+        this.loadingStatus = false;
+        this.allUploaded = response.documentsUploaded;
+      },
+      error: () => {
+        this.loadingStatus = false;
+        this.toastr.error('Erreur lors de la vérification du statut.');
+      },
+    });
+  }
 
   onSelect(event: any, key: string): void {
     const selectedFiles: File[] = event.files || [];
-
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
 
-    const validFiles: File[] = [];
-    for (const file of selectedFiles) {
-      if (!allowedTypes.includes(file.type)) {
-        this.toastr.error(
-          `Format non pris en charge pour ${file.name} (PDF, JPG, PNG).`
-        );
-        continue;
-      }
+    const validFiles = selectedFiles.filter(
+      (file) =>
+        allowedTypes.includes(file.type) && file.size <= this.maxFileSize
+    );
 
-      if (file.size > this.maxFileSize) {
-        this.toastr.error(`"${file.name}" est trop volumineux (max 10 Mo).`);
-        continue;
-      }
-
-      validFiles.push(file);
+    if (validFiles.length < selectedFiles.length) {
+      this.toastr.warning(
+        'Certains fichiers ont été ignorés (format ou taille).'
+      );
     }
 
     if (validFiles.length > 0) {
@@ -96,25 +114,17 @@ export class UploadFileComponent {
     event.preventDefault();
     event.stopPropagation();
     const uploader = this.fileUpload.find((f) => f.name === key);
-    if (uploader) {
-      uploader.choose();
-    }
+    if (uploader) uploader.choose();
   }
 
   private clearFileUpload(key: string): void {
     const uploader = this.fileUpload.find((f) => f.name === key);
-    if (uploader) {
-      uploader.clear();
-    }
+    if (uploader) uploader.clear();
   }
 
-  preview(key: string): void {
-    const files = this.files[key];
-    if (!files || files.length === 0) return;
-
-    const file = files[0];
+  previewFile(key: string, file: File): void {
+    if (!file) return;
     const reader = new FileReader();
-
     reader.onload = () => {
       const result = reader.result as string;
       const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(result);
@@ -154,18 +164,10 @@ export class UploadFileComponent {
             pending--;
             if (pending === 0) {
               if (errorCount === 0) {
+                this.allUploaded = true;
                 this.toastr.success(
                   'Tous les fichiers ont été uploadés avec succès !'
                 );
-                if (errorCount === 0) {
-                  setTimeout(() => {
-                    this.toastr.success(
-                      'Tous les fichiers ont été uploadés avec succès !'
-                    );
-                  }, 100);
-
-                  this.allUploaded = true;
-                }
               } else {
                 this.toastr.error(
                   `${successCount} fichier(s) uploadé(s), ${errorCount} échec(s)`
@@ -185,29 +187,10 @@ export class UploadFileComponent {
     return Object.values(this.files).every((f) => f && f.length > 0);
   }
 
-  previewFile(key: string, file: File): void {
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(result);
-
-      this.previewState = {
-        visible: true,
-        safeUrl,
-        type: file.type === 'application/pdf' ? 'pdf' : 'image',
-      };
-    };
-    reader.readAsDataURL(file);
-  }
-
   removeFile(key: string, file: File): void {
     if (!this.files[key]) return;
     this.files[key] = this.files[key].filter((f) => f !== file);
-    if (this.files[key].length === 0) {
-      this.clearFileUpload(key);
-    }
+    if (this.files[key].length === 0) this.clearFileUpload(key);
   }
 
   goToDashboard(): void {

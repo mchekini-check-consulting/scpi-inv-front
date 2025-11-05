@@ -1,137 +1,141 @@
 <div class="kyc-container">
-  <ng-container *ngIf="!allUploaded; else uploadedMessage">
-    <div class="kyc-wrapper">
-      <ng-container *ngFor="let doc of documents">
-        <p-card class="kyc-card">
-          <ng-template pTemplate="header">
-            <div class="kyc-header">
-              <h3 class="kyc-title">{{ doc.label }}</h3>
-              <p class="kyc-subtitle">
-                <ng-container [ngSwitch]="doc.key">
-                  <span *ngSwitchCase="'identity'">
-                    Carte d'identité, passeport ou titre de séjour
-                  </span>
-                  <span *ngSwitchCase="'address'">
-                    Facture d'électricité, de gaz, d'eau ou quittance de loyer
-                    (moins de 3 mois)
-                  </span>
-                  <span *ngSwitchCase="'tax'">
-                    Dernier avis d'imposition sur le revenu
-                  </span>
-                </ng-container>
-              </p>
-            </div>
-          </ng-template>
-
-          <!-- ✅ Uploader -->
-          <p-fileUpload
-            #fileUploadRef
-            [name]="doc.key"
-            mode="advanced"
-            [customUpload]="true"
-            [showUploadButton]="false"
-            [showCancelButton]="false"
-            [multiple]="true"
-            [maxFileSize]="maxFileSize"
-            [accept]="accept"
-            (onSelect)="onSelect($event, doc.key)"
-            (onClear)="onClear(doc.key)"
-            class="kyc-uploader"
-          >
-            <ng-template pTemplate="content">
-              <!-- ✅ Zone vide -->
-              <div class="dropzone" *ngIf="!files[doc.key]?.length">
-                <div class="dropzone-icon">
-                  <i class="pi pi-cloud-upload"></i>
-                </div>
-                <p class="dropzone-text">Glissez-déposez vos documents ici</p>
-                <span class="dropzone-ou">ou</span>
-                <button
-                  type="button"
-                  pButton
-                  class="kyc-choose-btn"
-                  label="Parcourir les fichiers"
-                  (click)="triggerChoose($event, doc.key)"
-                ></button>
-                <p class="dropzone-hint">PDF, JPG, PNG — Taille max : 10 Mo</p>
-              </div>
-
-              <!-- ✅ Liste fichiers -->
-              <div *ngIf="files[doc.key]?.length" class="file-list">
-                <div *ngFor="let file of files[doc.key]" class="file-chip">
-                  <i
-                    class="pi"
-                    [ngClass]="
-                      file.type === 'application/pdf'
-                        ? 'pi-file-pdf'
-                        : 'pi-image'
-                    "
-                  ></i>
-                  <span class="file-name">{{ file.name }}</span>
-                  <div class="file-chip-actions">
-                    <button
-                      pButton
-                      icon="pi pi-eye"
-                      class="p-button-text preview-btn"
-                      (click)="previewFile(doc.key, file)"
-                    ></button>
-                    <button
-                      pButton
-                      icon="pi pi-times"
-                      class="p-button-text remove-btn"
-                      (click)="removeFile(doc.key, file)"
-                    ></button>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </p-fileUpload>
-        </p-card>
-      </ng-container>
-    </div>
-
-    <!-- ✅ Bouton Enregistrer -->
-    <div class="kyc-actions">
-      <button
-        pButton
-        label="Enregistrer"
-        icon="pi pi-check"
-        class="kyc-save-btn"
-        [disabled]="!canSave()"
-        (click)="save()"
-      ></button>
+  <ng-container *ngIf="loadingStatus; else kycContent">
+    <div class="loading-status">
+      <i class="pi pi-spin pi-spinner"></i>
+      <p>Vérification du statut de vos documents...</p>
     </div>
   </ng-container>
 
-  <!-- ✅ Message de confirmation -->
-  <!-- ✅ Message de confirmation stylé -->
-  <ng-template #uploadedMessage>
-    <div class="kyc-success-wrapper">
-      <div class="kyc-success-card animate-in">
-        <div class="success-icon">
-          <div class="circle">
-            <i class="pi pi-check"></i>
-          </div>
-        </div>
+  <ng-template #kycContent>
+    <ng-container *ngIf="!allUploaded; else uploadedMessage">
+      <div class="kyc-wrapper">
+        <ng-container *ngFor="let doc of documents">
+          <p-card class="kyc-card">
+            <ng-template pTemplate="header">
+              <div class="kyc-header">
+                <h3 class="kyc-title">{{ doc.label }}</h3>
+                <p class="kyc-subtitle">
+                  <ng-container [ngSwitch]="doc.key">
+                    <span *ngSwitchCase="'identity'">
+                      Carte d'identité, passeport ou titre de séjour
+                    </span>
+                    <span *ngSwitchCase="'address'">
+                      Facture d'électricité, de gaz, d'eau ou quittance de loyer
+                      (moins de 3 mois)
+                    </span>
+                    <span *ngSwitchCase="'tax'">
+                      Dernier avis d'imposition sur le revenu
+                    </span>
+                  </ng-container>
+                </p>
+              </div>
+            </ng-template>
 
-        <h2 class="success-title">Merci !</h2>
-        <p class="success-message">
-          Vos documents ont été envoyés avec succès pour vérification.<br />
-          Vous recevrez une notification une fois la validation terminée.
-        </p>
+            <p-fileUpload
+              #fileUploadRef
+              [name]="doc.key"
+              mode="advanced"
+              [customUpload]="true"
+              [showUploadButton]="false"
+              [showCancelButton]="false"
+              [multiple]="true"
+              [maxFileSize]="maxFileSize"
+              [accept]="accept"
+              (onSelect)="onSelect($event, doc.key)"
+              (onClear)="onClear(doc.key)"
+              class="kyc-uploader"
+            >
+              <ng-template pTemplate="content">
+                <div class="dropzone" *ngIf="!files[doc.key]?.length">
+                  <div class="dropzone-icon">
+                    <i class="pi pi-cloud-upload"></i>
+                  </div>
+                  <p class="dropzone-text">Glissez-déposez vos documents ici</p>
+                  <span class="dropzone-ou">ou</span>
+                  <button
+                    type="button"
+                    pButton
+                    class="kyc-choose-btn"
+                    label="Parcourir les fichiers"
+                    (click)="triggerChoose($event, doc.key)"
+                  ></button>
+                  <p class="dropzone-hint">
+                    PDF, JPG, PNG — Taille max : 10 Mo
+                  </p>
+                </div>
 
+                <div *ngIf="files[doc.key]?.length" class="file-list">
+                  <div *ngFor="let file of files[doc.key]" class="file-chip">
+                    <i
+                      class="pi"
+                      [ngClass]="
+                        file.type === 'application/pdf'
+                          ? 'pi-file-pdf'
+                          : 'pi-image'
+                      "
+                    ></i>
+                    <span class="file-name">{{ file.name }}</span>
+                    <div class="file-chip-actions">
+                      <button
+                        pButton
+                        icon="pi pi-eye"
+                        class="p-button-text preview-btn"
+                        (click)="previewFile(doc.key, file)"
+                      ></button>
+                      <button
+                        pButton
+                        icon="pi pi-times"
+                        class="p-button-text remove-btn"
+                        (click)="removeFile(doc.key, file)"
+                      ></button>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </p-fileUpload>
+          </p-card>
+        </ng-container>
+      </div>
+
+      <div class="kyc-actions">
         <button
           pButton
-          label="Retour à l’accueil"
-          icon="pi pi-home"
-          class="success-btn"
-          (click)="goToDashboard()"
+          label="Enregistrer"
+          icon="pi pi-check"
+          class="kyc-save-btn"
+          [disabled]="!canSave()"
+          (click)="save()"
         ></button>
       </div>
-    </div>
+    </ng-container>
+
+    <ng-template #uploadedMessage>
+      <div class="kyc-success-wrapper">
+        <div class="kyc-success-card animate-in">
+          <div class="success-icon">
+            <div class="circle">
+              <i class="pi pi-check"></i>
+            </div>
+          </div>
+
+          <h2 class="success-title">Merci !</h2>
+          <p class="success-message">
+            Vos documents ont été envoyés avec succès pour vérification.<br />
+            Vous recevrez une notification une fois la validation terminée.
+          </p>
+
+          <button
+            pButton
+            label="Retour à l’accueil"
+            icon="pi pi-home"
+            class="success-btn"
+            (click)="goToDashboard()"
+          ></button>
+        </div>
+      </div>
+    </ng-template>
   </ng-template>
 
-  <!-- ✅ POPUP DE PRÉVISUALISATION -->
   <p-dialog
     [(visible)]="previewState.visible"
     [modal]="true"
