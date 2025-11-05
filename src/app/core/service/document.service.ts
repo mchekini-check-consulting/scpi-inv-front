@@ -7,7 +7,7 @@ import { UploadResponse } from '../model/UploadResponse';
   providedIn: 'root',
 })
 export class DocumentService {
-  private API_URL = "/api/v1/document";
+  private API_URL = '/api/v1/document';
 
   constructor(private http: HttpClient) {}
 
@@ -19,10 +19,18 @@ export class DocumentService {
     return this.http.post<UploadResponse>(`${this.API_URL}/upload`, formData);
   }
 
-
   downloadFile(fileName: string, type: any): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/download/${fileName}`, {
       params: { type },
     });
+  }
+
+  getUploadStatus(): Observable<{
+    userId: string;
+    documentsUploaded: boolean;
+  }> {
+    return this.http.get<{ userId: string; documentsUploaded: boolean }>(
+      `${this.API_URL}/status`
+    );
   }
 }
