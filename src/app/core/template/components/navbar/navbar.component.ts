@@ -3,6 +3,8 @@ import {RouterLink, RouterModule} from '@angular/router';
 import {CommonModule, NgFor} from '@angular/common';
 import {TranslateModule, TranslateService} from '@ngx-translate/core';
 import { AuthService } from '../../../service/auth.service';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
 
 interface Lang {
   name: string;
@@ -10,10 +12,9 @@ interface Lang {
   flag: string;
 }
 
-
 @Component({
   selector: 'app-navbar',
-  imports: [NgFor, TranslateModule, CommonModule, RouterModule, RouterLink],
+  imports: [NgFor, TranslateModule, CommonModule, RouterModule, RouterLink, MenuModule],
   templateUrl: './navbar.component.html',
   standalone: true,
   styleUrl: './navbar.component.css'
@@ -24,7 +25,7 @@ export class NavbarComponent implements OnInit {
   isSidebarMini = false;
 
   isLangDropdownOpen = false;
-  isProfileDropdownOpen = false;
+  profileMenuItems: MenuItem[] = [];
 
   selectedLang: String = "Français";
   selectedFlag: string = 'img/Flag_fr.png';
@@ -34,10 +35,8 @@ export class NavbarComponent implements OnInit {
   avatarInitial: string = '';
   avatarColor: string = '#607d8b';
 
-
   constructor(private translate: TranslateService, private authService: AuthService) {
     translate.setDefaultLang('fr');
-
   }
 
   toggleSidebar() {
@@ -55,9 +54,34 @@ export class NavbarComponent implements OnInit {
       {name: "Français", code: "fr", flag: 'img/Flag_fr.png'},
       {name: "English", code: "en", flag: 'img/Flag_gb.png'},
     ]);
+
+    this.profileMenuItems = [
+      {
+        label: 'Mon Profil',
+        icon: 'pi pi-user',
+        routerLink: '/profile'
+      },
+      {
+        label: 'Modifier mon Profil',
+        icon: 'pi pi-user-edit',
+        
+      },
+      {
+        separator: true
+      },
+      {
+        label: 'Se Déconnecter',
+        icon: 'pi pi-power-off',
+        styleClass: 'text-red-600',
+        command: () => {
+          this.logout();
+        }
+      }
+    ];
+
     this.username = 'Mahdi CHEKINI';
 
-   this.authService.userInfo$.subscribe(claims => {
+    this.authService.userInfo$.subscribe(claims => {
       if (claims) {
         const prenom = claims.given_name || '';
         const nom = claims.family_name || '';
@@ -75,31 +99,20 @@ export class NavbarComponent implements OnInit {
         }
       }
     });
-
-
   }
 
- private getAvatarColor(seed: string): string {
-  const colors = [
-    '#F44336',
-    '#E91E63',
-    '#9C27B0',
-    '#3F51B5',
-    '#2196F3',
-    '#009688',
-    '#4CAF50',
-    '#FF9800',
-    '#795548'
-  ];
-  let hash = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+  private getAvatarColor(seed: string): string {
+    const colors = [
+      '#F44336', '#E91E63', '#9C27B0', '#3F51B5', '#2196F3',
+      '#009688', '#4CAF50', '#FF9800', '#795548'
+    ];
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+      hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % colors.length;
+    return colors[index];
   }
-
-  const index = Math.abs(hash) % colors.length;
-  return colors[index];
-}
-
 
   switchLanguage(language: string) {
     const selectedLanguage = this.lang!.find(lang => lang.code === language);
