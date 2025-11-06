@@ -46,26 +46,11 @@
               class="kyc-uploader"
             >
               <ng-template pTemplate="content">
-                <div class="dropzone" *ngIf="!files[doc.key]?.length">
-                  <div class="dropzone-icon">
-                    <i class="pi pi-cloud-upload"></i>
-                  </div>
-                  <p class="dropzone-text">Glissez-déposez vos documents ici</p>
-                  <span class="dropzone-ou">ou</span>
-                  <button
-                    type="button"
-                    pButton
-                    class="kyc-choose-btn"
-                    label="Parcourir les fichiers"
-                    (click)="triggerChoose($event, doc.key)"
-                  ></button>
-                  <p class="dropzone-hint">
-                    PDF, JPG, PNG — Taille max : 10 Mo
-                  </p>
-                </div>
-
-                <div *ngIf="files[doc.key]?.length" class="file-list">
-                  <div *ngFor="let file of files[doc.key]" class="file-chip">
+                <div class="file-list" *ngIf="getFilesFor(doc.key).length > 0">
+                  <div
+                    *ngFor="let file of getFilesFor(doc.key)"
+                    class="file-chip"
+                  >
                     <i
                       class="pi"
                       [ngClass]="
@@ -91,6 +76,24 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="dropzone dropzone-below">
+                  <div class="dropzone-icon">
+                    <i class="pi pi-cloud-upload"></i>
+                  </div>
+                  <p class="dropzone-text">Glissez-déposez vos documents ici</p>
+                  <span class="dropzone-ou">ou</span>
+                  <button
+                    type="button"
+                    pButton
+                    class="kyc-choose-btn"
+                    label="Parcourir les fichiers"
+                    (click)="triggerChoose($event, doc.key)"
+                  ></button>
+                  <p class="dropzone-hint">
+                    PDF, JPG, PNG — Taille max : 10 Mo
+                  </p>
+                </div>
               </ng-template>
             </p-fileUpload>
           </p-card>
@@ -100,12 +103,37 @@
       <div class="kyc-actions">
         <button
           pButton
-          label="Enregistrer"
+          label="{{ uploading ? 'Envoi en cours...' : 'Enregistrer' }}"
           icon="pi pi-check"
           class="kyc-save-btn"
-          [disabled]="!canSave()"
+          [disabled]="uploading || !canSave()"
           (click)="save()"
         ></button>
+      </div>
+
+      <div class="uploaded-section" *ngIf="uploadedFiles.length > 0">
+        <h4>Documents envoyés :</h4>
+        <div class="uploaded-list">
+          <div
+            *ngFor="let file of uploadedFiles; let i = index"
+            class="uploaded-item"
+          >
+            <i
+              class="pi"
+              [ngClass]="
+                file.name.endsWith('.pdf') ? 'pi-file-pdf' : 'pi-image'
+              "
+            ></i>
+            <span>{{ file.name }}</span>
+            <small>{{ file.size / 1024 | number : "1.0-0" }} Ko</small>
+            <button
+              pButton
+              icon="pi pi-trash"
+              class="p-button-text remove-btn"
+              (click)="removeUploadedFile(i)"
+            ></button>
+          </div>
+        </div>
       </div>
     </ng-container>
 
@@ -117,16 +145,13 @@
               <i class="pi pi-check"></i>
             </div>
           </div>
-
           <h2 class="success-title">Merci !</h2>
           <p class="success-message">
-            Vos documents ont été envoyés avec succès pour vérification.<br />
-            Vous recevrez une notification une fois la validation terminée.
+            Vos documents ont été envoyés avec succès pour vérification.
           </p>
-
           <button
             pButton
-            label="Retour à l’accueil"
+            label="Retour à l'accueil"
             icon="pi pi-home"
             class="success-btn"
             (click)="goToDashboard()"
@@ -139,16 +164,11 @@
   <p-dialog
     [(visible)]="previewState.visible"
     [modal]="true"
-    [style]="{ width: '75vw', maxWidth: '900px' }"
-    [draggable]="false"
-    [resizable]="false"
     header="Aperçu du document"
+    [style]="{ width: '75vw', maxWidth: '900px' }"
     (onHide)="closePreview()"
   >
-    <div
-      *ngIf="previewState.type === 'pdf'; else imagePreview"
-      class="preview-content"
-    >
+    <div *ngIf="previewState.type === 'pdf'; else imgPreview">
       <iframe
         *ngIf="previewState.safeUrl"
         [src]="previewState.safeUrl"
@@ -157,18 +177,11 @@
         style="border: none"
       ></iframe>
     </div>
-
-    <ng-template #imagePreview>
+    <ng-template #imgPreview>
       <img
         *ngIf="previewState.safeUrl"
         [src]="previewState.safeUrl"
-        alt="Aperçu du document"
-        style="
-          width: 100%;
-          max-height: 600px;
-          object-fit: contain;
-          border-radius: 10px;
-        "
+        style="width: 100%; max-height: 600px; object-fit: contain"
       />
     </ng-template>
   </p-dialog>

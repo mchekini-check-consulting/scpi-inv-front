@@ -38,6 +38,7 @@ export class UploadFileComponent implements OnInit {
   private router = inject(Router);
 
   loadingStatus = true;
+  uploading = false;
   allUploaded = false;
 
   readonly maxFileSize = 10 * 1024 * 1024;
@@ -48,6 +49,8 @@ export class UploadFileComponent implements OnInit {
     address: [],
     tax: [],
   };
+
+  uploadedFiles: { key: string; name: string; size: number }[] = [];
 
   previewState = {
     visible: false,
@@ -83,8 +86,15 @@ export class UploadFileComponent implements OnInit {
     });
   }
 
+  getFilesFor(key: string): File[] {
+    return this.files[key] ?? [];
+  }
+
   onSelect(event: any, key: string): void {
-    const selectedFiles: File[] = event.files || [];
+    const selectedFiles: File[] = Array.isArray(event.files)
+      ? event.files
+      : Array.from(event.files || []);
+
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
 
     const validFiles = selectedFiles.filter(
@@ -99,9 +109,7 @@ export class UploadFileComponent implements OnInit {
     }
 
     if (validFiles.length > 0) {
-      this.files[key].push(...validFiles);
-    } else {
-      this.clearFileUpload(key);
+      this.files[key] = [...(this.files[key] || []), ...validFiles];
     }
   }
 
@@ -123,15 +131,12 @@ export class UploadFileComponent implements OnInit {
   }
 
   previewFile(key: string, file: File): void {
-    if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
       const result = reader.result as string;
-      const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(result);
-
       this.previewState = {
         visible: true,
-        safeUrl,
+        safeUrl: this.sanitizer.bypassSecurityTrustResourceUrl(result),
         type: file.type === 'application/pdf' ? 'pdf' : 'image',
       };
     };
@@ -152,17 +157,21 @@ export class UploadFileComponent implements OnInit {
       return;
     }
 
+    this.uploading = true;
     let pending = allFiles.length;
     let successCount = 0;
     let errorCount = 0;
 
     allFiles.forEach(({ key, file }) => {
+      const documentEnum = this.documents.find((d) => d.key === key)
+        ?.enumValue!;
       this.uploadService
-        .uploadFile(file, this.documents.find((d) => d.key === key)?.enumValue!)
+        .uploadFile(file, documentEnum)
         .pipe(
           finalize(() => {
             pending--;
             if (pending === 0) {
+              this.uploading = false;
               if (errorCount === 0) {
                 this.allUploaded = true;
                 this.toastr.success(
@@ -170,27 +179,49 @@ export class UploadFileComponent implements OnInit {
                 );
               } else {
                 this.toastr.error(
-                  `${successCount} fichier(s) uploadé(s), ${errorCount} échec(s)`
+                  `${successCount} succès, ${errorCount} échec(s).`
                 );
               }
             }
           })
         )
         .subscribe({
-          next: () => successCount++,
+          next: (res) => {
+            successCount++;
+            this.uploadedFiles.push({
+              key,
+              name: res.originalName || file.name,
+              size: file.size,
+            });
+          },
           error: () => errorCount++,
         });
     });
   }
 
-  canSave(): boolean {
-    return Object.values(this.files).every((f) => f && f.length > 0);
-  }
-
   removeFile(key: string, file: File): void {
     if (!this.files[key]) return;
+
     this.files[key] = this.files[key].filter((f) => f !== file);
-    if (this.files[key].length === 0) this.clearFileUpload(key);
+    if (this.files[key].length === 0) {
+      const uploader = this.fileUpload.find((f) => f.name === key);
+      if (uploader) uploader.clear();
+    }
+  }
+
+  removeUploadedFile(index: number): void {
+    if (index >= 0 && index < this.uploadedFiles.length) {
+      const removed = this.uploadedFiles.splice(index, 1)[0];
+      this.toastr.info(`Document "${removed.name}" supprimé de la liste.`);
+    }
+  }
+
+  canSave(): boolean {
+    return (
+      this.getFilesFor('identity').length > 0 &&
+      this.getFilesFor('address').length > 0 &&
+      this.getFilesFor('tax').length > 0
+    );
   }
 
   goToDashboard(): void {
