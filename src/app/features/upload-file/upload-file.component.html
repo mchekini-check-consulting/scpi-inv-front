@@ -77,9 +77,23 @@
                   </div>
                 </div>
 
-                <div class="dropzone dropzone-below">
+                <div class="dropzone">
                   <div class="dropzone-icon">
-                    <i class="pi pi-cloud-upload"></i>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#10b981"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                      ></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
                   </div>
                   <p class="dropzone-text">Glissez-déposez vos documents ici</p>
                   <span class="dropzone-ou">ou</span>
@@ -110,36 +124,11 @@
           (click)="save()"
         ></button>
       </div>
-
-      <div class="uploaded-section" *ngIf="uploadedFiles.length > 0">
-        <h4>Documents envoyés :</h4>
-        <div class="uploaded-list">
-          <div
-            *ngFor="let file of uploadedFiles; let i = index"
-            class="uploaded-item"
-          >
-            <i
-              class="pi"
-              [ngClass]="
-                file.name.endsWith('.pdf') ? 'pi-file-pdf' : 'pi-image'
-              "
-            ></i>
-            <span>{{ file.name }}</span>
-            <small>{{ file.size / 1024 | number : "1.0-0" }} Ko</small>
-            <button
-              pButton
-              icon="pi pi-trash"
-              class="p-button-text remove-btn"
-              (click)="removeUploadedFile(i)"
-            ></button>
-          </div>
-        </div>
-      </div>
     </ng-container>
 
     <ng-template #uploadedMessage>
       <div class="kyc-success-wrapper">
-        <div class="kyc-success-card animate-in">
+        <div class="kyc-success-card">
           <div class="success-icon">
             <div class="circle">
               <i class="pi pi-check"></i>
