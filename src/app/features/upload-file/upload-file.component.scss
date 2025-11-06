@@ -16,74 +16,41 @@
 .kyc-card {
   border-radius: 18px;
   border: none;
+  background: #fff;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
   overflow: hidden;
-  background: white;
 }
 
 .kyc-header {
   background: linear-gradient(135deg, #00b09b, #96c93d, #00c16a);
-  background-size: 300% 300%;
-  animation: gradientMove 6s ease infinite;
   color: white;
   padding: 1.2rem 1.5rem;
   border-radius: 18px 18px 0 0;
-  box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.1);
 }
-
-@keyframes gradientMove {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 .kyc-title {
   font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 0.25rem;
-  letter-spacing: 0.4px;
 }
-
 .kyc-subtitle {
   font-size: 0.85rem;
   opacity: 0.95;
+  margin: 0;
 }
 
 .kyc-uploader {
   width: 100%;
 }
-
-::ng-deep .p-fileupload .p-fileupload-buttonbar,
-::ng-deep .p-fileupload-choose,
-::ng-deep .p-fileupload-header {
+::ng-deep .p-fileupload .p-fileupload-header,
+::ng-deep .p-fileupload-buttonbar {
   display: none !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  visibility: hidden !important;
 }
-
 ::ng-deep .p-fileupload-content {
   border: 2px dashed #bbf7d0;
   border-radius: 14px;
   background: #f0fdf4;
-  text-align: center;
   padding: 1.8rem;
-  transition: all 0.3s ease;
-  cursor: pointer;
-
-  &:hover {
-    background: #ecfdf5;
-    border-color: #10b981;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
-  }
+  text-align: center;
 }
 
 .dropzone {
@@ -91,76 +58,54 @@
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
+  margin-top: 1rem;
 }
-
 .dropzone-icon {
   background: white;
   border: 3px solid #10b981;
   border-radius: 50%;
-  width: 65px;
-  height: 65px;
+  width: 68px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-
-  i {
-    font-size: 1.6rem;
-    color: #10b981;
-  }
-
-  &:hover {
-    background: #10b981;
-    transform: scale(1.05);
-    i {
-      color: white;
-    }
-  }
 }
-
+.dropzone-icon svg {
+  width: 36px;
+  height: 36px;
+  stroke: #10b981;
+}
 .dropzone-text {
   font-size: 1rem;
   font-weight: 600;
   color: #064e3b;
 }
-
 .dropzone-ou {
   color: #9ca3af;
   font-size: 0.8rem;
 }
-
 .dropzone-hint {
   color: #6b7280;
   font-size: 0.8rem;
 }
 
 .kyc-choose-btn {
-  background: linear-gradient(135deg, #16a34a, #10b981);
+  background: #10b981;
   border: none;
   color: white;
   border-radius: 8px;
   padding: 0.6rem 1.4rem;
   font-weight: 600;
   font-size: 0.9rem;
-  transition: all 0.25s ease;
   cursor: pointer;
-
-  &:hover {
-    background: linear-gradient(135deg, #059669, #34d399);
-    transform: scale(1.05);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
 }
 
 .file-list {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  margin-top: 1rem;
 }
-
 .file-chip {
   background: #f9fafb;
   border-radius: 10px;
@@ -170,53 +115,31 @@
   gap: 0.75rem;
   border-left: 4px solid #10b981;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  transition: all 0.2s ease;
-
-  &:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transform: translateX(2px);
-  }
-
-  i.pi {
-    font-size: 1.2rem;
-    color: #10b981;
-  }
-
-  .pi-file-pdf {
-    color: #ef4444;
-  }
-
-  .pi-image {
-    color: #3b82f6;
-  }
 }
-
+.file-chip i.pi {
+  font-size: 1.2rem;
+}
+.pi-file-pdf {
+  color: #ef4444;
+}
+.pi-image {
+  color: #3b82f6;
+}
 .file-name {
   flex: 1;
   font-weight: 600;
   color: #111827;
   font-size: 0.9rem;
 }
-
 .file-chip-actions {
   display: flex;
   gap: 0.25rem;
 }
-
 .preview-btn {
   color: #10b981;
-
-  &:hover {
-    background: rgba(16, 185, 129, 0.1);
-  }
 }
-
 .remove-btn {
   color: #ef4444;
-
-  &:hover {
-    background: rgba(239, 68, 68, 0.1);
-  }
 }
 
 .kyc-actions {
@@ -224,214 +147,68 @@
   justify-content: flex-end;
   margin-top: 2rem;
 }
-
 .kyc-save-btn {
-  background: linear-gradient(135deg, #16a34a, #10b981);
+  background: #10b981;
   border: none;
   color: white;
   border-radius: 10px;
   padding: 0.8rem 2rem;
   font-weight: 600;
   font-size: 1rem;
-  transition: all 0.3s ease;
-
-  &:hover:not(:disabled) {
-    background: linear-gradient(135deg, #059669, #34d399);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.25);
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+}
+.kyc-save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #9ca3af;
 }
 
 .kyc-success-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 70vh;
+  min-height: 70vh;
   text-align: center;
-  background: transparent;
 }
-
 .kyc-success-card {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 3rem 2.5rem;
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
   max-width: 500px;
-  width: 90%;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
-  animation: fadeInUp 0.8s ease forwards;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: -40%;
-    left: -40%;
-    width: 180%;
-    height: 180%;
-    background: radial-gradient(circle at center, #bbf7d0 0%, transparent 70%);
-    opacity: 0.3;
-    z-index: 0;
-  }
 }
-
-.success-icon {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 1.5rem;
-
-  .circle {
-    background: #ecfdf5;
-    border: 3px solid #16a34a;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: pulseRing 1.6s infinite ease-in-out;
-
-    i {
-      font-size: 2.2rem;
-      color: #16a34a;
-      animation: checkPop 0.5s ease forwards;
-    }
-  }
+.success-icon .circle {
+  background: #ecfdf5;
+  border: 3px solid #16a34a;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
 }
-
-.success-title {
+.success-icon i {
+  font-size: 2rem;
   color: #16a34a;
-  font-weight: 800;
-  font-size: 1.6rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.75rem;
-  letter-spacing: 0.5px;
 }
-
+.success-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #16a34a;
+  margin-top: 1rem;
+}
 .success-message {
   color: #475569;
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 2rem;
-  z-index: 1;
-  position: relative;
+  margin: 1rem 0 2rem;
 }
-
 .success-btn {
-  background: linear-gradient(135deg, #16a34a, #10b981);
+  background: #10b981;
   border: none;
   color: white;
-  border-radius: 12px;
-  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  padding: 0.7rem 1.8rem;
   font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 1;
-  position: relative;
-
-  &:hover {
-    background: linear-gradient(135deg, #059669, #34d399);
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-  }
-
-  &:active {
-    transform: scale(0.97);
-  }
-}
-
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes pulseRing {
-  0% {
-    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.3);
-  }
-  70% {
-    box-shadow: 0 0 0 12px rgba(22, 163, 74, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(22, 163, 74, 0);
-  }
-}
-
-@keyframes checkPop {
-  0% {
-    transform: scale(0.4) rotate(-20deg);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-}
-
-::ng-deep .p-dialog {
-  border-radius: 14px !important;
-  overflow: hidden !important;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25) !important;
-  animation: fadeInZoom 0.3s ease-in-out;
-  backdrop-filter: blur(8px);
-}
-
-@keyframes fadeInZoom {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-::ng-deep .p-dialog .p-dialog-header {
-  background: linear-gradient(135deg, #00b09b, #96c93d, #00c16a);
-  color: white;
-  font-weight: 600;
-  border-top-left-radius: 14px !important;
-  border-top-right-radius: 14px !important;
-  padding: 1rem 1.25rem !important;
-  box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.15);
-}
-
-::ng-deep .p-dialog .p-dialog-content {
-  background: #f9fafb;
-  border-radius: 0 0 14px 14px !important;
-  padding: 1.5rem !important;
-}
-
-::ng-deep .p-dialog .p-dialog-header-close-icon {
-  color: white !important;
-  font-size: 1.1rem !important;
-  transition: transform 0.25s ease;
-}
-
-::ng-deep .p-dialog .p-dialog-header-close-icon:hover {
-  transform: rotate(90deg);
-  color: #f0fdf4 !important;
-}
-
-.preview-content iframe,
-::ng-deep img[alt="Aperçu du document"] {
-  border-radius: 10px;
-  background: white;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  font-size: 0.95rem;
 }
 
 @media (max-width: 768px) {
@@ -439,75 +216,7 @@
     margin: 1rem;
     padding: 1rem;
   }
-
-  .kyc-header {
-    padding: 1rem;
-  }
-
-  .kyc-title {
-    font-size: 1.1rem;
-  }
-
-  .kyc-subtitle {
-    font-size: 0.8rem;
-  }
-
-  ::ng-deep .p-fileupload-content {
-    padding: 1.5rem 1.25rem;
-  }
-
-  .file-chip {
-    flex-wrap: wrap;
-  }
-
   .kyc-save-btn {
     width: 100%;
-  }
-}
-
-.loading-status {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50vh;
-  color: #4b5563;
-  font-size: 1.1rem;
-
-  i {
-    font-size: 2rem;
-    color: #10b981;
-    margin-bottom: 10px;
-  }
-}
-.upload-timer {
-  margin-top: 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #065f46;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: #ecfdf5;
-  border-radius: 10px;
-  padding: 0.8rem 1.4rem;
-  box-shadow: inset 0 0 4px rgba(16, 185, 129, 0.1);
-  animation: pulseTimer 1.6s ease-in-out infinite alternate;
-}
-
-.upload-timer i {
-  color: #10b981;
-  font-size: 1.1rem;
-}
-
-@keyframes pulseTimer {
-  0% {
-    opacity: 0.85;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1.03);
   }
 }
