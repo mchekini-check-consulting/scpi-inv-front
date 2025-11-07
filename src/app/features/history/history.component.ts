@@ -28,6 +28,7 @@ import { History } from '../../models/history.model';
 })
 export class HistoryComponent implements OnInit {
   histories: History[] = [];
+  historyDetails: History[] = [];
   filteredHistories: History[] = [];
   selectedStatus: string = 'ALL';
   error!: string;
@@ -87,5 +88,16 @@ export class HistoryComponent implements OnInit {
     } else {
       this.filteredHistories = this.histories.filter(h => h.status === this.selectedStatus);
     }
+  }
+
+  loadDetails(history: History): void {
+    this.historyService.getHistoryDetailsByInvestmentId(history.investmentId).subscribe({
+      next: (details) => {
+        this.historyDetails = details;
+      },
+      error: (err) => {
+        console.error('Erreur chargement détails:', err);
+      },
+    });
   }
 }

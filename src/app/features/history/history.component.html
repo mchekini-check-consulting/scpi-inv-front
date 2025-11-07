@@ -27,19 +27,34 @@
       [rowsPerPageOptions]="[5, 10, 20]"
       responsiveLayout="scroll"
       [tableStyle]="{ 'min-width': '100%' }"
+      dataKey="investmentId"
+      #table
+      (onRowExpand)="loadDetails($event.data)"
     >
       <ng-template pTemplate="header">
         <tr>
+          <th style="width: 3rem"></th>
           <th>N° de référence</th>
-          <th>Date</th>
+          <th>Date de création</th>
           <th>Statut</th>
-          <th>Action</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-history>
+
+      <ng-template pTemplate="body" let-history let-expanded="expanded">
         <tr>
+          <td>
+            <p-button
+              type="button"
+              pRipple
+              [pRowToggler]="history"
+              [text]="true"
+              severity="secondary"
+              [rounded]="true"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            ></p-button>
+          </td>
           <td>{{ history.investmentId }}</td>
-          <td>{{ history.modificationDate | date:'dd/MM/yyyy' }}</td>
+          <td>{{ history.creationDate | date: 'dd/MM/yyyy' }}</td>
           <td>
             <p-tag
               [value]="getStatusLabel(history.status)"
@@ -47,20 +62,66 @@
               icon="{{ getStatusIcon(history.status) }}"
             ></p-tag>
           </td>
+        </tr>
+      </ng-template>
+
+      <!-- ✅ Sous-tableau pleine largeur -->
+      <ng-template pTemplate="rowexpansion" let-history>
+        <tr>
+          <td colspan="4">
+            <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+              <h4 class="text-lg font-semibold mb-3">
+                Détails de la demande {{ history.investmentId }}
+              </h4>
+
+              <p-table
+                [value]="historyDetails"
+                dataKey="id"
+                responsiveLayout="scroll"
+                [tableStyle]="{ 'min-width': '100%' }"
+                *ngIf="historyDetails.length > 0"
+              >
+                <ng-template pTemplate="header">
+        <tr>
+          <th>Date</th>
+          <th>Statut</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-detail>
+        <tr>
+          <td>{{ detail.modificationDate | date: 'dd/MM/yyyy' }}</td>
           <td>
-            <button
-              pButton
-              icon="pi pi-eye"
-              class="p-button-rounded p-button-outlined p-button-sm"
-              label="Voir"
-            ></button>
+            <p-tag
+              [value]="getStatusLabel(detail.status)"
+              [severity]="getStatusSeverity(detail.status)"
+              icon="{{ getStatusIcon(detail.status) }}"
+            ></p-tag>
           </td>
         </tr>
       </ng-template>
-    </p-table>
-  </ng-container>
 
-  <ng-template #emptyState>
-    <p-message severity="info" text="Aucune demande trouvée pour ce statut."></p-message>
-  </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="2">Aucun détail disponible.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p *ngIf="!historyDetails" class="text-gray-500 text-sm mt-2">
+      Chargement des détails...
+    </p>
+</div>
+</td>
+</tr>
+</ng-template>
+</p-table>
+</ng-container>
+
+<ng-template #emptyState>
+  <p-message
+    severity="info"
+    text="Aucune demande trouvée pour ce statut."
+  ></p-message>
+</ng-template>
 </div>
