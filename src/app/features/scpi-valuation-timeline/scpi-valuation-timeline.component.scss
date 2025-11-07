@@ -1,0 +1,72 @@
+.valuation-section {
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .icon-box {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 0.75rem;
+      display: grid;
+      place-items: center;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #2d3748;
+    }
+  }
+
+  .valuation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .valuation-block {
+    .valuation-label {
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    .timeline-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.875rem;
+
+      .year {
+        font-weight: 500;
+        color: #4a5568;
+      }
+
+      .value {
+        font-weight: 600;
+        color: #2d3748;
+      }
+    }
+
+    .timeline-caption {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      color: #718096;
+    }
+
+    .single-value {
+      font-size: 1rem;
+
+      .label {
+        font-weight: 500;
+        margin-right: 0.5rem;
+      }
+
+      .value {
+        font-weight: 600;
+        color: #2d3748;
+      }
+    }
+  }
+}
