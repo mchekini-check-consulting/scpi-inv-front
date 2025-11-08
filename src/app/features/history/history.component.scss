@@ -94,3 +94,23 @@
 .mt-2 {
   margin-top: 0.5rem;
 }
+
+.minimal-stats {
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.minimal-count {
+  background: #3B82F6;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}

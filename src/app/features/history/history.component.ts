@@ -76,10 +76,21 @@ export class HistoryComponent implements OnInit {
         return 'success';
       case 'FAILED':
         return 'danger';
-      case 'PENDING':
-        return 'warn';
       default:
         return 'info';
+    }
+  }
+
+  getStatusStyle(status: string): any {
+    switch (status) {
+      case 'PENDING':
+        return {
+          'background-color': '#ffd54f',
+          'color': '#000000',
+          'border-color': '#ffc107'
+        };
+      default:
+        return {};
     }
   }
 

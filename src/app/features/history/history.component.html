@@ -22,6 +22,11 @@
     </div>
   </div>
 
+  <div class="minimal-stats">
+    <span class="minimal-count">{{ filteredHistories.length }}</span>
+    <span>demande(s) trouvée(s)</span>
+  </div>
+
   <ng-container *ngIf="filteredHistories.length > 0; else emptyState">
     <p-table
       [value]="filteredHistories"
@@ -38,8 +43,8 @@
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 3rem"></th>
-          <th>N° de référence</th>
-          <th>Date de création</th>
+          <th>Référence</th>
+          <th>Date de réception</th>
           <th>Statut</th>
         </tr>
       </ng-template>
@@ -63,6 +68,7 @@
             <p-tag
               [value]="getStatusLabel(history.status)"
               [severity]="getStatusSeverity(history.status)"
+              [style]="getStatusStyle(history.status)"
               icon="{{ getStatusIcon(history.status) }}"
             ></p-tag>
           </td>
@@ -93,6 +99,7 @@
             <p-tag
               [value]="getStatusLabel(detail.status)"
               [severity]="getStatusSeverity(detail.status)"
+              [style]="getStatusStyle(detail.status)"
               icon="{{ getStatusIcon(detail.status) }}"
             ></p-tag>
           </td>
@@ -119,7 +126,7 @@
 <ng-template #emptyState>
   <p-message
     severity="info"
-    text="Aucune demande trouvée pour ce statut."
+    text="Vous n’avez encore effectué aucune demande. "
   ></p-message>
 </ng-template>
 </div>
