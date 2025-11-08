@@ -56,10 +56,10 @@ export const ROUTES: RouteInfo[] = [
   {
     path: "/dashboard/history",
     title: "Historique des demandes",
-    key: "SIDEBAR.REQUEST-HISTORY",
+    key: "SIDEBAR.HISTORY",
     icon: "pi pi-list",
     class: "",
-    feature: "request-history",
+    feature: "history",
   }
 
 ];

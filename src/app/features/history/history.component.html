@@ -2,8 +2,11 @@
   <div class="header-section">
     <div class="header-left">
       <h2 class="title">Historique des demandes</h2>
-      <p class="subtitle">Suivez l'état de vos demandes de souscription SCPI</p>
+      <p class="subtitle">
+        Suivez l'état de vos demandes de souscription SCPI
+      </p>
     </div>
+
     <div class="header-right">
       <label class="filter-label">Filtrer par statut :</label>
       <p-dropdown
@@ -28,8 +31,9 @@
       responsiveLayout="scroll"
       [tableStyle]="{ 'min-width': '100%' }"
       dataKey="investmentId"
-      #table
-      (onRowExpand)="loadDetails($event.data)"
+      [expandedRowKeys]="expandedRowKeys"
+      (onRowExpand)="onRowExpand($event)"
+      (onRowCollapse)="onRowCollapse($event)"
     >
       <ng-template pTemplate="header">
         <tr>
@@ -54,7 +58,7 @@
             ></p-button>
           </td>
           <td>{{ history.investmentId }}</td>
-          <td>{{ history.creationDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ history.creationDate | date: 'dd/MM/yyyy hh:mm' }}</td>
           <td>
             <p-tag
               [value]="getStatusLabel(history.status)"
@@ -64,16 +68,10 @@
           </td>
         </tr>
       </ng-template>
-
-      <!-- ✅ Sous-tableau pleine largeur -->
-      <ng-template pTemplate="rowexpansion" let-history>
+      <ng-template pTemplate="rowexpansion">
         <tr>
           <td colspan="4">
-            <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-              <h4 class="text-lg font-semibold mb-3">
-                Détails de la demande {{ history.investmentId }}
-              </h4>
-
+            <div class="p-4">
               <p-table
                 [value]="historyDetails"
                 dataKey="id"
@@ -90,7 +88,7 @@
 
       <ng-template pTemplate="body" let-detail>
         <tr>
-          <td>{{ detail.modificationDate | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ detail.modificationDate | date: 'dd/MM/yyyy hh:mm' }}</td>
           <td>
             <p-tag
               [value]="getStatusLabel(detail.status)"
