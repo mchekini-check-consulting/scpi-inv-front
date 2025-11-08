@@ -1,11 +1,15 @@
 import { ScpiDismembrement } from './scpi-dismembrement.model';
 
 export interface ScpiInvestment {
-  id: number;
+id: number;
   name: string;
-  minimumSubscription: number;
   sharePrice: number;
-  dismembermentActive: boolean;
   distributionRate: number;
+  minimumSubscription: number;
+  dismembermentActive: boolean;
   scpiDismembrement: ScpiDismembrement[];
+
+  hasInvested: boolean;          
+  totalInvestedAmount: number;
 }
+

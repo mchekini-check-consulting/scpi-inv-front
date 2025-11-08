@@ -9,42 +9,32 @@
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-row gap-5">
     <div class="flex-1 flex flex-col gap-4">
-      <!-- TYPE D'INVESTISSEMENT -->
       <div class="bg-white rounded-xl shadow-md p-6">
         <h3 class="py-2 font-medium">Type d'investissement</h3>
-
-        <!-- Si le démembrement est actif -->
         <div *ngIf="scpiInvestment?.dismembermentActive; else pleinePropriete">
           <div class="flex flex-col my-2 gap-3">
-            <!-- Pleine propriété -->
             <div
-              class="w-full flex flex-row items-center rounded-xl border border-gray-800 px-4 py-2"
-            >
+              class="w-full flex flex-row items-center rounded-xl border border-gray-800 px-4 py-2">
               <label class="w-1/3 flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   formControlName="investmentType"
                   value="pleine"
-                  class="text-blue-600"
-                />
+                  class="text-blue-600" />
                 <span>Pleine propriété</span>
               </label>
               <p class="w-2/3 text-sm text-gray-600">
                 Vous détenez 100% des droits sur les parts
               </p>
             </div>
-
-            <!-- Nue-propriété -->
             <div
-              class="w-full flex flex-row items-center rounded-xl border border-gray-800 px-4 py-2"
-            >
+              class="w-full flex flex-row items-center rounded-xl border border-gray-800 px-4 py-2">
               <label class="w-1/3 flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   formControlName="investmentType"
                   value="nue"
-                  class="text-blue-600"
-                />
+                  class="text-blue-600" />
                 <span>Nue-propriété</span>
               </label>
               <p class="w-2/3 text-sm text-gray-600">
@@ -52,17 +42,14 @@
               </p>
             </div>
 
-            <!-- Usufruit -->
             <div
-              class="w-full flex flex-row items-center rounded-xl border border-gray-800 px-4 py-2"
-            >
+              class="w-full flex flex-row items-center rounded-xl border border-gray-800 px-4 py-2">
               <label class="w-1/3 flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   formControlName="investmentType"
                   value="usufruit"
-                  class="text-blue-600"
-                />
+                  class="text-blue-600" />
                 <span>Usufruit</span>
               </label>
               <p class="w-2/3 text-sm text-gray-600">
@@ -71,21 +58,17 @@
             </div>
           </div>
         </div>
-
-        <!-- Sinon : pleine propriété uniquement -->
         <ng-template #pleinePropriete>
           <div class="flex flex-col my-2 gap-3">
             <div
-              class="w-full flex flex-row items-center rounded-xl border border-gray-800 px-4 py-2"
-            >
+              class="w-full flex flex-row items-center rounded-xl border border-gray-800 px-4 py-2">
               <label class="w-1/3 flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   formControlName="investmentType"
                   value="pleine"
                   checked
-                  class="text-blue-600"
-                />
+                  class="text-blue-600" />
                 <span>Pleine propriété</span>
               </label>
               <p class="w-2/3 text-sm text-gray-600">
@@ -99,52 +82,60 @@
         </ng-template>
       </div>
 
-      <!-- MONTANT DE L'INVESTISSEMENT -->
       <div class="bg-white rounded-xl shadow-md p-6">
         <h3 class="font-medium mb-4">Montant de l'investissement</h3>
-        <div class="flex flex-col gap-4">
-          <div class="flex items-center gap-2">
-            <div class="border rounded-lg p-2 w-full text-lg font-semibold">
-              {{ form.get("amount")?.value | number }}
-            </div>
-            <span class="text-gray-600">€</span>
-          </div>
-          <input
-            type="range"
-            formControlName="amount"
-            [min]="scpiInvestment?.minimumSubscription || 1000"
-            max="100000"
-            step="100"
-            class="w-full"
-          />
-          <div class="flex justify-between text-sm text-gray-600">
-            <span
-              >{{ scpiInvestment?.minimumSubscription || 1000 | number }}€</span
-            >
-            <span>100 000€</span>
+        <div class="flex items-center gap-2">
+          <div
+            class="border rounded-lg p-2 w-full text-lg font-semibold bg-gray-50 text-center">
+            {{ form.get("amount")?.value | number:'1.0-0' }} €
           </div>
         </div>
       </div>
 
+      <div *ngIf="scpiInvestment?.hasInvested"
+        class="bg-white rounded-xl shadow-md p-6 mt-2">
+        <h3 class="font-medium mb-4">Montant total investi</h3>
+        <div class="flex items-center gap-2">
+          <div
+            class="border rounded-lg p-2 w-full text-lg font-semibold bg-purple-50 text-center text-purple-700">
+            {{ (totalInvestedAmount + currentInvestmentAmount) | number:'1.0-0'
+            }} €
+          </div>
+        </div>
+        <p class="text-sm text-gray-800 mt-2 text-center">
+          Dont {{ totalInvestedAmount | number:'1.0-0' }} € déjà investis
+        </p>
+      </div>
+      <div *ngIf="!isAmountValid || !scpiInvestment?.hasInvested;"
+        class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-center">
+        <p class="text-red-600 font-medium">
+          <ng-container >
+            Le montant minimum pour un premier investissement est de
+            <strong>{{ scpiInvestment?.minimumSubscription | number }}</strong>
+            €.<br>
+            <small class="text-red-500">
+              Actuellement : {{ currentInvestmentAmount | number }} €
+            </small>
+          </ng-container>
+
+        </p>
+      </div>
       <div
         *ngIf="
           scpiInvestment?.dismembermentActive &&
           (selectedInvestmentType === 'nue' ||
             selectedInvestmentType === 'usufruit')
         "
-        class="bg-white rounded-xl shadow-md p-6"
-      >
+        class="bg-white rounded-xl shadow-md p-6">
         <div class="flex items-center gap-2 mb-4">
           <svg
             class="w-5 h-5 text-blue-600"
             fill="currentColor"
-            viewBox="0 0 20 20"
-          >
+            viewBox="0 0 20 20">
             <path
               fill-rule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-              clip-rule="evenodd"
-            ></path>
+              clip-rule="evenodd"></path>
           </svg>
           <h3 class="font-medium">Barème de démembrement</h3>
         </div>
@@ -158,34 +149,29 @@
             class="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
             (click)="selectDuration(option.durationYears)"
             [class.border-blue-600]="selectedDuration === option.durationYears"
-            [class.bg-blue-50]="selectedDuration === option.durationYears"
-          >
+            [class.bg-blue-50]="selectedDuration === option.durationYears">
             <input
               type="radio"
               [value]="option.durationYears"
               [checked]="selectedDuration === option.durationYears"
-              class="text-blue-600"
-            />
+              class="text-blue-600" />
             <div class="flex-1">
               <span class="font-medium">{{ option.durationYears }} ans</span>
               <span class="text-sm text-blue-600 ml-2">
                 {{ option.nueProprietePercentage }}% /
                 {{ option.usufruitPercentage }}%
               </span>
-              <span class="text-xs text-gray-500 ml-1"
-                >Nue-propriété / Usufruit</span
-              >
+              <span class="text-xs text-gray-500 ml-1">Nue-propriété /
+                Usufruit</span>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="sticky top-4 self-start flex-1 flex flex-col gap-4">
-      
+    <div class="sticky top-4 self-start flex-1 flex flex-col gap-2">
       <div class="bg-gray-50 rounded-xl shadow-md p-6">
-        <div class="grid grid-cols-2 gap-4">
-          <!-- Prix plein -->
+        <div class="grid grid-cols-4 gap-3 items-center">
           <div>
             <p class="text-sm text-gray-600 mb-1">Prix plein</p>
             <p class="text-2xl font-bold text-gray-900">
@@ -193,15 +179,30 @@
             </p>
           </div>
 
-          <!-- Rendement -->
           <div>
             <p class="text-sm text-gray-600 mb-1">Rendement</p>
             <p class="text-2xl font-bold text-green-600">
               {{ scpiInvestment?.distributionRate }}%
             </p>
           </div>
+
+          <div>
+            <p class="text-sm text-gray-600 mt-2">Nombre de parts</p>
+            <p-inputnumber
+              formControlName="shareCount"
+              [min]="1"
+              [step]="1"
+              showButtons="true"
+              buttonLayout="horizontal"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+              styleClass="w-12"
+              inputStyleClass="text-center text-lg font-semibold"
+              (onInput)="updateAmount()"></p-inputnumber>
+          </div>
         </div>
       </div>
+
       <div class="bg-teal-50 rounded-xl shadow-md p-6">
         <h3 class="font-medium mb-4 text-gray-800">
           Impact du démembrement
@@ -210,8 +211,7 @@
 
         <div
           *ngIf="selectedDuration && getSelectedDismemberment()"
-          class="space-y-3"
-        >
+          class="space-y-3">
           <div class="flex justify-between items-center">
             <span class="text-gray-600">Nue-propriété</span>
             <span class="text-teal-600 font-semibold text-lg">
@@ -235,11 +235,11 @@
 
         <p
           *ngIf="!selectedDuration || !getSelectedDismemberment()"
-          class="text-gray-500 text-sm italic"
-        >
+          class="text-gray-500 text-sm italic">
           Sélectionnez une durée de démembrement
         </p>
       </div>
+
       <div class="bg-purple-100 rounded-xl shadow-md p-6">
         <h3 class="font-medium mb-3">Informations importantes</h3>
         <ul class="text-left text-sm text-gray-700 space-y-1">
@@ -251,10 +251,15 @@
           </li>
         </ul>
       </div>
+
       <button
         type="submit"
-        class="px-4 py-2 text-center w-full text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition"
-      >
+        [disabled]="!isAmountValid"
+        class="px-4 py-2 text-center w-full text-white rounded-xl transition"
+        [ngClass]="{
+    'bg-blue-600 hover:bg-blue-700': isAmountValid,
+    'bg-gray-400 cursor-not-allowed': !isAmountValid
+  }">
         Continuer vers le récapitulatif
       </button>
     </div>
