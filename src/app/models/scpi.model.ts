@@ -31,4 +31,6 @@ export interface ScpiDetail {
   enjoymentDelay: string;
   rentFrequency: string;
   advertising?: string;
+  scpiPartValues: { valuationYear: number; sharePrice: number ; reconstitutionValue: number }[];
+
 }

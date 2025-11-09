@@ -1,0 +1,88 @@
+<div class="valuation-section mt-8">
+  <div class="section-header">
+    <div class="icon-box bg-green-800 text-white">
+      <i class="pi pi-euro"></i>
+    </div>
+    <h3 class="section-title">Trajectoire de valorisation</h3>
+  </div>
+
+  <div class="valuation-grid">
+    <div class="valuation-block share-price-block">
+      <h4 class="valuation-label">Prix de part</h4>
+
+      <ng-container *ngIf="sharePriceHistory.length > 1; else singleSharePrice">
+        <div class="timeline-container">
+          <p-timeline
+            [value]="sharePriceHistory"
+            layout="horizontal"
+            align="bottom"
+            class="mini-timeline"
+          >
+            <ng-template pTemplate="content" let-data>
+              <div class="timeline-item">
+                <span class="year">{{ data.year }}</span>
+                <div class="value-container">
+                  <span class="value">
+                    {{ data.value | formatField : "currency" }}
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+          </p-timeline>
+        </div>
+
+        <p class="timeline-caption">
+          Évolution sur {{ sharePriceHistory.length }} ans
+        </p>
+      </ng-container>
+
+      <ng-template #singleSharePrice>
+        <div class="single-value" *ngIf="sharePriceHistory?.length === 1">
+          <span class="label">Valeur actuelle :</span>
+          <span class="value">
+            {{ sharePriceHistory[0].value | formatField : "currency" }}
+          </span>
+        </div>
+      </ng-template>
+    </div>
+
+    <div class="valuation-block reconstitution-block">
+      <h4 class="valuation-label">Valeur de reconstitution</h4>
+
+      <ng-container *ngIf="reconstitutionHistory.length > 1; else singleReconstitution">
+        <div class="timeline-container">
+          <p-timeline
+            [value]="reconstitutionHistory"
+            layout="horizontal"
+            align="bottom"
+            class="mini-timeline"
+          >
+            <ng-template pTemplate="content" let-data>
+              <div class="timeline-item">
+                <span class="year">{{ data.year }}</span>
+                <div class="value-container">
+                  <span class="value">
+                    {{ data.value | formatField : "currency" }}
+                  </span>
+                </div>
+              </div>
+            </ng-template>
+          </p-timeline>
+        </div>
+
+        <p class="timeline-caption">
+          Évolution sur {{ reconstitutionHistory.length }} ans
+        </p>
+      </ng-container>
+
+      <ng-template #singleReconstitution>
+        <div class="single-value" *ngIf="reconstitutionHistory?.length === 1">
+          <span class="label">Valeur actuelle :</span>
+          <span class="value">
+            {{ reconstitutionHistory[0].value | formatField : "currency" }}
+          </span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

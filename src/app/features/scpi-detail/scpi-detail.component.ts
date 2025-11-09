@@ -10,11 +10,12 @@ import { FormatFieldPipe } from '../../core/pipe/format-field.pipe';
 import { ScpiRepartitionComponent } from '../../core/template/components/scpi-repartition/scpi-repartition.component';
 import { ScpiRepartition } from '../../models/scpi-repartition.model';
 import { PerformanceHistoryComponent } from '../performance-history-scpi/performance-history/performance-history.component';
+import {ScpiValuationTimelineComponent} from "../scpi-valuation-timeline/scpi-valuation-timeline.component";
 
 @Component({
   selector: 'app-scpi-detail',
   standalone: true,
-  imports: [CommonModule, AccordionModule, ButtonModule, FormatFieldPipe, ScpiRepartitionComponent,PerformanceHistoryComponent],
+  imports: [CommonModule, AccordionModule, ButtonModule, FormatFieldPipe, ScpiRepartitionComponent, PerformanceHistoryComponent, ScpiValuationTimelineComponent],
   templateUrl: './scpi-detail.component.html',
   styleUrls: ['./scpi-detail.component.scss'],
 })
@@ -40,9 +41,9 @@ export class ScpiDetailComponent implements OnInit {
           this.scpi = data;
           this.titleService.setTitle(`${data.name} - ${data.manager}`);
           this.isLoading = false;
-        
+
           if (data.id) {
-           
+
             this.loadRepartition(data.id);
           }
         },
@@ -55,7 +56,7 @@ export class ScpiDetailComponent implements OnInit {
     }
   }
 
- 
+
   loadRepartition(scpiId: number): void {
     this.scpiService.getScpiRepartition(scpiId).subscribe({
       next: (data) => {
