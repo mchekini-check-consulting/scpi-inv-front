@@ -6,11 +6,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-scpi-invest',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputNumberModule],
+  imports: [CommonModule, ReactiveFormsModule, InputNumberModule, DialogModule, ButtonModule],
   templateUrl: './scpi-invest.component.html',
   styleUrl: './scpi-invest.component.scss',
 })
@@ -22,6 +24,14 @@ export class ScpiInvestComponent implements OnInit {
   isAmountValid = false;
   totalInvestedAmount = 0;
   currentInvestmentAmount = 0;
+
+  showRecapModal = false;
+
+  recapData: {
+    numberOfShares: number;
+    annualRevenue: number;
+    monthlyRevenue: number;
+  } | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -130,12 +140,70 @@ export class ScpiInvestComponent implements OnInit {
   }
 
   getSelectedDismemberment() {
-    if (!this.selectedDuration || !this.scpiInvestment?.scpiDismembrement) return null;
+    if (!this.selectedDuration || !this.scpiInvestment?.scpiDismembrement)
+      return null;
     return this.scpiInvestment.scpiDismembrement.find(
       (d) => d.durationYears === this.selectedDuration
     );
   }
 
   onSubmit(): void {
+    if (!this.scpiInvestment) {
+      return;
+    }
+
+    if (!this.isAmountValid) {
+      return;
+    }
+
+    const formValue = this.form.value;
+    const dismemberment = this.getSelectedDismemberment();
+
+    const investmentType = formValue.investmentType || 'pleine';
+    const numberOfShares = formValue.shareCount || 0;
+    const amount = this.currentInvestmentAmount || 0;
+    const distributionRate = this.scpiInvestment.distributionRate || 0;
+
+    let annualRevenue = 0;
+
+    if (investmentType === 'pleine') {
+      annualRevenue = amount * (distributionRate / 100);
+    } else if (investmentType === 'usufruit' && dismemberment) {
+      const usufruitPrice = (amount * dismemberment.usufruitPercentage) / 100;
+      annualRevenue =
+        usufruitPrice * (this.scpiInvestment.distributionRate / 100);
+    } else if (investmentType === 'nue' && dismemberment) {
+      const nueProprietePrice =
+        (amount * dismemberment.nueProprietePercentage) / 100;
+      annualRevenue =
+        nueProprietePrice * (this.scpiInvestment.distributionRate / 100);
+    }
+
+    this.recapData = {
+      numberOfShares,
+      annualRevenue,
+      monthlyRevenue: annualRevenue / 12,
+    };
+
+
+    this.showRecapModal = true;
+  }
+
+  closeRecapModal(): void {
+    this.showRecapModal = false;
+  }
+
+  confirmInvestment(): void {
+    
+  }
+
+  getInvestmentTypeLabel(): string {
+    const type = this.form.value.investmentType;
+    const labels: Record<string, string> = {
+      'pleine': 'Pleine propriété',
+      'nue': 'Nue-propriété',
+      'usufruit': 'Usufruit'
+    };
+    return labels[type] || type;
   }
 }
