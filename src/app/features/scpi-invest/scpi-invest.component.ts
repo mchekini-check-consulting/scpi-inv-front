@@ -19,7 +19,6 @@ export class ScpiInvestComponent implements OnInit {
   form: FormGroup;
   selectedDuration: number | null = null;
 
-  // Validation
   isAmountValid = false;
   totalInvestedAmount = 0;
   currentInvestmentAmount = 0;
@@ -28,7 +27,7 @@ export class ScpiInvestComponent implements OnInit {
     private route: ActivatedRoute,
     private scpiService: ScpiService,
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef 
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       investmentType: ['pleine'],
@@ -40,18 +39,27 @@ export class ScpiInvestComponent implements OnInit {
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    if (id) {
-  
-      this.scpiService.getScpiInvestment(id).subscribe({
-        next: (response: ScpiInvestment) => {
-          this.scpiInvestment = response;
-          this.totalInvestedAmount = response.totalInvestedAmount || 0;
-          this.updateAmount(); 
-          this.cdr.detectChanges(); 
-        },
+  if (id) {
+    this.scpiService.getScpiInvestment(id).subscribe({
+      next: (response: ScpiInvestment) => {
+        this.scpiInvestment = response;
+        this.totalInvestedAmount = response.totalInvestedAmount || 0;
+
+        const shareCountCtrl = this.form.get('shareCount'); 
+
+        if (!response.hasInvested && response.minimumSubscription && response.sharePrice) {
+          const minShares = Math.ceil(response.minimumSubscription / response.sharePrice);
+          shareCountCtrl?.setValue(minShares, { emitEvent: false });
+        } else if (response.hasInvested) {
+          shareCountCtrl?.setValue(1, { emitEvent: false });
+        }
+
+        this.updateAmount();
+        this.cdr.detectChanges();
+      },
         error: (err) => {
           console.error('Erreur chargement SCPI:', err);
-        },
+        }
       });
     }
 
@@ -67,11 +75,32 @@ export class ScpiInvestComponent implements OnInit {
     });
   }
 
-  updateAmount(): void {
-    const parts = this.form.get('shareCount')?.value || 0;
-    const prix = this.scpiInvestment?.sharePrice || 0;
-    this.currentInvestmentAmount = parts * prix;
+  calculateMinShares(): number {
+    if (
+      !this.scpiInvestment ||
+      !this.scpiInvestment.minimumSubscription ||
+      !this.scpiInvestment.sharePrice ||
+      this.scpiInvestment.sharePrice <= 0
+    ) {
+      return 1;
+    }
+    return Math.ceil(this.scpiInvestment.minimumSubscription / this.scpiInvestment.sharePrice);
+  }
 
+  updateAmount(): void {
+    let parts = this.form.get('shareCount')?.value || 0;
+    const prix = this.scpiInvestment?.sharePrice || 0;
+    const minimumRequis = this.scpiInvestment?.minimumSubscription || 0;
+
+    if (this.scpiInvestment && !this.scpiInvestment.hasInvested && prix > 0) {
+      const minShares = this.calculateMinShares();
+      if (parts < minShares) {
+        parts = minShares;
+        this.form.get('shareCount')?.setValue(minShares, { emitEvent: false });
+      }
+    }
+
+    this.currentInvestmentAmount = parts * prix;
     this.form.get('amount')?.setValue(this.currentInvestmentAmount, { emitEvent: false });
 
     if (!this.scpiInvestment) {
@@ -81,17 +110,14 @@ export class ScpiInvestComponent implements OnInit {
     }
 
     const totalApresInvestissement = this.totalInvestedAmount + this.currentInvestmentAmount;
-    const minimumRequis = this.scpiInvestment.minimumSubscription;
 
     if (this.scpiInvestment.hasInvested) {
-
       this.isAmountValid = totalApresInvestissement >= minimumRequis;
     } else {
-
       this.isAmountValid = this.currentInvestmentAmount >= minimumRequis;
     }
 
-    this.cdr.detectChanges(); 
+    this.cdr.detectChanges();
   }
 
   get selectedInvestmentType(): string {
@@ -111,6 +137,5 @@ export class ScpiInvestComponent implements OnInit {
   }
 
   onSubmit(): void {
-    
   }
 }
