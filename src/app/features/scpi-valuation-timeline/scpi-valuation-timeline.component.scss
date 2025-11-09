@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 
     .icon-box {
       width: 3.5rem;
@@ -14,44 +14,112 @@
     }
 
     .section-title {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 600;
-      color: #2d3748;
+      color: #1a202c;
     }
   }
 
   .valuation-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    gap: 3rem;
+    align-items: start;
   }
 
   .valuation-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
     .valuation-label {
-      font-weight: 500;
-      margin-bottom: 0.75rem;
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-bottom: 1.25rem;
+      color: #2d3748;
+    }
+
+    .timeline-container {
+      width: 100%;
+      position: relative;
     }
 
     .timeline-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-size: 0.875rem;
+      gap: 0.25rem;
+      font-size: 0.95rem;
+      width: 100%;
+      text-align: center;
+      position: relative;
 
       .year {
         font-weight: 500;
         color: #4a5568;
+        margin-bottom: 0.5rem;
+      }
+
+      .value-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 1.5rem;
       }
 
       .value {
         font-weight: 600;
         color: #2d3748;
+        white-space: nowrap;
       }
     }
 
+    ::ng-deep .mini-timeline.p-timeline-horizontal {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 0.75rem;
+      width: 100%;
+    }
+
+    ::ng-deep .mini-timeline .p-timeline-event {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 !important;
+      padding: 0 !important;
+      position: relative;
+    }
+
+    ::ng-deep .mini-timeline .p-timeline-event-connector {
+      background-color: #e2e8f0;
+      height: 2px;
+      position: absolute;
+      top: 0.5rem;
+      left: 50%;
+      right: -50%;
+      z-index: 0;
+    }
+
+    ::ng-deep .mini-timeline .p-timeline-event:last-child .p-timeline-event-connector {
+      display: none;
+    }
+
+    ::ng-deep .mini-timeline .p-timeline-event-marker {
+      border: 2px solid #48bb78;
+      background-color: #ffffff;
+      width: 1rem;
+      height: 1rem;
+      box-shadow: 0 0 0 4px rgba(72, 187, 120, 0.2);
+      z-index: 1;
+      position: relative;
+    }
+
     .timeline-caption {
-      margin-top: 0.5rem;
-      font-size: 0.875rem;
+      margin-top: 1.25rem;
+      font-size: 0.9rem;
       color: #718096;
     }
 
