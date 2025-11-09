@@ -208,6 +208,7 @@
           <div>
             <p class="text-sm text-gray-600 mt-2">Nombre de parts</p>
             <p-inputnumber
+              
               formControlName="shareCount"
               [min]="!scpiInvestment?.hasInvested ? calculateMinShares() : 1"
               [step]="1"
@@ -215,6 +216,7 @@
               buttonLayout="horizontal"
               incrementButtonIcon="pi pi-plus"
               decrementButtonIcon="pi pi-minus"
+               [inputStyle]="{ width: '100px' }"
               inputStyleClass="text-center text-lg font-semibold"
               (onInput)="updateAmount()"
             ></p-inputnumber>
