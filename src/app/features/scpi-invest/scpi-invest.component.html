@@ -106,7 +106,7 @@
           Dont {{ totalInvestedAmount | number:'1.0-0' }} € déjà investis
         </p>
       </div>
-      <div *ngIf="!isAmountValid || !scpiInvestment?.hasInvested;"
+      <div *ngIf="!isAmountValid && !scpiInvestment?.hasInvested;"
         class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-center">
         <p class="text-red-600 font-medium">
           <ng-container >
@@ -190,7 +190,7 @@
             <p class="text-sm text-gray-600 mt-2">Nombre de parts</p>
             <p-inputnumber
               formControlName="shareCount"
-              [min]="1"
+              [min]="!scpiInvestment?.hasInvested ? calculateMinShares() : 1"
               [step]="1"
               showButtons="true"
               buttonLayout="horizontal"
