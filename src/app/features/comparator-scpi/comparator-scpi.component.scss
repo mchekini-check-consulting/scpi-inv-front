@@ -1,0 +1,251 @@
+.page {
+  min-height: 100vh;
+  padding: 3rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+
+  h1 {
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #111827;
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+    color: #6b7280;
+  }
+}
+
+
+.invest-card {
+  width: 100%;
+  max-width: 1150px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 1.75rem 2.25rem 1.5rem;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+  box-sizing: border-box;
+  margin-bottom: 2rem;
+}
+
+.invest-header {
+  margin-bottom: 0.75rem;
+}
+
+.invest-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #111827;
+}
+
+.invest-input-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.invest-input-wrapper {
+  position: relative;
+  width: 260px;
+  background: #f9fafb;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 0.55rem 0.85rem;
+  display: flex;
+  align-items: center;
+
+  ::ng-deep .p-inputnumber,
+  ::ng-deep .p-inputnumber-input {
+    width: 100%;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background: transparent;
+    font-size: 1rem;
+    color: #111827;
+  }
+}
+
+.currency-suffix {
+  margin-left: 0.35rem;
+  font-size: 0.95rem;
+  color: #9ca3af;
+}
+
+.invest-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.slider-label {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  min-width: 70px;
+}
+
+.slider-wrapper {
+  flex: 1;
+
+  ::ng-deep .p-slider {
+    width: 100%;
+  }
+
+  ::ng-deep .p-slider .p-slider-range {
+    background: #111827;
+  }
+
+  ::ng-deep .p-slider .p-slider-handle {
+    border: 2px solid #111827;
+    background: #ffffff;
+    width: 16px;
+    height: 16px;
+    margin-top: -6px;
+  }
+}
+
+
+.comparison-card {
+  width: 100%;
+  max-width: 1150px;
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.16);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+
+.comparison-header {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #dde6f0;
+  padding: 0.75rem 1.75rem;
+  column-gap: 1.25rem;
+  box-sizing: border-box;
+
+  .comparison-header-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  ::ng-deep .p-dropdown {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 18px;
+    background: #f3f6fb;
+    border: none;
+    box-shadow: none;
+    font-weight: 500;
+    color: #111827;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 260px repeat(3, 1fr);
+  column-gap: 1.25rem;
+  padding: 0.85rem 1.75rem;
+  align-items: center;
+  box-sizing: border-box;
+  border-top: 1px solid #edf1f7;
+  background: #ffffff;
+}
+
+.row-highlight {
+  background: #f3f7fc;
+  border-top-color: #dde6f0;
+}
+
+.section-row {
+  background: #f9fafb;
+}
+
+
+.label-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #111827;
+  font-weight: 500;
+
+  .label-title {
+    white-space: nowrap;
+  }
+
+  &.sub-label {
+    font-weight: 400;
+    color: #9ca3af;
+  }
+}
+
+.icon {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.value-cell {
+  font-size: 0.95rem;
+  color: #111827;
+  display: flex;
+  align-items: center;
+}
+
+.value-cell.big {
+  flex-direction: column;
+  align-items: flex-start;
+
+  .main-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .sub-value {
+    font-size: 0.8rem;
+    color: #2563eb;
+    margin-top: 0.1rem;
+
+    .per-year {
+      color: #9ca3af;
+      font-weight: 400;
+    }
+  }
+
+  .placeholder {
+    color: #d1d5db;
+  }
+}
+
+.cashback {
+  font-weight: 500;
+  color: #16a34a;
+}
+
+.cashback-zero {
+  color: #9ca3af;
+}
+
+@media (max-width: 900px) {
+  .comparison-header {
+    grid-template-columns: 1fr;
+    row-gap: 0.5rem;
+  }
+
+  .row {
+    grid-template-columns: 1.5fr 1fr;
+    row-gap: 0.4rem;
+  }
+}

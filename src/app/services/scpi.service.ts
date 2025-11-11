@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Scpi, ScpiDetail, ScpiPage } from '../models/scpi.model';
+import { Scpi, ScpiComparisonDTOResponse, ScpiDetail, ScpiPage, ScpiWithRates } from '../models/scpi.model';
 import { ScpiInvestment } from '../models/scpi-investment.model';
 import { ScpiRepartition } from '../models/scpi-repartition.model';
 import { DistributionRateChartResponse } from '../models/distribution-rate.model';
@@ -48,6 +48,10 @@ export class ScpiService {
     return this.http.get<DistributionRateChartResponse>(
       `${this.apiUrl}/${scpiId}/distribution-rates`
     );
+  }
+  
+  getScpisForComparator(): Observable<ScpiWithRates[]> {
+    return this.http.get<ScpiWithRates[]>(`${this.apiUrl}/comparator-scpis`);
   }
 }
  

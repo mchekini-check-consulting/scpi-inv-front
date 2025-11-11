@@ -60,6 +60,14 @@ export const ROUTES: RouteInfo[] = [
     icon: "pi pi-list",
     class: "",
     feature: "history",
+  },
+    {
+    path: "/dashboard/comparator",
+    title: "Comparateur Scpi",
+    key: "SIDEBAR.COMPARATOR",
+    icon: "pi pi-sliders-h",
+    class: "",
+    feature: "comparator",
   }
 
 ];
