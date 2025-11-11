@@ -1,18 +1,22 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ScpiService } from '../../services/scpi.service';
 import { ScpiInvestment } from '../../models/scpi-investment.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-
+import { MessageService } from 'primeng/api';
+import { InvestmentRequestDTO } from '../../models/investment.model';
+import { ToastModule } from 'primeng/toast'
+import { InvestmentService } from '../../services/investment.service';
 @Component({
   selector: 'app-scpi-invest',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, InputNumberModule, DialogModule, ButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, InputNumberModule, DialogModule, ButtonModule,ToastModule],
+  providers: [MessageService],
   templateUrl: './scpi-invest.component.html',
   styleUrl: './scpi-invest.component.scss',
 })
@@ -36,8 +40,10 @@ export class ScpiInvestComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private scpiService: ScpiService,
+    private investmentService:InvestmentService, 
     private fb: FormBuilder,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private messageService: MessageService
   ) {
     this.form = this.fb.group({
       investmentType: ['pleine'],
@@ -55,7 +61,7 @@ export class ScpiInvestComponent implements OnInit {
         this.scpiInvestment = response;
         this.totalInvestedAmount = response.totalInvestedAmount || 0;
 
-        const shareCountCtrl = this.form.get('shareCount'); 
+        const shareCountCtrl = this.form.get('shareCount');
 
         if (!response.hasInvested && response.minimumSubscription && response.sharePrice) {
           const minShares = Math.ceil(response.minimumSubscription / response.sharePrice);
@@ -147,6 +153,16 @@ export class ScpiInvestComponent implements OnInit {
     );
   }
 
+  getInvestmentTypeEnum(): 'FULL_OWNERSHIP' | 'BARE_OWNERSHIP' | 'USUFRUCT' {
+  const type = this.form.value.investmentType;
+  switch (type) {
+    case 'pleine':     return 'FULL_OWNERSHIP';
+    case 'nue':        return 'BARE_OWNERSHIP';
+    case 'usufruit':   return 'USUFRUCT';
+    default:           return 'FULL_OWNERSHIP';
+  }
+}
+
   onSubmit(): void {
     if (!this.scpiInvestment) {
       return;
@@ -192,10 +208,36 @@ export class ScpiInvestComponent implements OnInit {
   closeRecapModal(): void {
     this.showRecapModal = false;
   }
+confirmInvestment(): void {
+  if (!this.scpiInvestment || !this.recapData) return;
 
-  confirmInvestment(): void {
-    
-  }
+  const request: InvestmentRequestDTO = {
+    scpiId: this.scpiInvestment.id,
+    investmentType: this.getInvestmentTypeEnum(),
+    numberOfShares: this.recapData.numberOfShares,
+    investmentAmount: this.currentInvestmentAmount,
+    dismembermentYears: this.selectedDuration || null
+  };
+
+  this.investmentService.createInvestment(request).subscribe({
+    next: () => {
+      this.showRecapModal = false;
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Demande envoyée',
+        detail:'Votre demande d’investissement a été prise en compte et sera traitée dans les plus brefs délais'
+      });
+      setTimeout(() => {},2500); 
+    },
+    error: (err) => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Une erreur est survenue. Veuillez réessayer.'
+      });
+    }
+  });
+}
 
   getInvestmentTypeLabel(): string {
     const type = this.form.value.investmentType;
