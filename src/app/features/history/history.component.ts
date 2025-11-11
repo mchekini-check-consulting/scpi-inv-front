@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { TableModule } from 'primeng/table';
-import { DropdownModule } from 'primeng/dropdown';
-import { ButtonModule } from 'primeng/button';
-import { FormsModule } from '@angular/forms';
-import { TagModule } from 'primeng/tag';
-import { ToolbarModule } from 'primeng/toolbar';
-import { MessageModule } from 'primeng/message';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {TableModule} from 'primeng/table';
+import {DropdownModule} from 'primeng/dropdown';
+import {ButtonModule} from 'primeng/button';
+import {FormsModule} from '@angular/forms';
+import {TagModule} from 'primeng/tag';
+import {ToolbarModule} from 'primeng/toolbar';
+import {MessageModule} from 'primeng/message';
 import {HistoryService} from "../../services/history.service";
-import { History } from '../../models/history.model';
+import {History} from '../../models/history.model';
 
 @Component({
-  selector: 'app-request-history',
+  selector: 'app-history',
   standalone: true,
   imports: [
     CommonModule,
@@ -31,16 +31,18 @@ export class HistoryComponent implements OnInit {
   historyDetails: History[] = [];
   filteredHistories: History[] = [];
   selectedStatus: string = 'ALL';
+  expandedRowKeys: { [key: string]: boolean } = {};
   error!: string;
 
   statusOptions = [
-    { label: 'Tous les statuts', value: 'ALL' },
-    { label: 'Validée', value: 'SUCCESS' },
-    { label: 'Rejetée', value: 'FAILED' },
-    { label: 'En cours', value: 'PENDING' },
+    {label: 'Tous les statuts', value: 'ALL'},
+    {label: 'Validée', value: 'SUCCESS'},
+    {label: 'Rejetée', value: 'FAILED'},
+    {label: 'En cours', value: 'PENDING'},
   ];
 
-  constructor(private historyService: HistoryService) {}
+  constructor(private historyService: HistoryService) {
+  }
 
   ngOnInit(): void {
     this.historyService.getHistory().subscribe({
@@ -57,28 +59,51 @@ export class HistoryComponent implements OnInit {
 
   getStatusLabel(status: string): string {
     switch (status) {
-      case 'SUCCESS': return 'Validée';
-      case 'FAILED': return 'Rejetée';
-      case 'PENDING': return 'En cours';
-      default: return status;
+      case 'SUCCESS':
+        return 'Validée';
+      case 'FAILED':
+        return 'Rejetée';
+      case 'PENDING':
+        return 'En cours';
+      default:
+        return status;
     }
   }
 
   getStatusSeverity(status: string): 'success' | 'danger' | 'warn' | 'info' {
     switch (status) {
-      case 'SUCCESS': return 'success';
-      case 'FAILED': return 'danger';
-      case 'PENDING': return 'warn';
-      default: return 'info';
+      case 'SUCCESS':
+        return 'success';
+      case 'FAILED':
+        return 'danger';
+      default:
+        return 'info';
+    }
+  }
+
+  getStatusStyle(status: string): any {
+    switch (status) {
+      case 'PENDING':
+        return {
+          'background-color': '#ffd54f',
+          'color': '#000000',
+          'border-color': '#ffc107'
+        };
+      default:
+        return {};
     }
   }
 
   getStatusIcon(status: string): string {
     switch (status) {
-      case 'SUCCESS': return 'pi pi-check';
-      case 'FAILED': return 'pi pi-times';
-      case 'PENDING': return 'pi pi-clock';
-      default: return 'pi pi-info-circle';
+      case 'SUCCESS':
+        return 'pi pi-check';
+      case 'FAILED':
+        return 'pi pi-times';
+      case 'PENDING':
+        return 'pi pi-clock';
+      default:
+        return 'pi pi-info-circle';
     }
   }
 
@@ -99,5 +124,17 @@ export class HistoryComponent implements OnInit {
         console.error('Erreur chargement détails:', err);
       },
     });
+  }
+
+  onRowExpand(event: any): void {
+    const history = event.data;
+    this.expandedRowKeys = { [history.investmentId]: true };
+
+
+    this.loadDetails(history);
+  }
+
+  onRowCollapse(event: any): void {
+    delete this.expandedRowKeys[event.data.investmentId];
   }
 }
