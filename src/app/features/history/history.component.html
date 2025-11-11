@@ -63,7 +63,7 @@
             ></p-button>
           </td>
           <td>{{ history.investmentId }}</td>
-          <td>{{ history.creationDate | date: 'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ history.creationDate | date: 'dd/MM/yyyy HH:mm' : 'Europe/Paris' }}</td>
           <td>
             <p-tag
               [value]="getStatusLabel(history.status)"
@@ -94,7 +94,7 @@
 
       <ng-template pTemplate="body" let-detail>
         <tr>
-          <td>{{ detail.modificationDate | date: 'dd/MM/yyyy hh:mm' }}</td>
+          <td>{{ detail.modificationDate | date: 'dd/MM/yyyy HH:mm' : 'Europe/Paris' }}</td>
           <td>
             <p-tag
               [value]="getStatusLabel(detail.status)"
