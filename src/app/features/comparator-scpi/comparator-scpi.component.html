@@ -1,0 +1,140 @@
+<div class="page">
+  <header class="page-header">
+    <h1>Comparateur SCPI</h1>
+    <p>Comparez jusqu'à 3 SCPI et visualisez vos revenus estimés</p>
+  </header>
+
+  <section class="invest-card">
+    <div class="invest-header">
+      <label for="investment" class="invest-label">Montant à investir</label>
+    </div>
+
+    <div class="invest-input-row">
+      <div class="invest-input-wrapper">
+        <p-inputNumber
+          inputId="investment"
+          [(ngModel)]="investment"
+          (ngModelChange)="onInvestmentChange($event)"
+          [min]="minInvestment"
+          [max]="maxInvestment"
+          [step]="step"
+          [useGrouping]="true"
+          [showButtons]="false"
+          mode="decimal">
+        </p-inputNumber>
+        <span class="currency-suffix">€</span>
+      </div>
+    </div>
+
+    <div class="invest-slider-row">
+      <span class="slider-label">{{ minInvestment.toLocaleString('fr-FR') }} €</span>
+      <div class="slider-wrapper">
+        <p-slider
+          [(ngModel)]="investment"
+          (ngModelChange)="onInvestmentChange($event)"
+          [min]="minInvestment"
+          [max]="maxInvestment"
+                  [step]="step">
+        </p-slider>
+      </div>
+      <span class="slider-label">{{ maxInvestment.toLocaleString('fr-FR') }} €</span>
+    </div>
+  </section>
+
+  <section class="comparison-card">
+    <div class="comparison-header">
+      <div class="comparison-header-col" *ngFor="let scpi of selectedScpis; let i = index; trackBy: trackByIndex">
+        <p-select
+          *ngIf="!isLoading; else loading"
+          [options]="getFilteredOptions(i)"
+          [(ngModel)]="selectedScpis[i]"
+          (ngModelChange)="onScpiSelected(i, $event)"
+          optionLabel="name"
+          placeholder="Sélectionnez une SCPI"
+          [showClear]="true"
+          [filter]="true">
+        </p-select>
+        <ng-template #loading>
+          <p-progressSpinner [style]="{width: '30px', height: '30px'}"></p-progressSpinner>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Revenus mensuels -->
+    <div class="row row-highlight">
+      <div class="label-cell">
+        <i class="pi pi-chart-line icon"></i>
+        <div class="label-title">Revenus mensuels</div>
+      </div>
+      <div class="value-cell big" *ngFor="let scpi of selectedScpis">
+        <div class="main-value" *ngIf="scpi; else noScpi">
+          {{ getMonthlyRevenue(scpi) | number:'1.2-2' }} €
+        </div>
+        <div class="sub-value" *ngIf="scpi">
+          {{ getLatestRate(scpi) | number:'1.2-2' }}% / an
+        </div>
+        <ng-template #noScpi>
+          <div class="placeholder">-</div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="row">
+      <div class="label-cell">
+        <i class="pi pi-wallet icon"></i>
+        <div class="label-title">Frais souscription</div>
+      </div>
+      <div class="value-cell" *ngFor="let scpi of selectedScpis">
+        {{ scpi ? formatEuro(scpi.subscriptionFees) : '-' }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="label-cell">
+        <i class="pi pi-gift icon"></i>
+        <div class="label-title">Cashback</div>
+      </div>
+      <div class="value-cell" *ngFor="let scpi of selectedScpis">
+        <span [class.cashback-zero]="!scpi || scpi.cashback === 0">
+          {{ scpi ? formatEuro(scpi.cashback) : '-' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="row section-row">
+      <div class="label-cell">
+        <i class="pi pi-database icon"></i>
+        <div class="label-title">Critères importants</div>
+      </div>
+      <div class="value-cell" *ngFor="let _ of selectedScpis"></div>
+    </div>
+
+    <div class="row">
+      <div class="label-cell sub-label">Capitalisation</div>
+      <div class="value-cell" *ngFor="let scpi of selectedScpis">
+        {{ getCapitalization(scpi) }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="label-cell sub-label">Fréquence loyers</div>
+      <div class="value-cell" *ngFor="let scpi of selectedScpis">
+        {{ scpi?.rentFrequency || '-' }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="label-cell sub-label">Délai jouissance</div>
+      <div class="value-cell" *ngFor="let scpi of selectedScpis">
+        {{ getEnjoymentDelayLabel(scpi) }}
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="label-cell sub-label">Investissement min.</div>
+      <div class="value-cell" *ngFor="let scpi of selectedScpis">
+        {{ scpi ? formatEuroNoCents(scpi.minimumSubscription) : '-' }}
+      </div>
+    </div>
+  </section>
+</div>

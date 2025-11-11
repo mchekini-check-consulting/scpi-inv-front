@@ -1,3 +1,6 @@
+import { DistributionRate } from "./distribution-rate.model";
+import { ScpiDismembrement } from "./scpi-dismembrement.model";
+
 export interface Scpi {
   id: number;
   name: string;
@@ -33,4 +36,34 @@ export interface ScpiDetail {
   advertising?: string;
   scpiPartValues: { valuationYear: number; sharePrice: number ; reconstitutionValue: number }[];
 
+}
+
+export interface ScpiWithRates {
+  id: number;
+  name: string;
+  capitalization: number; 
+  rentFrequency: string;
+  enjoymentDelay: number;
+  minimumSubscription: number;
+  subscriptionFees: number;
+  cashback: number;
+  distributionRates: DistributionRate[];
+}
+
+export interface ScpiComparisonResult {
+  id: number;
+  name: string;
+  capitalization: number;
+  rentFrequency: string;
+  enjoymentDelay: number;
+  minimumSubscription: number;
+  subscriptionFees: number;
+  cashback: number;
+  estimatedMonthlyRevenue: number;
+  annualYieldPercentage: number;
+}
+
+export interface ScpiComparisonDTOResponse {
+amountInvest: number;
+  scpis: ScpiComparisonResult[];
 }
