@@ -2,35 +2,40 @@ import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Router } from '@angular/router';
 import { authConfig } from '../config/auth.config';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
+import { PermissionService } from '../../services/permission.service';
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
   private isLoggedOut = false;
-
-
   private emailCheckInterval: any = null;
-
-
   userInfo$ = new BehaviorSubject<any>(null);
 
-  constructor(private oauthService: OAuthService, private router: Router, private http: HttpClient) {
+  constructor(
+    private oauthService: OAuthService, 
+    private router: Router, 
+    private http: HttpClient,
+    private permissionService: PermissionService  
+  ) {
     this.oauthService.setStorage(localStorage);
     this.oauthService.configure(authConfig);
     this.oauthService.setupAutomaticSilentRefresh();
-
   }
 
   async init(): Promise<void> {
     await this.oauthService.loadDiscoveryDocumentAndTryLogin();
 
-
     if (this.oauthService.hasValidAccessToken()) {
-      const redirectUrl = localStorage.getItem('redirectUrl');
       const claims = this.decodeJwt(this.oauthService.getAccessToken()!);
       this.userInfo$.next(claims);
+      
+     
+      this.loadUserPermissions();
+
+      const redirectUrl = localStorage.getItem('redirectUrl');
       if (redirectUrl) {
         localStorage.removeItem('redirectUrl');
         await this.router.navigateByUrl(redirectUrl);
@@ -38,6 +43,16 @@ export class AuthService {
     } else {
       this.userInfo$.next(null);
     }
+  }
+
+  private loadUserPermissions(): void {
+    this.permissionService.loadUserPermissions().subscribe({
+      next: (permissions) => {
+      },
+      error: (error) => {
+        console.error('❌ Erreur lors du chargement des permissions:', error);
+      }
+    });
   }
 
   async login(): Promise<void> {
@@ -89,5 +104,4 @@ export class AuthService {
       return null;
     }
   }
-
 }

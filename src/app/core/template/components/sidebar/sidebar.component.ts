@@ -2,6 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { NgForOf, NgIf } from "@angular/common";
 import { RouterLink } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
+import { PermissionService } from "../../../../services/permission.service";
+import { PERMISSION_MAPPING } from "../../../config/permission.config";
+
 
 declare interface RouteInfo {
   path: string;
@@ -47,7 +50,7 @@ export const ROUTES: RouteInfo[] = [
   },
   {
     path: "/dashboard/profile",
-    title: "Documents Réglemenataires",
+    title: "Documents Réglementaires",
     key: "SIDEBAR.MY-PROFILE",
     icon: "pi pi-user",
     class: "",
@@ -69,7 +72,6 @@ export const ROUTES: RouteInfo[] = [
     class: "",
     feature: "comparator",
   }
-
 ];
 
 @Component({
@@ -82,14 +84,35 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
   version = "1.0.0";
   menuItems: RouteInfo[] = [];
+  userRole: string | null = null;
 
-  constructor() {
-
-  }
+  constructor(private permissionService: PermissionService) {}
 
   ngOnInit() {
-    this.menuItems = ROUTES.filter((menuItem) => menuItem);
+    
+    this.permissionService.userPermissions$.subscribe(userPermissions => {
+      if (userPermissions) {
+        this.userRole = userPermissions.role;
+        this.filterMenuItems();
+      }
+    });
   }
 
+  private filterMenuItems(): void {
+    this.menuItems = ROUTES.filter(menuItem => {
+   
+      const requiredPermission = PERMISSION_MAPPING[menuItem.feature];
+      
+     
+      if (!requiredPermission) {
+        return true;
+      }
+      
+      const hasPermission = this.permissionService.hasPermission(requiredPermission);
+      
+      return hasPermission;
+    });
 
+ 
+  }
 }
