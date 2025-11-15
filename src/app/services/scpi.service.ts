@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Scpi, ScpiComparisonDTOResponse, ScpiDetail, ScpiPage, ScpiWithRates } from '../models/scpi.model';
+import { Scpi,ScpiDetail, ScpiPage, ScpiWithRates } from '../models/scpi.model';
 import { ScpiInvestment } from '../models/scpi-investment.model';
 import { ScpiRepartition } from '../models/scpi-repartition.model';
 import { DistributionRateChartResponse } from '../models/distribution-rate.model';

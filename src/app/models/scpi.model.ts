@@ -1,5 +1,4 @@
 import { DistributionRate } from "./distribution-rate.model";
-import { ScpiDismembrement } from "./scpi-dismembrement.model";
 
 export interface Scpi {
   id: number;
@@ -50,20 +49,3 @@ export interface ScpiWithRates {
   distributionRates: DistributionRate[];
 }
 
-export interface ScpiComparisonResult {
-  id: number;
-  name: string;
-  capitalization: number;
-  rentFrequency: string;
-  enjoymentDelay: number;
-  minimumSubscription: number;
-  subscriptionFees: number;
-  cashback: number;
-  estimatedMonthlyRevenue: number;
-  annualYieldPercentage: number;
-}
-
-export interface ScpiComparisonDTOResponse {
-amountInvest: number;
-  scpis: ScpiComparisonResult[];
-}
