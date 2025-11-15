@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
 
 export interface UserPermissions {
   userId: string;
@@ -16,7 +15,7 @@ export interface UserPermissions {
   providedIn: 'root'
 })
 export class PermissionService {
-  private apiUrl = `${environment.permissionsApiUrl}/permissions`;
+  private apiUrl = '/api/v1/permissions';
   
   private permissionsSubject = new BehaviorSubject<string[]>([]);
   public permissions$ = this.permissionsSubject.asObservable();
