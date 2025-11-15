@@ -2,8 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { NgForOf, NgIf } from "@angular/common";
 import { RouterLink } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
-import { PermissionService } from "../../../../services/permission.service";
-import { PERMISSION_MAPPING } from "../../../config/permission.config";
 
 declare interface RouteInfo {
   path: string;
@@ -84,36 +82,14 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
   version = "1.0.0";
   menuItems: RouteInfo[] = [];
-  userRole: string | null = null;
-  
 
-  constructor(private permissionService: PermissionService) {
+  constructor() {
 
   }
 
   ngOnInit() {
-    this.permissionService.userPermissions$.subscribe(userPermissions => {
-      if (userPermissions) {
-        this.userRole = userPermissions.role;
-        this.filterMenuItems();
-      }
-    });
+    this.menuItems = ROUTES.filter((menuItem) => menuItem);
   }
 
-  private filterMenuItems(): void {
-    this.menuItems = ROUTES.filter(menuItem => {
-   
-      const requiredPermission = PERMISSION_MAPPING[menuItem.feature];
-      
-     
-      if (!requiredPermission) {
-        return true;
-      }
-      
-      const hasPermission = this.permissionService.hasPermission(requiredPermission);
-      
-      return hasPermission;
-    });
-  }
 
 }
