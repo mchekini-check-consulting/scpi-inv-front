@@ -1,11 +1,105 @@
-<footer class="footer">
-  <div class="container">
-    <nav>
+<footer class="!container !max-w-6xl !mx-auto !flex !flex-col">
 
-      <p class="copyright">
-        ©
-        HI-TECH-ACADEMY {{year}}
-      </p>
-    </nav>
+  <div class="py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+        <div class="w-12 h-12 !bg-secondary rounded-xl flex items-center justify-center">
+          <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+        <div class="text-xl font-bold">
+          <span class="text-gray-800">SCPI Invest <span class="!text-secondary">+</span> </span>
+        </div>
+      </div>
+        <p class="text-gray-600">Votre futur mérite +</p>
+      </div>
+
+ 
+      <div>
+        <h3 class="text-gray-900 font-bold text-lg mb-4">
+          {{ footerSections[0].title }}
+        </h3>
+        <ul class="space-y-3">
+          <li *ngFor="let link of footerSections[0].links">
+            <a
+              [href]="link.url"
+              class="text-gray-600 hover:text-secondary transition-colors"
+            >
+              {{ link.label }}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      
+      <div>
+        <h3 class="text-gray-900 font-bold text-lg mb-4">
+          {{ footerSections[1].title }}
+        </h3>
+        <ul class="space-y-3">
+          <li *ngFor="let link of footerSections[1].links">
+            <a
+              [href]="link.url"
+              class="text-gray-600 hover:text-secondary transition-colors"
+            >
+              {{ link.label }}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+
+      <div>
+        <h3 class="text-gray-900 font-bold text-lg mb-4">Contact</h3>
+        <ul class="space-y-3">
+          <li class="flex items-center gap-2 text-gray-600">
+            <i class="pi pi-envelope text-secondary"></i>
+            <a
+              [href]="'mailto:' + contactInfo.email"
+              class="hover:text-secondary transition-colors"
+            >
+              {{ contactInfo.email }}
+            </a>
+          </li>
+          <li class="flex items-center gap-2 text-gray-600">
+            <i class="pi pi-phone text-secondary"></i>
+            <a
+              [href]="getPhoneLink()"
+              class="hover:text-secondary transition-colors"
+            >
+              {{ contactInfo.phone }}
+            </a>
+          </li>
+          <li class="flex items-center gap-2 text-gray-600">
+            <i class="pi pi-map-marker text-secondary"></i>
+            <span>{{ contactInfo.location }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-gray-200">
+    <div class="container max-w-7xl mx-auto px-4 py-6">
+      <div
+        class="flex flex-col md:flex-row justify-between items-center gap-4"
+      >
+        <p class="text-gray-600 text-sm">
+          © {{ year }} SCPI Invest +. Tous droits réservés.
+        </p>
+        <div class="flex gap-6">
+          <a
+            *ngFor="let link of legalLinks"
+            [href]="link.url"
+            class="text-gray-600 hover:text-secondary transition-colors text-sm"
+          >
+            {{ link.label }}
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </footer>

@@ -6,162 +6,86 @@ import { ScpiCardComponent } from '../scpi-card/scpi-card.component';
 import { Scpi } from '../../../../models/scpi.model';
 import { AuthService } from '../../../service/auth.service';
 
+interface Advantage {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface Step {
+  number: string;
+  title: string;
+  description: string;
+  image: string;
+  imageAlt: string;
+  imagePosition: 'left' | 'right';
+}
 
 @Component({
   selector: 'app-herosection',
   standalone: true,
-  imports: [CardModule, ButtonModule, CommonModule, ScpiCardComponent],
+  imports: [CardModule, ButtonModule, CommonModule],
   templateUrl: './herosection.component.html',
   styleUrl: './herosection.component.scss',
 })
 export class HerosectionComponent {
-  @ViewChild('cardsSection') cardsSection!: ElementRef;
-
-  currentSlideIndex = 0;
-  cardsPerView = 4;
-
-  // Mock data basé sur tes cards mais au format Scpi
-  mockScpis: Scpi[] = [
+  advantages: Advantage[] = [
     {
-      id: 1,
-      name: 'SCPI Résidentiel',
-      manager: 'Investissement locatif',
-      advertising: 'Investissez dans des biens résidentiels avec un rendement stable et sécurisé.',
-      imageUrl: '../../img/scpi/1.webp',
-      country: 'France',
-      cashback: 5,
-      distributionRate: 8.35,
-      minimumSubscription: 5000,
+      icon: 'pi-file',
+      title: 'Catalogue exhaustif',
+      description: 'Accédez à plus de 100 SCPI partenaires avec toutes les données actualisées en temps réel.'
     },
     {
-      id: 2,
-      name: 'SCPI Bureaux',
-      manager: 'Placement professionnel',
-      advertising: 'Diversifiez votre portefeuille avec des immeubles de bureaux modernes.',
-      imageUrl: '../../img/scpi/2.webp',
-      country: 'Europe',
-      cashback: 0,
-      distributionRate: 8.0,
-      minimumSubscription: 2850,
+      icon: 'pi-calculator',
+      title: 'Simulateurs avancés',
+      description: 'Calculez vos rendements potentiels et optimisez votre stratégie d\'investissement.'
     },
     {
-      id: 3,
-      name: 'SCPI Santé',
-      manager: 'Investir dans le médical',
-      advertising: 'Profitez de la croissance du secteur de la santé et du bien-être.',
-      imageUrl: '../../img/scpi/3.webp',
-      country: 'France',
-      cashback: 0,
-      distributionRate: 8.0,
-      minimumSubscription: 1000,
+      icon: 'pi-chart-bar',
+      title: 'Comparateurs intelligents',
+      description: 'Comparez les performances, les frais et les caractéristiques de chaque SCPI.'
     },
     {
-      id: 4,
-      name: 'SCPI Commerces',
-      manager: 'Revenus réguliers',
-      advertising: 'Accédez à un rendement stable grâce aux surfaces commerciales louées.',
-      imageUrl: '../../img/scpi/7.webp',
-      country: 'Pays-Bas',
-      cashback: 0,
-      distributionRate: 7.5,
-      minimumSubscription: 3500,
+      icon: 'pi-clock',
+      title: 'Portefeuille unique',
+      description: 'Centralisez tous vos investissements SCPI dans un tableau de bord unifié.'
     },
     {
-      id: 5,
-      name: 'SCPI Logistique',
-      manager: 'Secteur en croissance',
-      advertising: 'Profitez de la forte demande en entrepôts et plateformes logistiques.',
-      imageUrl: '../../img/scpi/5.webp',
-      country: 'Allemagne',
-      cashback: 2,
-      distributionRate: 6.8,
-      minimumSubscription: 4000,
+      icon: 'pi-th-large',
+      title: 'Agrégation des données',
+      description: 'Visualisez la performance globale de votre portefeuille en un coup d\'œil.'
     },
     {
-      id: 6,
-      name: 'SCPI Hôtellerie',
-      manager: 'Tourisme et loisirs',
-      advertising: "Investissez dans le secteur dynamique de l'hôtellerie et du tourisme.",
-      imageUrl: '../../img/scpi/9.webp',
-      country: 'Espagne',
-      cashback: 3,
-      distributionRate: 7.2,
-      minimumSubscription: 2500,
-    },
-    {
-      id: 7,
-      name: 'SCPI International',
-      manager: 'Diversification mondiale',
-      advertising: 'Accédez aux marchés internationaux avec une SCPI européenne.',
-      imageUrl: '../../img/scpi/7.webp',
-      country: 'Europe',
-      cashback: 0,
-      distributionRate: 6.5,
-      minimumSubscription: 5000,
-    },
-    {
-      id: 8,
-      name: 'SCPI Éco-responsable',
-      manager: 'Immobilier durable',
-      advertising: 'Investissez dans des bâtiments éco-responsables et certifiés.',
-      imageUrl: '../../img/scpi/7.webp',
-      country: 'France',
-      cashback: 4,
-      distributionRate: 7.8,
-      minimumSubscription: 3000,
-    },
+      icon: 'pi-shield',
+      title: 'Sécurité maximale',
+      description: 'Vos données sont protégées avec les standards de sécurité les plus élevés.'
+    }
   ];
 
-  constructor(private authService: AuthService) {
-    this.updateCardsPerView();
-    window.addEventListener('resize', () => this.updateCardsPerView());
-  }
-
-  updateCardsPerView(): void {
-    if (window.innerWidth < 768) {
-      this.cardsPerView = 1;
-    } else if (window.innerWidth < 1024) {
-      this.cardsPerView = 2;
-    } else if (window.innerWidth < 1280) {
-      this.cardsPerView = 3;
-    } else {
-      this.cardsPerView = 4;
+  steps: Step[] = [
+    {
+      number: '01',
+      title: 'Créez votre compte',
+      description: 'Inscrivez-vous gratuitement en quelques minutes et accédez à notre plateforme.',
+      image: 'img/person-creating-account-on-modern-laptop-in-bright.jpg',
+      imageAlt: 'Femme créant son compte sur la plateforme SCPI Invest',
+      imagePosition: 'right'
+    },
+    {
+      number: '02',
+      title: 'Explorez le catalogue',
+      description: 'Parcourez plus de 100 SCPI et comparez leurs performances avec nos outils.',
+      image: 'img/financial-charts-and-scpi-portfolio-comparison-on-.jpg', 
+      imageAlt: 'Tablette affichant le catalogue SCPI Portfolio',
+      imagePosition: 'left'
+    },
+    {
+      number: '03',
+      title: 'Investissez et suivez',
+      description: 'Constituez votre portefeuille et suivez vos investissements en temps réel.',
+      image: 'img/professional-investment-dashboard-with-real-time-d.jpg', 
+      imageAlt: 'Dashboard Investment Portfolio Analytics',
+      imagePosition: 'right'
     }
-  }
-
-  scrollToCards(): void {
-    this.cardsSection.nativeElement.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
-  }
-
-  nextSlide(): void {
-    if (this.currentSlideIndex < this.mockScpis.length - this.cardsPerView) {
-      this.currentSlideIndex++;
-    }
-  }
-
-  previousSlide(): void {
-    if (this.currentSlideIndex > 0) {
-      this.currentSlideIndex--;
-    }
-  }
-
-  goToSlide(index: number): void {
-    this.currentSlideIndex = index;
-  }
-
-  getDotsArray(): number[] {
-    const totalDots = Math.max(1, this.mockScpis.length - this.cardsPerView + 1);
-    return Array(totalDots).fill(0);
-  }
-
-  onCardViewMore(): void {
-    this.authService.login();
-  }
-
-  onCardInvest(): void {
-    this.authService.login();
-  }
+  ];
 }
