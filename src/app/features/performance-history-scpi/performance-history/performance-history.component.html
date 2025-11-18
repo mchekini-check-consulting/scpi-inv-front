@@ -1,10 +1,19 @@
 <section class="perf-card">
   <ng-container *ngIf="!insufficientHistory && data; else noData">
-    <p-chart [data]="data" [options]="options" class="chart"></p-chart>
+    <div class="chart-container">
+      <div class="chart-wrapper">
+        <p-chart [data]="data" [options]="options" class="chart"></p-chart>
 
-    <h3 class="chart-title">
-      Taux de distribution et rendement moyen sur 3 ans
-    </h3>
+        <h3 class="chart-title">Évolution de la performance</h3>
+      </div>
+      <div class="average-card" *ngIf="average3Years !== null">
+        <div class="average-content">
+          <h4 class="average-title">Rendement moyen</h4>
+          <p class="average-value">{{ average3Years | number : "1.2-2" }}%</p>
+          <p class="average-label">Sur les 3 dernières années</p>
+        </div>
+      </div>
+    </div>
   </ng-container>
 
   <ng-template #noData>
