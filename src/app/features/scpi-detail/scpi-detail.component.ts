@@ -11,20 +11,20 @@ import { FormatFieldPipe } from '../../core/pipe/format-field.pipe';
 import { ScpiRepartitionComponent } from '../../core/template/components/scpi-repartition/scpi-repartition.component';
 import { ScpiRepartition } from '../../models/scpi-repartition.model';
 import { PerformanceHistoryComponent } from '../performance-history-scpi/performance-history/performance-history.component';
-import { ScpiValuationTimelineComponent } from "../scpi-valuation-timeline/scpi-valuation-timeline.component";
+import { ScpiValuationGraphComponent } from "../scpi-valuation-graph/scpi-valuation-graph.component";
 import { TabsModule } from 'primeng/tabs';
 
 @Component({
   selector: 'app-scpi-detail',
   standalone: true,
   imports: [
-    CommonModule, 
-    AccordionModule, 
-    ButtonModule, 
-    FormatFieldPipe, 
-    ScpiRepartitionComponent, 
-    PerformanceHistoryComponent, 
-    ScpiValuationTimelineComponent, 
+    CommonModule,
+    AccordionModule,
+    ButtonModule,
+    FormatFieldPipe,
+    ScpiRepartitionComponent,
+    PerformanceHistoryComponent,
+    ScpiValuationGraphComponent,
     TabsModule
   ],
   templateUrl: './scpi-detail.component.html',
