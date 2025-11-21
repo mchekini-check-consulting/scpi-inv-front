@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -9,7 +14,6 @@ import { ScpiService } from '../../services/scpi.service';
 import { ScpiWithRates } from '../../models/scpi.model';
 import localeFr from '@angular/common/locales/fr';
 import { Location } from '@angular/common';
-
 
 registerLocaleData(localeFr);
 
@@ -25,9 +29,9 @@ registerLocaleData(localeFr);
     InputNumberModule,
     SliderModule,
     SelectModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
   ],
-  providers: [{ provide: 'LOCALE_ID', useValue: 'fr-FR' }]
+  providers: [{ provide: 'LOCALE_ID', useValue: 'fr-FR' }],
 })
 export class ComparatorScpiComponent implements OnInit {
   investment = 10000;
@@ -65,7 +69,7 @@ export class ComparatorScpiComponent implements OnInit {
         console.error('Erreur chargement SCPI', err);
         this.isLoading = false;
         this.cdr.markForCheck();
-      }
+      },
     });
   }
 
@@ -89,10 +93,10 @@ export class ComparatorScpiComponent implements OnInit {
   private updateFilteredOptionsCache(): void {
     for (let i = 0; i < 3; i++) {
       const selectedIds = this.selectedScpis
-        .map((s, idx) => idx !== i && s ? s.id : null)
-        .filter(id => id !== null) as number[];
+        .map((s, idx) => (idx !== i && s ? s.id : null))
+        .filter((id) => id !== null) as number[];
       this.filteredOptionsCache[i] = this.scpiOptions.filter(
-        scpi => !selectedIds.includes(scpi.id)
+        (scpi) => !selectedIds.includes(scpi.id)
       );
     }
   }
@@ -127,10 +131,12 @@ export class ComparatorScpiComponent implements OnInit {
 
   formatEuro(value: number | null | undefined): string {
     if (value == null) return '-';
-    return (value * this.investment / 100).toLocaleString('fr-FR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }) + ' €';
+    return (
+      ((value * this.investment) / 100).toLocaleString('fr-FR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }) + ' €'
+    );
   }
 
   formatEuroNoCents(value: number | null | undefined): string {
@@ -156,5 +162,12 @@ export class ComparatorScpiComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+  getSubscriptionFeeRate(scpi: ScpiWithRates): number {
+    return scpi.subscriptionFees ?? 0;
+  }
+
+  getCashbackRate(scpi: ScpiWithRates): number {
+    return scpi.cashback ?? 0;
   }
 }
