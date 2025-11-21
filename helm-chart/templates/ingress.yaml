@@ -17,6 +17,15 @@ spec:
                 name: scpi-inv-api
                 port:
                   number: 8080
+
+          - path: /validation-api
+            pathType: Prefix
+            backend:
+              service:
+                name: scpi-doc-validation-api
+                port:
+                  number: 8080
+
           - path: /
             pathType: Prefix
             backend:
