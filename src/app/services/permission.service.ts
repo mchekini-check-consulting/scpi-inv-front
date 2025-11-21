@@ -15,7 +15,7 @@ export interface UserPermissions {
   providedIn: 'root'
 })
 export class PermissionService {
-  private apiUrl = '/validation-api/v1/permissions';
+  private apiUrl = '/validation-api/api/v1/permissions';
   
   private permissionsSubject = new BehaviorSubject<string[]>([]);
   public permissions$ = this.permissionsSubject.asObservable();
