@@ -11,13 +11,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
 .title {
-  font-size: 1.75rem;
+  font-size: 1.875rem;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -34,7 +34,8 @@
   border: 1px solid #e2e8f0;
   color: #374151;
   padding: 0.75rem 1.5rem;
-  border-radius: 1rem;
+  border-radius: 0.75rem;
+
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -59,7 +60,7 @@
 .scpi-item {
   background: #f9fafb;
   padding: 1.5rem;
-  border-radius: 1rem;
+  border-radius: 1.25rem; 
   border: 1px solid #e5e7eb;
 }
 
@@ -71,7 +72,7 @@
 }
 
 .scpi-name {
-  font-size: 1.25rem;
+  font-size: 1.25rem; 
   font-weight: 600;
   color: #0f172a;
   margin: 0;
@@ -120,3 +121,5 @@
   color: #6b7280;
   font-size: 1.25rem;
 }
+
+
