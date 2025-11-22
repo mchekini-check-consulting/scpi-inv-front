@@ -8,6 +8,7 @@ import { ScpiDetailComponent } from './features/scpi-detail/scpi-detail.componen
 import { ScpiInvestComponent } from './features/scpi-invest/scpi-invest.component';
 import {HistoryComponent} from "./features/history/history.component";
 import { ComparatorScpiComponent } from './features/comparator-scpi/comparator-scpi.component';
+import { PortefeuilleScpiComponent } from './features/portefeuille-scpi/portefeuille-scpi.component';
 
 export const routes: Routes = [
 
@@ -23,7 +24,8 @@ export const routes: Routes = [
       { path: 'scpi/:slug', component: ScpiDetailComponent },
       { path: 'profile', component: UploadFileComponent },
       { path: 'history', component: HistoryComponent },
-      { path: 'comparator', component: ComparatorScpiComponent }
+      { path: 'comparator', component: ComparatorScpiComponent },
+      { path: 'portefeuille', component: PortefeuilleScpiComponent }
 
        
     ],
