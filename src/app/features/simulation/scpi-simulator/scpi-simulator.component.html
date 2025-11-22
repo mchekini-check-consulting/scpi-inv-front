@@ -1,0 +1,41 @@
+<div class="page-container">
+  <header class="header">
+    <h1>Simulateur Fiscalité SCPI</h1>
+    <p class="subtitle">Estimez immédiatement l'impact fiscal de votre portefeuille SCPI</p>
+  </header>
+
+  <main class="main-content">
+    <div class="cards-grid">
+      <div class="card">
+        <div class="icon-wrapper green">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6-4h6m-6 8h6m-3-8v8m-6-4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <h2>Nouvelle simulation</h2>
+        <p>Créez une nouvelle analyse fiscale pour votre investissement SCPI</p>
+        <button type="button"
+        class="primary"
+        (click)="goToNewSimulation()"
+        >
+          Créer une nouvelle simulation
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="icon-wrapper amber">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h2>Mes simulations</h2>
+        <p>Accédez à vos simulations enregistrées et consultez vos résultats</p>
+        <button routerLink="/dashboard/simulation/mes-simulations" class="secondary">
+          Voir mes simulations
+        </button>
+      </div>
+    </div>
+  </main>
+</div>

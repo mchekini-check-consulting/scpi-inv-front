@@ -1,0 +1,121 @@
+
+$bg: #f9fafb;
+$text: #0f172a;
+$green: #2d5f2e;
+$green-600: #234a24;
+$green-100: #eaf4ea;
+$blue-600: #155eef;
+$gray-700: #374151;
+$gray-500: #6b7280;
+$bg: #f8fafc;
+header {
+  background-color: $green;
+  padding: 3rem 0;
+  color: white;
+
+  .max-w-6xl {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    text-align: center;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 650;
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    p {
+      font-size: 1.125rem;
+      margin-top: 0.75rem;
+      opacity: 0.95;
+    }
+  }
+}
+
+.max-w-6xl {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.bg-white.rounded-3xl {
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  border: 1px solid #f1f5f9;
+}
+
+.flex.justify-between.items-center.mb-8 {
+  flex-wrap: wrap;
+  gap: 1.5rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $text;
+  }
+
+  .text-gray-500 {
+    color: $gray-500;
+    font-size: 1rem;
+  }
+
+  .bg-gray-100 {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: $gray-700;
+    padding: 0.75rem 1.75rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f1f5f9;
+      border-color: $gray-500;
+    }
+  }
+}
+
+.bg-gray-50.rounded-2xl {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.text-center.py-16.text-gray-500 {
+  padding: 5rem 2rem;
+  color: $gray-500;
+
+  p:first-child {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  p:last-child {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+    opacity: 0.9;
+  }
+}
+
+@media (max-width: 768px) {
+  header .max-w-6xl {
+    h1 { font-size: 2.2rem; }
+    padding: 0 1rem;
+  }
+
+  .flex.justify-between.items-center.mb-8 {
+    flex-direction: column;
+    text-align: center;
+
+    .bg-gray-100 {
+      width: 100%;
+      max-width: 280px;
+      justify-content: center;
+    }
+  }
+
+  .max-w-6xl { padding: 2rem 1rem; }
+  .bg-white.rounded-3xl { padding: 2rem; }
+}
