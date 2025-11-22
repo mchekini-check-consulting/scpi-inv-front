@@ -15,7 +15,7 @@ export interface UserPermissions {
   providedIn: 'root'
 })
 export class PermissionService {
-  private apiUrl = '/validation-api/api/v1/permissions';
+  private apiUrl = '/api/v1/permissions';
   
   private permissionsSubject = new BehaviorSubject<string[]>([]);
   public permissions$ = this.permissionsSubject.asObservable();
@@ -26,7 +26,7 @@ export class PermissionService {
   constructor(private http: HttpClient) {}
 
   loadUserPermissions(): Observable<UserPermissions> {
-    return this.http.get<UserPermissions>(`${this.apiUrl}/me`).pipe(
+    return this.http.get<UserPermissions>(`http://localhost:8082/api/v1/permissions/me`).pipe(
       tap(response => {
         this.permissionsSubject.next(response.permissions);
         this.userPermissionsSubject.next(response);
