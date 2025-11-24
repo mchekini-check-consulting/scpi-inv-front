@@ -9,10 +9,12 @@ interface PortfolioScpi {
   name: string;
   sector: string;
   pricePerShare: number;
-  yield: number | null;
+  yield: number ;
   shares: number;
   amount: number;
-}
+  annualIncome: number;
+  monthlyIncome: number;
+  }
 
 @Component({
   selector: 'app-simulation-new',
@@ -76,35 +78,80 @@ export class SimulationNewComponent implements OnInit {
     this.newShares = 1;
   }
 
-  addScpi() {
-    if (this.selectedScpi && this.newShares > 0) {
-      const amount = this.selectedScpi.pricePerShare * this.newShares;
+  private calculateIncome(scpi: PortfolioScpi): void {
+  const annual = scpi.amount * (scpi.yield / 100);
+  scpi.annualIncome = Math.round(annual * 100) / 100; 
+  scpi.monthlyIncome = Math.round((annual / 12) * 100) / 100;
+}
+addScpi() {
+ if (!this.selectedScpi || this.newShares < 1) return;
 
-      const existing = this.scpis.find(s => s.id === this.selectedScpi!.id);
-      if (existing) {
-        existing.shares += this.newShares;
-        existing.amount += amount;
-      } else {
-        this.scpis.push({
-          ...this.selectedScpi,
-          shares: this.newShares,
-          amount
-        });
-      }
-      this.showAddModal = false;
-      this.newShares = 1;
-    }
-  }
+ const amount = this.selectedScpi.pricePerShare * this.newShares;
+
+ const existing = this.scpis.find(s => s.id === this.selectedScpi!.id);
+ if (existing) {
+   existing.shares += this.newShares;
+   existing.amount += amount;
+   this.calculateIncome(existing);
+ } else {
+   const newScpi: PortfolioScpi = {
+     ...this.selectedScpi,
+     shares: this.newShares,
+     amount: amount,
+     annualIncome: 0,
+     monthlyIncome: 0
+   };
+   this.calculateIncome(newScpi);
+   this.scpis.push(newScpi);
+ }
+
+ this.showAddModal = false;
+ this.selectedScpi = null;
+ this.newShares = 1;
+}
+
+updateShares(event: { scpi: PortfolioScpi; shares: number }) {
+ const scpi = this.scpis.find(s => s.id === event.scpi.id);
+ if (scpi && event.shares >= 0) {
+   scpi.shares = event.shares;
+   scpi.amount = scpi.shares * scpi.pricePerShare;
+   this.calculateIncome(scpi); 
+ }
+}
+
+  // addScpi() {
+  //   if (this.selectedScpi && this.newShares > 0) {
+  //     const amount = this.selectedScpi.pricePerShare * this.newShares;
+
+  //     const existing = this.scpis.find(s => s.id === this.selectedScpi!.id);
+  //     if (existing) {
+  //       existing.shares += this.newShares;
+  //       existing.amount += amount;
+  //     } else {
+  //       this.scpis.push({
+  //         ...this.selectedScpi,
+  //         shares: this.newShares,
+  //         amount
+  //       });
+  //     }
+  //     this.showAddModal = false;
+  //     this.newShares = 1;
+  //   }
+  // }
 
   removeScpi(scpiToRemove: PortfolioScpi) {
     this.scpis = this.scpis.filter(s => s.id !== scpiToRemove.id);
   }
 
-  updateShares(event: { scpi: PortfolioScpi; shares: number }) {
-    const scpi = this.scpis.find(s => s.id === event.scpi.id);
-    if (scpi) {
-      scpi.shares = event.shares;
-      scpi.amount = scpi.shares * scpi.pricePerShare;
-    }
-  }
+  // updateShares(event: { scpi: PortfolioScpi; shares: number }) {
+  //   const scpi = this.scpis.find(s => s.id === event.scpi.id);
+  //   if (scpi) {
+  //     scpi.shares = event.shares;
+  //     scpi.amount = scpi.shares * scpi.pricePerShare;
+  //   }
+  // }
+
+  isScpiInPortfolio(scpi: PortfolioScpi): boolean {
+  return this.scpis.some(s => s.id === scpi.id);
+}
 }

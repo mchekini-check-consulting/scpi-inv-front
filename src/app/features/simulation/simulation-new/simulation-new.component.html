@@ -73,9 +73,14 @@
               <p class="text-sm text-gray-600">rendement</p>
             </div>
           </div>
+          <div *ngIf="isScpiInPortfolio(scpi)"
+         class="absolute top-3 right-3 bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
+      Déjà ajouté
+    </div>
         </div>
       </div>
 
+      
       <div class="mt-8" *ngIf="selectedScpi">
         <label class="block text-lg font-medium mb-3">Nombre de parts à ajouter</label>
         <input type="number"

@@ -45,10 +45,19 @@
             <p class="text-2xl font-bold text-blue-600">{{ scpi.amount | currency:'EUR':'symbol':'1.0-0':'fr' }}</p>
           </div>
         </div>
-        
-        <div class="mt-4 flex items-center gap-3">
-          <span class="text-sm text-gray-600">Rendement :</span>
-          <span class="text-lg font-semibold text-green-600">{{ scpi.yield }} %</span>
+      
+        <div class="mt-6 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-medium text-gray-600">Rendement :</span>
+            <span class="text-base font-bold text-green-600">
+              {{ scpi.annualIncome | currency:'EUR':'symbol':'1.0-0':'fr' }}
+            </span>
+            <span class="text-sm font-medium text-gray-500">/ an</span>
+          </div>
+
+          <div class="text-sm font-bold text-emerald-600">
+            {{ scpi.yield | number:'1.2-2' }}%
+          </div>
         </div>
       </div>
     </div>
