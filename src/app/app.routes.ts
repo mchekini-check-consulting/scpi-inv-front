@@ -9,7 +9,7 @@ import { ScpiInvestComponent } from './features/scpi-invest/scpi-invest.componen
 import {HistoryComponent} from "./features/history/history.component";
 import { ComparatorScpiComponent } from './features/comparator-scpi/comparator-scpi.component';
 import { ScpiSimulatorComponent } from './features/simulation/scpi-simulator/scpi-simulator.component';
-import { SimulationNewComponent } from './features/simulation/simulation-new/simulation-new.component';
+import { SimulationLayoutComponent } from './features/simulation/simulation-layout/simulation-layout.component';
 
 export const routes: Routes = [
 
@@ -27,7 +27,7 @@ export const routes: Routes = [
       { path: 'history', component: HistoryComponent },
       { path: 'comparator', component: ComparatorScpiComponent },
       { path: 'simulation', component: ScpiSimulatorComponent },
-      { path: 'simulation/nouvelle', component: SimulationNewComponent}
+      { path: 'simulation/nouvelle', component: SimulationLayoutComponent}
 
     ],
   }

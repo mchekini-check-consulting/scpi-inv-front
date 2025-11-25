@@ -1,5 +1,4 @@
 import { DistributionRate } from "./distribution-rate.model";
-import { RepartitionItem } from "./scpi-repartition.model";
 
 export interface Scpi {
   id: number;
@@ -48,13 +47,4 @@ export interface ScpiWithRates {
   subscriptionFees: number;
   cashback: number;
   distributionRates: DistributionRate[];
-}
-
-export interface ScpiSimulator {
-  id: number;
-  name: string;
-  yieldDistributionRate: number | null;     
-  sharePrice: number | null;               
-  minimumSubscription: number;
-  sectors: RepartitionItem[];     
 }

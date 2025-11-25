@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PortfolioScpisComponent } from './portfolio-scpis.component';
+import { GeographicChartComponent } from './geographic-chart.component';
 
-describe('PortfolioScpisComponent', () => {
-  let component: PortfolioScpisComponent;
-  let fixture: ComponentFixture<PortfolioScpisComponent>;
+describe('GeographicChartComponent', () => {
+  let component: GeographicChartComponent;
+  let fixture: ComponentFixture<GeographicChartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PortfolioScpisComponent]
+      imports: [GeographicChartComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PortfolioScpisComponent);
+    fixture = TestBed.createComponent(GeographicChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

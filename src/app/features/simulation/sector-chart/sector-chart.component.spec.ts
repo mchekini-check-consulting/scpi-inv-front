@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SimulationNewComponent } from './simulation-new.component';
+import { SectorChartComponent } from './sector-chart.component';
 
-describe('SimulationNewComponent', () => {
-  let component: SimulationNewComponent;
-  let fixture: ComponentFixture<SimulationNewComponent>;
+describe('SectorChartComponent', () => {
+  let component: SectorChartComponent;
+  let fixture: ComponentFixture<SectorChartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SimulationNewComponent]
+      imports: [SectorChartComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SimulationNewComponent);
+    fixture = TestBed.createComponent(SectorChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

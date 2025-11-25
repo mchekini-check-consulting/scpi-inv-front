@@ -1,0 +1,70 @@
+<div class="simulation-layout">
+  <header class="simulation-header">
+    <h1>Simulateur SCPI</h1>
+    <p class="subtitle">Construisez, analysez et optimisez votre portefeuille immobilier</p>
+  </header>
+
+  <div class="kpi-section">
+    <div class="kpi-card investment">
+      <div class="kpi-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Investissement Total</p>
+        <p class="kpi-value">{{ formatCurrency(summary.totalInvestment) }}</p>
+      </div>
+    </div>
+
+    <div class="kpi-card gross">
+      <div class="kpi-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Revenus Bruts Annuels</p>
+        <p class="kpi-value">{{ formatCurrency(summary.grossRevenue) }}</p>
+      </div>
+    </div>
+
+    <div class="kpi-card net">
+      <div class="kpi-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+          <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Revenus Nets Annuels</p>
+        <p class="kpi-value">{{ formatCurrency(summary.netRevenue) }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <aside class="portfolio-section">
+      <app-portfolio-management ></app-portfolio-management>
+    </aside>
+
+    <main class="details-section">
+<app-tax-section></app-tax-section>
+      <div class="charts-grid">
+        <app-sector-chart></app-sector-chart>
+        <app-income-breakdown-chart></app-income-breakdown-chart>
+      </div>
+      
+      <app-geographic-chart></app-geographic-chart>
+      
+      <app-performance-details-table></app-performance-details-table>
+      
+    </main>
+  </div>
+  <app-scpi-selection-modal 
+ *ngIf="showAddModal" 
+ (close)="onOpenAddModal(false)"
+ (addScpi)="addToPortfolio($event)">
+ </app-scpi-selection-modal>
+</div>
