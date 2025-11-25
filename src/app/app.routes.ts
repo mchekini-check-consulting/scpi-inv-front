@@ -28,8 +28,7 @@ export const routes: Routes = [
       { path: 'history', component: HistoryComponent },
       { path: 'comparator', component: ComparatorScpiComponent },
       { path: 'simulation', component: ScpiSimulatorComponent },
-      { path: 'simulation/nouvelle', component: SimulationLayoutComponent}
-      { path: 'comparator', component: ComparatorScpiComponent },
+      { path: 'simulation/nouvelle', component: SimulationLayoutComponent},
       { path: 'portefeuille', component: PortefeuilleScpiComponent }
 
     ],

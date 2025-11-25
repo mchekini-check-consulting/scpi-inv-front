@@ -1,7 +1,13 @@
 <div class="simulation-layout">
+   <button class="back-button" (click)="goBack()">
+    <i class="pi pi-arrow-left"></i>
+    Retour
+  </button>
   <header class="simulation-header">
     <h1>Simulateur SCPI</h1>
-    <p class="subtitle">Construisez, analysez et optimisez votre portefeuille immobilier</p>
+    <p class="subtitle">
+      Construisez, analysez et optimisez votre portefeuille immobilier
+    </p>
   </header>
 
   <div class="kpi-section">
@@ -45,39 +51,94 @@
   </div>
 
   <div class="content-grid">
-    <aside class="portfolio-section">
-      <app-portfolio-management ></app-portfolio-management>
+    <aside class="portfolio-column">
+      <div class="card portfolio-card">
+        <app-portfolio-management></app-portfolio-management>
+      </div>
     </aside>
     
-    <main class="details-section">
-        <div class="tax-section card">
-        <h4>Fiscalité & TMI</h4>
-        <p class="description">Ajustez votre Tranche Marginale d'Imposition pour voir l'impact net.</p>
-        
-        <div class="tmi-slider-container">
-        <input 
-         type="range" 
-         class="tmi-slider" 
-         min="0" 
-         max="45" 
-         [(ngModel)]="tmiValue"
-         (input)="updateTmiDisplay()" 
-        >
-        
-        <div class="tmi-display">
-        <span class="tmi-value">{{ tmiValue }}</span>
-        <span class="tmi-unit">%</span>
+
+    <main class="analysis-column">
+      <div class="analysis-content">
+        <div class="card chart-card">
+          <div class="card-header">
+            <h3>Répartition géographique</h3>
+            <p class="card-subtitle">Détail de vos investissements par pays</p>
+          </div>
+          <div class="chart-container">
+            <app-geographic-chart></app-geographic-chart>
+          </div>
         </div>
+
+        <div class="card table-card">
+          <div class="card-header">
+            <h3>Répartition par pays</h3>
+            <p class="card-subtitle">Détail de vos investissements</p>
+          </div>
+          <table class="country-table">
+            <thead>
+              <tr>
+                <th>Pays</th>
+                <th>Montant investi</th>
+                <th>Pourcentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let country of countries">
+                <td>{{ country.name }}</td>
+                <td class="amount">{{ formatCurrency(country.amount) }}</td>
+                <td class="percentage">{{ country.percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <span class="tmi-footer">Votre TMI est par défaut à {{ defaultTmi }}%</span>
+
+        <div class="card tax-card">
+          <div class="card-header">
+            <h3>Synthèse fiscale</h3>
+            <p class="card-subtitle">Estimation de l'impact fiscal annuel</p>
+          </div>
+
+          <div class="tax-details">
+            <div class="tax-row">
+              <span class="tax-label">Revenus locatifs estimés</span>
+              <span class="tax-value positive">{{ formatCurrency(summary.grossRevenue) }}</span>
+            </div>
+            <div class="tax-row">
+              <span class="tax-label">Revenus fonciers imposables</span>
+              <span class="tax-value positive">{{ formatCurrency(taxableIncome) }}</span>
+            </div>
+            <div class="tax-row">
+              <span class="tax-label">Impôt sur le revenu estimé</span>
+              <span class="tax-value negative">{{ formatCurrency(incomeTax) }}</span>
+            </div>
+            <div class="tax-row">
+              <span class="tax-label">Prélèvements sociaux (17,2%)</span>
+              <span class="tax-value negative">{{ formatCurrency(socialTax) }}</span>
+            </div>
+            <div class="tax-row total">
+              <span class="tax-label">Revenus nets après fiscalité</span>
+              <span class="tax-value highlight">{{ formatCurrency(summary.netRevenue) }}</span>
+            </div>
+          </div>
+
+          <div class="tmi-section">
+            <div class="tmi-header">
+              <label>Tranche Marginale d'Imposition</label>
+              <div class="tmi-display">
+                <span class="tmi-value">{{ tmiValue }}</span><span class="tmi-unit">%</span>
+              </div>
+            </div>
+            <input type="range" class="tmi-slider" min="0" max="45" step="1" [(ngModel)]="tmiValue" (input)="updateTmi()">
+            <div class="tmi-marks">
+              <span>0%</span><span>11%</span><span>30%</span><span>41%</span><span>45%</span>
+            </div>
+          </div>
         </div>
-        <div class="charts-grid">
-</div>
-</main>
+      </div>
+    </main>
   </div>
-  <app-scpi-selection-modal 
- *ngIf="showAddModal" 
- (close)="onOpenAddModal(false)"
- (addScpi)="addToPortfolio($event)">
- </app-scpi-selection-modal>
+
+  <app-scpi-selection-modal *ngIf="showAddModal" (close)="onOpenAddModal(false)" (addScpi)="addToPortfolio($event)">
+  </app-scpi-selection-modal>
 </div>
