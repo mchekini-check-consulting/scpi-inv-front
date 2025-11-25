@@ -14,6 +14,10 @@ import { ToastModule } from 'primeng/toast';
 import { InvestmentService } from '../../services/investment.service';
 import { FormatFieldPipe } from '../../core/pipe/format-field.pipe';
 
+import { DocumentService } from '../../core/service/document.service';
+import { AuthService } from '../../core/service/auth.service';
+import { UserDocument } from '../../models/userDocument.model';
+
 @Component({
   selector: 'app-scpi-invest',
   standalone: true,
@@ -49,10 +53,16 @@ export class ScpiInvestComponent implements OnInit {
     futureMonthlyRevenue?: number;
   } | null = null;
 
+  areRegulatoryDocumentsValidated = false;
+  private readonly REQUIRED_DOCS: string[] = ['IDENTITY', 'ADDRESS', 'TAX'];
+
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private scpiService: ScpiService,
     private investmentService: InvestmentService,
+    private documentService: DocumentService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private messageService: MessageService
@@ -107,7 +117,50 @@ export class ScpiInvestComponent implements OnInit {
     this.form.get('shareCount')?.valueChanges.subscribe(() => {
       this.updateAmount();
     });
+
+    this.loadUserDocumentsStatus();
   }
+
+  private mapBackendType(type: string): string | null {
+    const mapping: Record<string, string> = {
+      'PIECE_IDENTITE': 'IDENTITY',
+      'JUSTIFICATIF_DOMICILE': 'ADDRESS',
+      'AVIS_IMPOSITION': 'TAX'
+    };
+    return mapping[type] || null;
+  }
+
+  private loadUserDocumentsStatus(): void {
+    const email = this.authService.getCurrentUserEmail();
+    if (!email) {
+      this.areRegulatoryDocumentsValidated = false;
+      return;
+    }
+
+    this.documentService.getUserDocuments(email).subscribe({
+      next: (docs: UserDocument[]) => {
+        const mappedDocs = docs.map(doc => ({
+          ...doc,
+          mappedType: this.mapBackendType(doc.type)
+        }));
+
+        this.areRegulatoryDocumentsValidated = this.REQUIRED_DOCS.every(required =>
+          mappedDocs.some(doc => doc.mappedType === required && doc.status === 'VALIDATED')
+        );
+
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.areRegulatoryDocumentsValidated = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  goToRegulatoryDocuments(): void {
+    this.router.navigate(['/dashboard/profile']);
+  }
+
 
   calculateMinShares(): number {
     if (
@@ -213,13 +266,13 @@ export class ScpiInvestComponent implements OnInit {
     } else if (investmentType === 'usufruit') {
       annualRevenue = amount * (distributionRate / 100);
     } else if (investmentType === 'nue') {
-   
+
       annualRevenue = 0;
- 
+
       futureAnnualRevenue = amount * (distributionRate / 100);
     }
 
-   
+
     this.recapData = {
       numberOfShares,
       annualRevenue,
