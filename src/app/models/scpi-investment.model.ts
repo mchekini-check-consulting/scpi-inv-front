@@ -22,6 +22,7 @@ export interface InvestmentResponse {
   investmentDate: string;
   scpiId: number;
   scpiName: string;
+  scpiManagerName: string;
   scpiType: string;
   sharePrice: number;
 }

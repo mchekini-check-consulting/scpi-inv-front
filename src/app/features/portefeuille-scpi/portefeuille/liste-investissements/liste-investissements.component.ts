@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PortfolioSummary } from '../../../../models/scpi-investment.model';
+import { InvestmentResponse, PortfolioSummary } from '../../../../models/scpi-investment.model';
 import { InvestmentService } from '../../../../services/investment.service';
 import { FormatFieldPipe } from '../../../../core/pipe/format-field.pipe';
+import { generateScpiSlug } from '../../../../utils/slug-util';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,7 +19,7 @@ export class ListeInvestissementsComponent implements OnInit {
   sortBy: 'date' | 'amount' = 'date';
   loading = false;
 
-  constructor(private investmentService: InvestmentService) {}
+  constructor(private investmentService: InvestmentService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadPortfolio();
@@ -51,12 +53,8 @@ export class ListeInvestissementsComponent implements OnInit {
     return labels[type] || type;
   }
 
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', { 
-      day: '2-digit', 
-      month: 'long', 
-      year: 'numeric' 
-    });
+  goToScpiDetail(investment: InvestmentResponse): void {
+    const slug = generateScpiSlug(investment.scpiName, investment.scpiManagerName);
+    this.router.navigate(['/dashboard/scpi', slug]);
   }
 }
