@@ -1,8 +1,7 @@
 $bg: #f9fafb;
 $text: #0f172a;
-$green: #2d5f2e;
-$green-600: #234a24;
-$green-100: #eaf4ea;
+$green: #569657;
+$green-600: #5B9F5A;
 $green-100: #eaf4ea;
 $blue-600: #155eef;
 $gray-700: #374151;
@@ -12,130 +11,212 @@ $border-light: #e2e8f0;
 $shadow-color: rgba(21, 94, 239, 0.1);
 
 .simulation-layout {
-  min-height: 100vh;
-  background: $bg-alt;
+ min-height: 100vh;
+ background: $bg-alt;
 }
 
 .simulation-header {
-background: linear-gradient(135deg, $green 0%, lighten($green, 15%) 100%);  color: white;
-  padding: 2rem 2rem 3rem;
-  text-align: center;
+  background: linear-gradient(135deg, $green-600 0%, lighten($green-600, 5%) 100%);
+ color: white;
+ padding: 2rem 2rem 3rem;
+ text-align: center;
 
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 0 0 0.5rem;
-  }
+ h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+ }
 
-  .subtitle {
-    font-size: 1rem;
-    opacity: 0.9;
-    margin: 0;
-  }
+ .subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0;
+ }
 }
 
 .kpi-section {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  padding: 0 2rem;
-  margin-top: -2rem;
-  margin-bottom: 2rem;
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 1.5rem;
+ padding: 0 2rem;
+ margin-top: -2rem;
+ margin-bottom: 0.5 rem;
 
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-  }
+ @media (max-width: 1024px) {
+  grid-template-columns: 1fr;
+ }
 }
 
 .kpi-card {
-  background: white;
+ background: white;
+ border-radius: 12px;
+ padding: 1.5rem;
+ box-shadow: 0 4px 6px rgba($shadow-color, 0.2); 
+ display: flex;
+ align-items: center;
+ gap: 1rem;
+
+ .kpi-icon {
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba($shadow-color, 0.2); 
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  flex-shrink: 0;
 
-  .kpi-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+  svg {
+   width: 24px;
+   height: 24px;
+  }
+ }
 
-    svg {
-      width: 24px;
-      height: 24px;
-    }
-  }
+ .kpi-content {
+  flex: 1;
+ }
 
-  .kpi-content {
-    flex: 1;
-  }
+ .kpi-label {
+  font-size: 0.875rem;
+  color: $gray-500;
+  margin: 0 0 0.25rem;
+ }
 
-  .kpi-label {
-    font-size: 0.875rem;
-    color: $gray-500;
-    margin: 0 0 0.25rem;
-  }
+ .kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  color: $text;
+ }
+ &.investment .kpi-icon {
+  background: linear-gradient(135deg, $blue-600 0%, darken($blue-600, 10%) 100%);
+  color: white;
+ }
 
-  .kpi-value {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin: 0;
-    color: $text;
-  }
-  &.investment .kpi-icon {
-    background: linear-gradient(135deg, $blue-600 0%, darken($blue-600, 10%) 100%);
-    color: white;
-  }
+ &.gross .kpi-icon {
+  background: linear-gradient(135deg, $green 0%, $green-600 100%);
+  color: white;
+ }
 
-  &.gross .kpi-icon {
-    background: linear-gradient(135deg, $green 0%, $green-600 100%);
-    color: white;
-  }
-
-  &.net .kpi-icon { 
-    background: linear-gradient(135deg, $gray-500 0%, $gray-700 100%);
-    color: white;
-  }
+ &.net .kpi-icon { 
+  background: linear-gradient(135deg, $gray-500 0%, $gray-700 100%);
+  color: white;
+ }
 }
 
 .content-grid {
-  display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 2rem;
-  padding: 0 2rem 2rem;
+ display: grid;
+ grid-template-columns: 400px 1fr;
+ gap: 2rem;
+ padding: 0 2rem 2rem;
 
-  @media (max-width: 1280px) {
-    grid-template-columns: 1fr;
-  }
+ @media (max-width: 1280px) {
+  grid-template-columns: 1fr;
+ }
 }
 
 .portfolio-section {
-  @media (max-width: 1280px) {
-    order: 2;
-  }
+ @media (max-width: 1280px) {
+  order: 2;
+ }
 }
 
 .details-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
-  @media (max-width: 1280px) {
-    order: 1;
-  }
+ display: flex;
+ flex-direction: column;
+ gap: 1.5rem;
+margin-top:2rem;
+ @media (max-width: 1280px) {
+  order: 1;
+ }
 }
 
 .charts-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 1.5rem;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+ @media (max-width: 768px) {
+  grid-template-columns: 1fr;
+ }
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.tax-section {
+  @extend .card;
+  position: relative;
+  
+  h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $text;
+    margin-bottom: 0.5rem;
+  }
+
+  .description {
+    font-size: 0.875rem;
+    color: $gray-500;
+    margin-bottom: 1.5rem;
+  }
+
+  .tmi-slider-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tmi-slider {
+    flex: 1;
+    -webkit-appearance: none; 
+    appearance: none;
+    height: 8px;
+    background: $border-light;
+    border-radius: 4px;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: $green; 
+      cursor: pointer;
+      border: 3px solid white;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    &::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: $green;
+      cursor: pointer;
+      border: 3px solid white;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .tmi-display {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: $green; 
+    white-space: nowrap;
+
+    .tmi-unit {
+      font-size: 1.25rem;
+    }
+  }
+
+  .tmi-footer {
+    display: block;
+    font-size: 0.75rem;
+    color: $gray-500;
+    text-align: right;
   }
 }

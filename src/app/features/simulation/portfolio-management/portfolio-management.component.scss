@@ -1,7 +1,7 @@
 $bg: #f9fafb;
 $text: #0f172a;
-$green: #2d5f2e;
-$green-600: #234a24;
+$green: #569657;
+$green-600: #5B9F5A;
 $green-100: #eaf4ea;
 $blue-600: #155eef;
 $gray-700: #374151;
@@ -16,8 +16,9 @@ $shadow-color: rgba(21, 94, 239, 0.1);
   padding: 1.5rem;
   box-shadow: 0 4px 10px rgba($shadow-color, 0.15); 
   height: fit-content;
-  position: sticky;
+  position: relative;
   top: 2rem;
+  z-index: 1;
 }
 
 .portfolio-header {

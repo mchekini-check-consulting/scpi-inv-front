@@ -8,14 +8,13 @@ import { SectorChartComponent } from "../sector-chart/sector-chart.component";
 import { IncomeBreakdownChartComponent } from "../income-breakdown-chart/income-breakdown-chart.component";
 import { GeographicChartComponent } from "../geographic-chart/geographic-chart.component";
 import { PerformanceDetailsTableComponent } from "../performance-details-table/performance-details-table.component";
-import { TaxSectionComponent } from "../tax-section/tax-section.component";
 import { ScpiSelectionModalComponent } from "../scpi-selection-modal/scpi-selection-modal.component";
-
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: "app-simulation-layout",
   standalone: true,
-  imports: [CommonModule, PortfolioManagementComponent, TaxSectionComponent, SectorChartComponent, IncomeBreakdownChartComponent, GeographicChartComponent, PerformanceDetailsTableComponent, ScpiSelectionModalComponent],
+  imports: [CommonModule, FormsModule,PortfolioManagementComponent, SectorChartComponent, IncomeBreakdownChartComponent, GeographicChartComponent, PerformanceDetailsTableComponent, ScpiSelectionModalComponent],
   templateUrl: "./simulation-layout.component.html",
   styleUrl: "./simulation-layout.component.scss",
 })
@@ -29,6 +28,8 @@ export class SimulationLayoutComponent implements OnInit {
     taxRate: 30,
   }
     showAddModal: boolean = false;
+    defaultTmi: number = 30; 
+    tmiValue: number = this.defaultTmi;
   constructor(private scpiService: ScpiService) {}
     addToPortfolio(event: { scpi: ScpiSimulator, shares: number }) {
 
@@ -56,4 +57,8 @@ export class SimulationLayoutComponent implements OnInit {
   onOpenAddModal(isOpen: boolean): void {
     this.showAddModal = isOpen;
   }
+  updateTmiDisplay(): void {
+        console.log(`TMI changée à : ${this.tmiValue}%`);
+
+    }
 }
