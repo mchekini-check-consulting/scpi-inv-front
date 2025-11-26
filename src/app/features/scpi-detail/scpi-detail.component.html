@@ -1,4 +1,10 @@
 <div class="scpi-container" *ngIf="!isLoading && scpi; else loadingOrError">
+  <div class="button-container-top">
+    <button type="button" class="back-btn-icon" (click)="goBack()">
+      <i class="pi pi-arrow-left" aria-hidden="true"></i>
+    </button>
+  </div>
+
   <div class="scpi-header">
     <div class="scpi-info">
       <div class="scpi-icon" aria-hidden="true">
@@ -16,7 +22,6 @@
     <p>{{ scpi.advertising }}</p>
   </div>
 
-  
   <p-tabs value="0" class="mt-8">
     <p-tablist>
       <p-tab value="0">
@@ -25,21 +30,21 @@
           <span>Répartition</span>
         </div>
       </p-tab>
-      
+
       <p-tab value="1">
         <div class="flex items-center gap-2">
           <i class="pi pi-chart-bar"></i>
           <span>Performance</span>
         </div>
       </p-tab>
-      
+
       <p-tab value="2">
         <div class="flex items-center gap-2">
           <i class="pi pi-euro"></i>
           <span>Évolution</span>
         </div>
       </p-tab>
-      
+
       <p-tab value="3">
         <div class="flex items-center gap-2">
           <i class="pi pi-info-circle"></i>
@@ -47,26 +52,37 @@
         </div>
       </p-tab>
     </p-tablist>
-    
+
     <p-tabpanels>
       <p-tabpanel value="0">
         <div class="tab-content" *ngIf="scpi?.id">
-          <app-scpi-repartition [scpiId]="scpi.id"></app-scpi-repartition>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5 h-auto md:min-h-[550px]">
+            <app-geo-repartition
+              *ngIf="repartition"
+              [geographicalData]="repartition.geographical"
+              class="h-full">
+            </app-geo-repartition>
+            <app-sectoral-repartition
+              *ngIf="repartition"
+              [sectoralData]="repartition.sectoral"
+              class="h-full">
+            </app-sectoral-repartition>
+          </div>
         </div>
       </p-tabpanel>
-      
+
       <p-tabpanel value="1">
         <div class="tab-content" *ngIf="scpi?.id">
           <app-performance-history [scpiId]="scpi.id"></app-performance-history>
         </div>
       </p-tabpanel>
-      
+
       <p-tabpanel value="2">
         <div class="tab-content">
           <app-scpi-valuation-timeline [scpi]="scpi"></app-scpi-valuation-timeline>
         </div>
       </p-tabpanel>
-      
+
       <p-tabpanel value="3">
         <div class="tab-content">
           <div class="indicators-grid">
@@ -156,13 +172,6 @@
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
-
-  <div class="button-container mt-6">
-    <button type="button" class="back-btn" (click)="goBack()">
-      <i class="pi pi-arrow-left" aria-hidden="true"></i>
-      <span>Retour au catalogue</span>
-    </button>
-  </div>
 </div>
 
 <ng-template #loadingOrError>
