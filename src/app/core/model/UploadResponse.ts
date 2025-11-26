@@ -5,4 +5,6 @@ export interface UploadResponse {
   size: number;
   contentType: string;
   error?: string;
+
+  areRegulatoryDocumentsValidated : boolean;
 }

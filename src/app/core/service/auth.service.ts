@@ -104,4 +104,9 @@ export class AuthService {
       return null;
     }
   }
+
+  getCurrentUserEmail(): string | null {
+  const userInfo = this.userInfo$.getValue();
+  return userInfo?.email || userInfo?.preferred_username || null;
+}
 }
