@@ -1,0 +1,105 @@
+$bg: #f9fafb;
+$text: #0f172a;
+$green: #2d5f2e;
+$green-600: #234a24;
+$green-100: #eaf4ea;
+$blue-600: #155eef;
+$gray-700: #374151;
+$gray-500: #6b7280;
+$bg-alt: #f8fafc; 
+$border-light: #e2e8f0;
+$shadow-color: rgba(21, 94, 239, 0.1);
+
+$red: #ef4444;      
+$red-dark: #dc2626;  
+$red-light: #fef2f2;
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 1rem;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); 
+}
+
+.modal-icon {
+  width: 72px;
+  height: 72px;
+  background: $red-light;
+  color: $red;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  border: 4px solid white; 
+  box-shadow: 0 0 0 1px $red-light; 
+  
+  svg {
+    width: 40px; 
+    height: 40px;
+    stroke: $red;
+  }
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $text;
+  margin: 0 0 0.75rem;
+}
+
+p {
+  font-size: 0.875rem;
+  color: $gray-500;
+  margin: 0 0 1.5rem;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+
+  button {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+
+  .cancel-button {
+    background: white;
+    color: $gray-700;
+    border: 1px solid $border-light;
+
+    &:hover {
+      background: $bg-alt;
+      border-color: $gray-500;
+    }
+  }
+
+  .confirm-button {
+    background: $red;
+    color: white;
+
+    &:hover {
+      background: $red-dark;
+    }
+  }
+}

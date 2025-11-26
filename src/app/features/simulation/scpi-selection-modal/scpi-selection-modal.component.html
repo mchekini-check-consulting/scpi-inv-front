@@ -1,0 +1,115 @@
+<div class="modal-overlay" (click)="close.emit()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div *ngIf="step === 'selection'" class="modal-content">
+      <div class="modal-header">
+        <h2>Sélectionner une SCPI</h2>
+        <button class="close-button" (click)="close.emit()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="search-box">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input
+          type="text"
+          placeholder="Rechercher une SCPI..."
+          [(ngModel)]="searchTerm"
+          (input)="filterScpis()"
+        />
+      </div>
+
+      <div class="scpi-list">
+        <div
+          *ngFor="let scpi of filteredList"
+          class="scpi-item"
+          (click)="selectScpi(scpi)"
+        >
+          <div class="scpi-info">
+            <h3>{{ scpi.name }}</h3>
+            <span class="scpi-sector" [style.background-color]="getSectorColor(getPrimarySector(scpi.sectors))">
+              {{ getPrimarySector(scpi.sectors) }}
+            </span>
+          </div>
+          <div class="scpi-details">
+            <div class="detail">
+              <span class="label">Prix par part</span>
+              <span class="value">{{ formatCurrency(scpi.sharePrice) }}</span> 
+            </div>
+            <div class="detail">
+              <span class="label">Taux de distribution</span>
+              <span class="value rate">{{ scpi.yieldDistributionRate }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="cancel-button" (click)="close.emit()">Annuler</button>
+      </div>
+    </div>
+
+    <div *ngIf="step === 'configuration'" class="modal-content">
+      <div class="modal-header">
+        <button class="back-button" (click)="backToSelection()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <h2>Configurer l'investissement</h2>
+        <button class="close-button" (click)="close.emit()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="config-content" *ngIf="selectedScpi">
+        <div class="selected-scpi-info">
+          <h3>{{ selectedScpi.name }}</h3>
+          <div class="sectors-list">
+            <span 
+              *ngFor="let sector of selectedScpi.sectors" 
+              class="scpi-sector" 
+              [style.background-color]="getSectorColor(sector.label)"
+            >
+              {{ sector.label }} ({{ sector.percentage }}%)
+            </span>
+          </div>
+          <p class="scpi-rate">Taux de distribution: {{ selectedScpi.yieldDistributionRate }}%</p>
+        </div>
+
+        <div class="input-group">
+          <label>Nombre de parts</label>
+          <input
+            type="number"
+            [(ngModel)]="shares"
+            [min]="Math.ceil(selectedScpi.minimumSubscription / selectedScpi.sharePrice)"
+            step="1"
+          />
+          <span class="help-text m-2">
+            Minimum: {{ Math.ceil(selectedScpi.minimumSubscription / selectedScpi.sharePrice) }} part(s) 
+            (Souscription minimale: {{ formatCurrency(selectedScpi.minimumSubscription) }})
+          </span>
+        </div>
+
+        <div class="amount-display">
+          <span class="amount-label">Montant investi</span>
+          <span class="amount-value">{{ formatCurrency(getTotalAmount()) }}</span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="cancel-button" (click)="close.emit()">Annuler</button>
+        <button class="confirm-button" (click)="confirmAdd()">Confirmer l'ajout</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -48,4 +48,3 @@ export interface ScpiWithRates {
   cashback: number;
   distributionRates: DistributionRate[];
 }
-

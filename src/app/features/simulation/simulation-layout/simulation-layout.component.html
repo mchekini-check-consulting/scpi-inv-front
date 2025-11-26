@@ -1,0 +1,144 @@
+<div class="simulation-layout">
+   <button class="back-button" (click)="goBack()">
+    <i class="pi pi-arrow-left"></i>
+    Retour
+  </button>
+  <header class="simulation-header">
+    <h1>Simulateur SCPI</h1>
+    <p class="subtitle">
+      Construisez, analysez et optimisez votre portefeuille immobilier
+    </p>
+  </header>
+
+  <div class="kpi-section">
+    <div class="kpi-card investment">
+      <div class="kpi-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Investissement Total</p>
+        <p class="kpi-value">{{ formatCurrency(summary.totalInvestment) }}</p>
+      </div>
+    </div>
+
+    <div class="kpi-card gross">
+      <div class="kpi-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Revenus Bruts Annuels</p>
+        <p class="kpi-value">{{ formatCurrency(summary.grossRevenue) }}</p>
+      </div>
+    </div>
+
+    <div class="kpi-card net">
+      <div class="kpi-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+          <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <p class="kpi-label">Revenus Nets Annuels</p>
+        <p class="kpi-value">{{ formatCurrency(summary.netRevenue) }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <aside class="portfolio-column">
+      <div class="card portfolio-card">
+        <app-portfolio-management></app-portfolio-management>
+      </div>
+    </aside>
+    
+
+    <main class="analysis-column">
+      <div class="analysis-content">
+        <div class="card chart-card">
+          <div class="card-header">
+            <h3>Répartition géographique</h3>
+            <p class="card-subtitle">Détail de vos investissements par pays</p>
+          </div>
+          <div class="chart-container">
+            <app-geographic-chart></app-geographic-chart>
+          </div>
+        </div>
+
+        <div class="card table-card">
+          <div class="card-header">
+            <h3>Répartition par pays</h3>
+            <p class="card-subtitle">Détail de vos investissements</p>
+          </div>
+          <table class="country-table">
+            <thead>
+              <tr>
+                <th>Pays</th>
+                <th>Montant investi</th>
+                <th>Pourcentage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let country of countries">
+                <td>{{ country.name }}</td>
+                <td class="amount">{{ formatCurrency(country.amount) }}</td>
+                <td class="percentage">{{ country.percentage }}%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card tax-card">
+          <div class="card-header">
+            <h3>Synthèse fiscale</h3>
+            <p class="card-subtitle">Estimation de l'impact fiscal annuel</p>
+          </div>
+
+          <div class="tax-details">
+            <div class="tax-row">
+              <span class="tax-label">Revenus locatifs estimés</span>
+              <span class="tax-value positive">{{ formatCurrency(summary.grossRevenue) }}</span>
+            </div>
+            <div class="tax-row">
+              <span class="tax-label">Revenus fonciers imposables</span>
+              <span class="tax-value positive">{{ formatCurrency(taxableIncome) }}</span>
+            </div>
+            <div class="tax-row">
+              <span class="tax-label">Impôt sur le revenu estimé</span>
+              <span class="tax-value negative">{{ formatCurrency(incomeTax) }}</span>
+            </div>
+            <div class="tax-row">
+              <span class="tax-label">Prélèvements sociaux (17,2%)</span>
+              <span class="tax-value negative">{{ formatCurrency(socialTax) }}</span>
+            </div>
+            <div class="tax-row total">
+              <span class="tax-label">Revenus nets après fiscalité</span>
+              <span class="tax-value highlight">{{ formatCurrency(summary.netRevenue) }}</span>
+            </div>
+          </div>
+
+          <div class="tmi-section">
+            <div class="tmi-header">
+              <label>Tranche Marginale d'Imposition</label>
+              <div class="tmi-display">
+                <span class="tmi-value">{{ tmiValue }}</span><span class="tmi-unit">%</span>
+              </div>
+            </div>
+            <input type="range" class="tmi-slider" min="0" max="45" step="1" [(ngModel)]="tmiValue" (input)="updateTmi()">
+            <div class="tmi-marks">
+              <span>0%</span><span>11%</span><span>30%</span><span>41%</span><span>45%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <app-scpi-selection-modal *ngIf="showAddModal" (close)="onOpenAddModal(false)" (addScpi)="addToPortfolio($event)">
+  </app-scpi-selection-modal>
+</div>
