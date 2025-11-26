@@ -1,0 +1,76 @@
+<div class="w-full">
+
+  <div class="flex justify-between items-center my-6">
+    <h2 class="text-2xl font-bold text-gray-800">Mes Investissements</h2>
+  </div>
+
+ 
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 !border-secondary"></div>
+  </div>
+
+  <div *ngIf="!loading && portfolio" class="space-y-4">
+    <div 
+      *ngFor="let investment of portfolio.investments" 
+      (click)="goToScpiDetail(investment)"
+      class="p-3 bg-gradient-to-br !from-primary/70 !to-primary/25 rounded-xl border border-secondary hover:shadow-xl transition-all duration-300 cursor-pointer group">
+      
+      <div class="flex justify-between items-start">
+    
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-3">
+            <h3 class="text-lg font-bold !text-tertiary group-hover:!text-secondary transition-colors">
+              {{ investment.scpiName }}
+            </h3>
+            <span class="px-2.5 py-0.5 bg-white/50 !text-secondary text-xs font-semibold rounded-full backdrop-blur-sm">
+              {{ investment.scpiType }}
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs !text-secondary/80 mb-2">
+            <div class="flex items-center gap-1.5">
+              <i class="pi pi-calendar text-xs"></i>
+              <span>{{ investment.investmentDate | formatField:'date' }}</span>
+            </div>
+            
+            <div class="flex items-center gap-1.5">
+              <i class="pi pi-file text-xs"></i>
+              <span>{{ getInvestmentTypeLabel(investment.investmentType) }}</span>
+            </div>
+            
+            <div class="flex items-center gap-1.5">
+              <i class="pi pi-chart-line text-xs"></i>
+              <span>{{ investment.numberOfShares }} parts</span>
+            </div>
+          </div>
+
+          <div *ngIf="investment.dismembermentYears" class="inline-flex items-center gap-1.5 text-xs bg-white/30 !text-secondary px-2.5 py-1 rounded-full backdrop-blur-sm">
+            <i class="pi pi-clock text-xs"></i>
+            Démembrement {{ investment.dismembermentYears }} ans
+          </div>
+        </div>
+
+     
+        <div class="text-right ml-4">
+          <p class="text-xs !text-secondary/70 mb-0.5 font-medium">Montant investi</p>
+          <p class="text-3xl font-bold !text-tertiary">
+            {{ investment.investmentAmount | formatField : 'currency' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex justify-end mt-3 pt-3 border-t border-white/20">
+        <span class="!text-secondary text-xs font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+          Voir les détails
+          <i class="pi pi-arrow-right text-xs"></i>
+        </span>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="!loading && portfolio && portfolio.investments.length === 0" class="text-center py-12">
+    <i class="pi pi-inbox text-6xl text-gray-300 mb-4"></i>
+    <p class="text-gray-500 text-lg">Aucun investissement pour le moment</p>
+  </div>
+</div>
