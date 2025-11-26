@@ -8,24 +8,26 @@ import { ScpiDetail } from '../../models/scpi.model';
 import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { FormatFieldPipe } from '../../core/pipe/format-field.pipe';
-import { ScpiRepartitionComponent } from '../../core/template/components/scpi-repartition/scpi-repartition.component';
+import { SectoralRepartitionComponent } from '../../core/template/components/sectoral-repartition/sectoral-repartition.component';
 import { ScpiRepartition } from '../../models/scpi-repartition.model';
 import { PerformanceHistoryComponent } from '../performance-history-scpi/performance-history/performance-history.component';
-import { ScpiValuationTimelineComponent } from "../scpi-valuation-timeline/scpi-valuation-timeline.component";
+import { ScpiValuationGraphComponent } from "../scpi-valuation-graph/scpi-valuation-graph.component";
 import { TabsModule } from 'primeng/tabs';
+import {GeoRepartitionComponent} from "../../core/template/components/geo-repartition/geo-repartition.component";
 
 @Component({
   selector: 'app-scpi-detail',
   standalone: true,
   imports: [
-    CommonModule, 
-    AccordionModule, 
-    ButtonModule, 
-    FormatFieldPipe, 
-    ScpiRepartitionComponent, 
-    PerformanceHistoryComponent, 
-    ScpiValuationTimelineComponent, 
-    TabsModule
+    CommonModule,
+    AccordionModule,
+    ButtonModule,
+    FormatFieldPipe,
+    SectoralRepartitionComponent,
+    PerformanceHistoryComponent,
+    ScpiValuationGraphComponent,
+    TabsModule,
+    GeoRepartitionComponent
   ],
   templateUrl: './scpi-detail.component.html',
   styleUrls: ['./scpi-detail.component.scss'],

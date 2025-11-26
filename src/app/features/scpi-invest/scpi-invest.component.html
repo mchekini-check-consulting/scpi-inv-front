@@ -1,4 +1,24 @@
-<p-toast></p-toast>
+ <p-toast></p-toast>
+
+<div *ngIf="!areRegulatoryDocumentsValidated"
+  class="w-full bg-red-100 border-l-4 border-red-600 rounded-r-lg p-5 mb-8 shadow-md">
+
+  <div class="flex items-start gap-4">
+    <span
+      class="flex items-center justify-center w-12 h-12 rounded-full bg-red-200">
+      <i class="pi pi-shield text-red-700 text-2xl"></i>
+    </span>
+
+    <div>
+      <h3 class="text-xl font-bold text-red-800">Votre investissement est
+        bloqué</h3>
+      <p class="text-red-700 mt-1">Tant que vous n’avez pas validé vos documents
+        réglementaires.</p>
+    </div>
+  </div>
+
+</div>
+
 <div class="px-10 py-2 mb-6">
   <h1 class="text-xl font-semibold text-gray-900">
     Calculez votre investissement
@@ -360,16 +380,42 @@
         </ul>
       </div>
 
-      <button
+      <div *ngIf="!areRegulatoryDocumentsValidated"
+        class="my-8 p-6 bg-orange-50 border border-orange-300 rounded-lg text-center">
+
+        <div class="flex items-center justify-center gap-3 text-orange-800">
+          <span
+            class="flex items-center justify-center w-10 h-10 rounded-full bg-orange-200">
+            <i class="pi pi-lock text-2xl text-orange-700"></i>
+          </span>
+
+          <p class="text-lg font-semibold">
+            Action impossible tant que les documents n’ont pas été validés
+          </p>
+        </div>
+
+      </div>
+
+         <button
         type="submit"
-        [disabled]="!isAmountValid"
+       [disabled]="!isAmountValid || !areRegulatoryDocumentsValidated"
         class="px-4 py-2 text-center w-full text-white rounded-xl transition"
         [ngClass]="{
-          'bg-blue-600 hover:bg-blue-700': isAmountValid,
-          'bg-gray-400 cursor-not-allowed': !isAmountValid
+          'bg-blue-600 hover:bg-blue-700': isAmountValid && areRegulatoryDocumentsValidated,
+          'bg-gray-400 cursor-not-allowed': !isAmountValid || !areRegulatoryDocumentsValidated
         }"
       >
         Continuer vers le récapitulatif
+      </button>
+      <button
+        *ngIf="!areRegulatoryDocumentsValidated"
+        pButton
+        type="button"
+        label="Accéder aux documents réglementaires"
+        class="w-full mt-4 text-lg p-button-outlined"
+        icon="pi pi-file-edit"
+        iconPos="left"
+        (click)="goToRegulatoryDocuments()">
       </button>
     </div>
   </form>
@@ -464,7 +510,7 @@
             <span class="text-2xl">✅</span>
             <p class="font-semibold text-green-800">Après {{ selectedDuration }} ans (pleine propriété)</p>
           </div>
-          
+
           <div class="bg-white rounded-lg p-3 mb-3 shadow-sm">
             <div class="flex justify-between items-center">
               <span class="text-gray-600">Revenu annuel estimé</span>

@@ -1,0 +1,24 @@
+<div class="bg-white rounded-lg shadow-md p-6 flex flex-col h-full">
+  <h3 class="text-xl font-semibold mb-4 text-gray-800">
+    Répartition Sectorielle
+  </h3>
+
+  <div class="chart-container flex-1 min-h-0">
+    <p-chart
+      type="doughnut"
+      [data]="sectoralChartData"
+      [options]="chartOptions"
+      class="w-full h-full"
+    ></p-chart>
+  </div>
+
+  <div class="stats-container mt-4 flex-shrink-0">
+    <div class="stats-grid">
+      <div class="stat-item" *ngFor="let sector of sectoralChartData?.labels; let i = index">
+        <div class="stat-color" [style.background-color]="sectoralChartData?.datasets[0]?.backgroundColor[i]"></div>
+        <span class="stat-label">{{ sector }}</span>
+        <span class="stat-value">{{ sectoralChartData?.datasets[0]?.data[i] }}%</span>
+      </div>
+    </div>
+  </div>
+</div>

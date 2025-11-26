@@ -1,0 +1,56 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.chart-container {
+  position: relative;
+  height: 350px;
+  min-height: 350px;
+}
+
+:host ::ng-deep echarts {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.legend-container {
+  margin-top: 1rem;
+  flex-shrink: 0;
+}
+
+.legend-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.country-name {
+  font-weight: 500;
+  color: #374151;
+}
+
+.country-value {
+  font-weight: 600;
+  color: #1e40af;
+}
+
+:host ::ng-deep .chart-container div[echarts] {
+  width: 100% !important;
+  height: 100% !important;
+}

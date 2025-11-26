@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { UploadResponse } from '../model/UploadResponse';
+import { UserDocument } from '../../models/userDocument.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,4 +34,28 @@ export class DocumentService {
       `${this.API_URL}/status`
     );
   }
+ getUserDocuments(email: string): Observable<UserDocument[]> {
+    return this.http.get<UserDocument[]>(`${this.API_URL}/by-email`, {
+      params: { email }
+    }).pipe(
+      catchError(err => {
+        return of([]);
+      })
+    );
+  }
+
+  areRegulatoryDocumentsValidated(email: string): Observable<boolean> {
+    return this.getUserDocuments(email).pipe(
+      map(documents => {
+        if (!documents || documents.length === 0) {
+          return false;
+        }
+        const allValidated = documents.every(doc => doc.status === 'VALIDATED');
+        return allValidated;
+      })
+    );
+  }
+
+
+
 }

@@ -1,0 +1,27 @@
+<div class="bg-white rounded-lg shadow-md p-6 flex flex-col h-full">
+  <h3 class="text-xl font-semibold mb-4 text-gray-800">
+    Répartition Géographique
+  </h3>
+
+  <div *ngIf="!geoMapOptions" class="flex-1 flex items-center justify-center">
+    <div class="text-gray-500">Chargement de la carte...</div>
+  </div>
+
+  <div class="chart-container flex-1 min-h-0" *ngIf="geoMapOptions">
+    <echarts
+      [options]="geoMapOptions"
+      class="w-full h-full"
+      style="display: block;">
+    </echarts>
+  </div>
+
+  <div class="legend-container mt-4 flex-shrink-0">
+    <h4 class="text-sm font-medium text-gray-700 mb-2 text-center">Légende des pays</h4>
+    <ul class="legend-list">
+      <li *ngFor="let country of countriesLegend" class="legend-item">
+        <span class="country-name">{{ country.name }}</span>
+        <span class="country-value">{{ country.value }}%</span>
+      </li>
+    </ul>
+  </div>
+</div>

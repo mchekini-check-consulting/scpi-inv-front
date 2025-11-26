@@ -6,12 +6,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FormatFieldPipe implements PipeTransform {
 
- transform(value: number | string | undefined, type: 'currency' | 'percent' | 'month'| 'date' | 'none' = 'none'): string {
+ transform(value: number | string | undefined, type: 'currency' | 'percent' | 'month' | 'millionCurrency'| 'date' | 'none' = 'none'): string {
   if (value === undefined || value === null) return '-';
 
   switch(type) {
     case 'currency':
-      return `${Number(value).toLocaleString('fr-FR')} €`; 
+      return `${Number(value).toLocaleString('fr-FR')} €`;
     case 'percent':
       return typeof value === 'number' ? `${value.toFixed(2)} %` : `${Number(value).toFixed(2)} %`;
     case 'month':
@@ -24,6 +24,9 @@ export class FormatFieldPipe implements PipeTransform {
           month: '2-digit',
           year: 'numeric'
         });
+    case 'millionCurrency':
+      const millions = Number(value) / 1_000_000;
+      return `${millions.toFixed(millions < 10 ? 1 : 0)} M€`;
     default:
       return String(value);
   }
