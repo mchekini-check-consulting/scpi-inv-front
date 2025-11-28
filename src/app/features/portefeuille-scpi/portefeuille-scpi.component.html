@@ -1,27 +1,26 @@
-<div class="p-8">
+<div class="container mx-auto p-8">
   <h1 class="text-3xl font-semibold mb-8">Mon Portefeuille SCPI</h1>
 
   <div class="mb-8">
     <app-portfolio-summary></app-portfolio-summary>
   </div>
-  
+
   <div class="grid grid-cols-2 gap-6">
     <div class="bg-white rounded-lg shadow-md p-6 min-h-[450px]">
       <app-montant-total-investi></app-montant-total-investi>
     </div>
-    
+
     <div class="bg-white rounded-lg shadow-md p-6 min-h-[450px]">
       <app-revenusmensuels></app-revenusmensuels>
     </div>
-    
-   
-    
+
     <div class="bg-white rounded-lg shadow-md p-6 min-h-[450px]">
       <app-repartition-geographique></app-repartition-geographique>
     </div>
 
-     <div class="border !border-secondary rounded-lg shadow-md p-6 min-h-[450px]">
-      <app-repartition-sectorielle></app-repartition-sectorielle>
+    <div class="min-h-[450px]">
+      <app-sectoral-repartition [loadFromApi]="true">
+      </app-sectoral-repartition>
     </div>
   </div>
   <div>
