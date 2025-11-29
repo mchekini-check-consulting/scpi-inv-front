@@ -2,11 +2,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Scpi, ScpiDetail } from '../../../../models/scpi.model';
 import { Router, RouterLink } from '@angular/router';
+import { FormatFieldPipe } from '../../../pipe/format-field.pipe';
 
 @Component({
   selector: 'app-scpi-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormatFieldPipe],
   templateUrl: './scpi-card.component.html',
   styleUrl: './scpi-card.component.scss',
 })

@@ -1,4 +1,3 @@
-
 <div *ngIf="loading" class="grid grid-cols-4 gap-4">
   <div
     *ngFor="let i of [1, 2, 3, 4]"
@@ -7,7 +6,6 @@
 </div>
 
 <div *ngIf="!loading && portfolio" class="grid grid-cols-4 gap-4">
-
   <div
     class="p-3 flex flex-col justify-center items-start bg-gradient-to-br !from-primary/70 !to-primary/25 rounded-xl border border-secondary hover:shadow-lg transition-shadow"
   >
@@ -21,7 +19,6 @@
     <p class="text-xs !text-secondary mt-2">{{ getFirstInvestmentLabel() }}</p>
   </div>
 
-
   <div
     class="p-3 flex flex-col justify-center items-start bg-gradient-to-br !from-primary/70 !to-primary/25 rounded-xl border border-secondary hover:shadow-lg transition-shadow"
   >
@@ -34,7 +31,6 @@
     </p>
     <p class="text-xs !text-secondary mt-2">Dernière distribution</p>
   </div>
-
 
   <div
     class="p-3 flex flex-col justify-center items-start bg-gradient-to-br !from-primary/70 !to-primary/25 rounded-xl border border-secondary hover:shadow-lg transition-shadow"
@@ -53,12 +49,16 @@
     class="p-3 flex flex-col justify-center items-start bg-gradient-to-br !from-primary/70 !to-primary/25 rounded-xl border border-secondary hover:shadow-lg transition-shadow"
   >
     <div class="flex items-center justify-between w-full mb-2">
-      <p class="text-sm !text-secondary font-semibold">SCPI différentes</p>
-      <i class="pi pi-building text-2xl !text-secondary"></i>
+      <p class="text-sm !text-secondary font-semibold">
+        Durée de détention
+      </p>
+      <i class="pi pi-clock text-xl !text-secondary/60"></i>
     </div>
+
     <p class="text-3xl font-bold !text-tertiary">
-      {{ portfolio.totalScpis }}
+      {{ averageHoldingMonths | duration }}
     </p>
-    <p class="text-xs !text-secondary mt-2">Portefeuille diversifié</p>
+
+    <p class="text-xs !text-secondary mt-2">Durée moyenne</p>
   </div>
 </div>
