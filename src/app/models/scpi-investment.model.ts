@@ -33,3 +33,14 @@ export interface PortfolioSummary {
   totalScpis: number;
   investments: InvestmentResponse[];
 }
+
+export interface RepartitionItem {
+  label: string;
+  percentage: number;
+}
+
+export interface InvestorPortfolioDistribution {
+  totalInvestedAmount: number;
+  sectoral: RepartitionItem[];
+  geographical: RepartitionItem[];
+}
