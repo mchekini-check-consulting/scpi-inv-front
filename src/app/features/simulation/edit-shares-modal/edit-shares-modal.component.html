@@ -1,0 +1,24 @@
+<div class="modal-overlay" (click)="close.emit()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Modifier le nombre de parts</h3>
+      <button class="close-btn" (click)="close.emit()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <p class="scpi-name">{{ item.scpi.name }}</p>
+      
+      <label>Nombre de parts</label>
+      <div class="shares-input-group">
+        <button (click)="decrement()" class="btn-minus">-</button>
+        <input type="number" [(ngModel)]="shares" min="1" (click)="$event.stopPropagation()">
+        <button (click)="increment()" class="btn-plus">+</button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="close.emit()">Annuler</button>
+      <button class="btn-save" (click)="save()">Modifier</button>
+    </div>
+  </div>
+</div>

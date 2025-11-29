@@ -37,6 +37,31 @@ $border-light: #e5e7eb;
     margin: 0;
   }
 }
+.save-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+
+  .btn-primary {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); 
+    color: white;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+  }
+}
+
+
 
 .kpi-section {
   display: grid;
@@ -352,7 +377,6 @@ $border-light: #e5e7eb;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease;
-  z-index: 100;
 
   &:hover {
     background: #f9fafb;

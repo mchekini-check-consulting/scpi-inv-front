@@ -39,7 +39,7 @@
           <div class="scpi-details">
             <div class="detail">
               <span class="label">Prix par part</span>
-              <span class="value">{{ formatCurrency(scpi.sharePrice) }}</span> 
+              <span class="value">{{ scpi.sharePrice | formatField : "currency" }}</span> 
             </div>
             <div class="detail">
               <span class="label">Taux de distribution</span>
@@ -96,19 +96,19 @@
           />
           <span class="help-text m-2">
             Minimum: {{ Math.ceil(selectedScpi.minimumSubscription / selectedScpi.sharePrice) }} part(s) 
-            (Souscription minimale: {{ formatCurrency(selectedScpi.minimumSubscription) }})
+            (Souscription minimale: {{selectedScpi.minimumSubscription | formatField : "currency"  }})
           </span>
         </div>
 
         <div class="amount-display">
           <span class="amount-label">Montant investi</span>
-          <span class="amount-value">{{ formatCurrency(getTotalAmount()) }}</span>
+          <span class="amount-value">{{ getTotalAmount() | formatField : "currency"  }}</span>
         </div>
       </div>
 
       <div class="modal-footer">
         <button class="cancel-button" (click)="close.emit()">Annuler</button>
-        <button class="confirm-button" (click)="confirmAdd()">Confirmer l'ajout</button>
+        <button class="confirm-button" (click)="confirmAdd()">Ajouter simulation</button>
       </div>
     </div>
   </div>
