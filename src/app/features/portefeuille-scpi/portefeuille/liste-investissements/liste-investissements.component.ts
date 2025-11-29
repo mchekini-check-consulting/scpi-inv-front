@@ -5,12 +5,13 @@ import { InvestmentService } from '../../../../services/investment.service';
 import { FormatFieldPipe } from '../../../../core/pipe/format-field.pipe';
 import { generateScpiSlug } from '../../../../utils/slug-util';
 import { Router } from '@angular/router';
+import { DurationPipe } from '../../../../core/pipe/duration.pipe';
 
 
 @Component({
   selector: 'app-liste-investissements',
   standalone: true,
-  imports: [CommonModule, FormatFieldPipe],
+  imports: [CommonModule, FormatFieldPipe, DurationPipe],
   templateUrl: './liste-investissements.component.html',
   styleUrl: './liste-investissements.component.scss'
 })
@@ -18,6 +19,7 @@ export class ListeInvestissementsComponent implements OnInit {
   portfolio: PortfolioSummary | null = null;
   sortBy: 'date' | 'amount' = 'date';
   loading = false;
+  averageHoldingMonths: number = 0;
 
   constructor(private investmentService: InvestmentService, private router: Router) {}
 

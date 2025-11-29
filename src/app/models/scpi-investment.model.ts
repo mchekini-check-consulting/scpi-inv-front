@@ -25,6 +25,7 @@ export interface InvestmentResponse {
   scpiManagerName: string;
   scpiType: string;
   sharePrice: number;
+  investmentDurationMonths: number;
 }
 
 export interface PortfolioSummary {

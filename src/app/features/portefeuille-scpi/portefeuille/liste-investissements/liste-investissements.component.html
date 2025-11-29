@@ -32,6 +32,11 @@
               <i class="pi pi-calendar text-xs"></i>
               <span>{{ investment.investmentDate | formatField:'date' }}</span>
             </div>
+
+            <div class="flex items-center gap-1.5">
+              <i class="pi pi-clock text-xs"></i>
+              <span>{{ investment.investmentDurationMonths | duration }}</span>
+            </div>
             
             <div class="flex items-center gap-1.5">
               <i class="pi pi-file text-xs"></i>

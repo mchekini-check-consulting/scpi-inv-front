@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { InvestmentService } from '../../../../services/investment.service';
 import { PortfolioSummary } from '../../../../models/scpi-investment.model';
 import { FormatFieldPipe } from '../../../../core/pipe/format-field.pipe';
+import { number } from 'echarts';
+import { DurationPipe } from '../../../../core/pipe/duration.pipe';
 
 @Component({
   selector: 'app-portfolio-summary',
   standalone: true,
-  imports: [CommonModule, FormatFieldPipe],
+  imports: [CommonModule, FormatFieldPipe, DurationPipe],
   templateUrl: './portfolio-summary.component.html',
   styleUrl: './portfolio-summary.component.scss',
 })
@@ -15,6 +17,7 @@ export class PortfolioSummaryComponent implements OnInit {
   portfolio: PortfolioSummary | null = null;
   loading = false;
   firstInvestmentDate: Date | null = null;
+  averageHoldingMonths : number = 0
 
   constructor(private investmentService: InvestmentService) {}
 
@@ -34,6 +37,7 @@ export class PortfolioSummaryComponent implements OnInit {
           this.firstInvestmentDate = new Date(
             Math.min(...dates.map((d) => d.getTime()))
           );
+          this.calculateAverageHoldingPeriod(data.investments);
         }
         this.loading = false;
       },
@@ -58,5 +62,19 @@ export class PortfolioSummaryComponent implements OnInit {
       'fr-FR',
       options
     )}`;
+  }
+
+  
+  calculateAverageHoldingPeriod(investments: any[]): void {
+    if (!investments || investments.length === 0) {
+      this.averageHoldingMonths = 0;
+      return;
+    }
+
+    const totalMonths = investments.reduce((sum, inv) => {
+      return sum + (inv.investmentDurationMonths || 0);
+    }, 0);
+
+    this.averageHoldingMonths = Math.round(totalMonths / investments.length);
   }
 }
