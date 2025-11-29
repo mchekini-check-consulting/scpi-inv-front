@@ -5,16 +5,12 @@ import { Scpi,ScpiDetail, ScpiPage,ScpiWithRates } from '../models/scpi.model';
 import { ScpiInvestment } from '../models/scpi-investment.model';
 import { ScpiRepartition } from '../models/scpi-repartition.model';
 import { DistributionRateChartResponse } from '../models/distribution-rate.model';
-import { ScpiSimulator } from '../models/scpi-simulator.model';
-
+import { SimulationResponseDTO } from '../models/scpi-simulator.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScpiService {
-  getSummary(): import("../models/scpi-simulator.model").SimulationSummary {
-    throw new Error("Method not implemented.");
-  }
   private apiUrl = '/api/v1/scpi';
   portfolioSubject: any;
   taxRateSubject: any;
@@ -61,8 +57,36 @@ export class ScpiService {
     return this.http.get<ScpiWithRates[]>(`${this.apiUrl}/comparator-scpis`);
   }
 
-  getScpiForSimulator(): Observable<ScpiSimulator[]> {
-    return this.http.get<ScpiSimulator[]>(`${this.apiUrl}/simulator`);
+  getScpiForSimulator(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/scpis-full-ownership`);
   }
+
+  saveSimulation(payload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/simulations`, payload);
+  }
+
+  getMySimulations(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/simulations`);
+  }
+
+  deleteSimulation(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/simulations/${id}`);
+  }
+
+  deleteScpiFromSimulation(simulationId: number, scpiId: number) {
+  return this.http.delete<SimulationResponseDTO>(`${this.apiUrl}/simulations/${simulationId}/scpis/${scpiId}`
+  );
+}
+    updateScpiShares(simulationId: number, scpiId: number, shares: number): Observable<SimulationResponseDTO> {
+      return this.http.put<SimulationResponseDTO>(`${this.apiUrl}/simulations/${simulationId}/scpis/${scpiId}`,
+        { shares }
+      );
+    }
+
+    getSimulationById(simulationId: number): Observable<SimulationResponseDTO> {
+      return this.http.get<SimulationResponseDTO>(`${this.apiUrl}/simulations/${simulationId}`);
+    }
+
+
 }
  

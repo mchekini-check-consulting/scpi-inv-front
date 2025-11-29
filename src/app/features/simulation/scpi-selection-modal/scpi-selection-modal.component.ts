@@ -5,11 +5,12 @@ import { FormsModule } from "@angular/forms"
 import { ScpiService } from "../../../services/scpi.service"
 import { RepartitionItem } from "../../../models/scpi-repartition.model"
 import { ScpiSimulator } from "../../../models/scpi-simulator.model"
+import { FormatFieldPipe } from "../../../core/pipe/format-field.pipe";
 
 @Component({
  selector: "app-scpi-selection-modal",
  standalone: true,
- imports: [CommonModule, FormsModule],
+ imports: [CommonModule, FormsModule, FormatFieldPipe],
  templateUrl: "./scpi-selection-modal.component.html",
  styleUrl: "./scpi-selection-modal.component.scss",
 })
@@ -72,14 +73,6 @@ export class ScpiSelectionModalComponent implements OnInit {
   }
  }
 
- formatCurrency(value: number): string {
-  return new Intl.NumberFormat("fr-FR", {
-   style: "currency",
-   currency: "EUR",
-   minimumFractionDigits: 0,
-   maximumFractionDigits: 0,
-  }).format(value)
- }
 
  getPrimarySector(sectors: RepartitionItem[]): string {
   if (!sectors || sectors.length === 0) return "Autre"

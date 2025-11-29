@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ScpiSimulatorComponent } from './scpi-simulator.component';
+import { EditSharesModalComponent } from './edit-shares-modal.component';
 
-describe('ScpiSimulatorComponent', () => {
-  let component: ScpiSimulatorComponent;
-  let fixture: ComponentFixture<ScpiSimulatorComponent>;
+describe('EditSharesModalComponent', () => {
+  let component: EditSharesModalComponent;
+  let fixture: ComponentFixture<EditSharesModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ScpiSimulatorComponent]
+      imports: [EditSharesModalComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ScpiSimulatorComponent);
+    fixture = TestBed.createComponent(EditSharesModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
