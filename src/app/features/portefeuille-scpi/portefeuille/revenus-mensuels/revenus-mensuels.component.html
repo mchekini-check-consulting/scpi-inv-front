@@ -1,0 +1,48 @@
+<div class="rounded-lg p-6 h-full flex flex-col">
+
+  <div class="mb-6">
+    <h3 class="text-white text-lg font-semibold mb-1">Revenus Nets Mensuels</h3>
+    <p class="text-gray-400 text-sm">Évolution des distributions sur 6 mois</p>
+  </div>
+
+
+  <div *ngIf="loading" class="flex-1 flex items-center justify-center">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+  </div>
+
+  
+  <div *ngIf="!loading && revenue" class="flex-1 flex flex-col">
+  
+    <div class="mb-4">
+      <div class="flex items-baseline gap-3">
+        <span class="text-4xl font-bold text-white">
+          {{ revenue.totalMonthlyRevenue | number:'1.0-0' }} €
+        </span>
+        <span 
+          class="text-sm font-medium"
+          [class.text-green-400]="calculateVariation().startsWith('+')"
+          [class.text-red-400]="calculateVariation().startsWith('-')"
+          [class.text-gray-400]="!calculateVariation().startsWith('+') && !calculateVariation().startsWith('-')">
+          {{ calculateVariation() }} vs mois précédent
+        </span>
+      </div>
+    </div>
+
+ 
+    <div class="flex-1 min-h-[250px]">
+      <p-chart 
+        type="line" 
+        [data]="chartData" 
+        [options]="chartOptions"
+        [style]="{'height': '100%'}">
+      </p-chart>
+    </div>
+  </div>
+
+
+  <div *ngIf="!loading && !revenue" 
+       class="flex-1 flex flex-col items-center justify-center text-gray-400">
+    <i class="pi pi-chart-line text-6xl mb-4"></i>
+    <p>Aucune donnée disponible</p>
+  </div>
+</div>

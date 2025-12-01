@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { InvestmentRequestDTO } from '../models/investment.model';
+import { InvestmentRequestDTO, MonthlyRevenue } from '../models/investment.model';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { InvestorPortfolioDistribution, PortfolioSummary } from '../models/scpi-investment.model';
@@ -24,4 +24,8 @@ export class InvestmentService {
   getPortfolioDistribution(): Observable<InvestorPortfolioDistribution> {
     return this.http.get<InvestorPortfolioDistribution>(`${this.apiUrl}/investment/portfolio-distribution`);
   }
+
+  getMonthlyRevenue(): Observable<MonthlyRevenue> {
+  return this.http.get<MonthlyRevenue>(`${this.apiUrl}/investment/monthly-revenue`);
+}
 }
