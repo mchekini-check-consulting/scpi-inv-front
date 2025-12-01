@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
+  CountryData,
   PortfolioItem,
   ScpiSimulator,
   SimulationResponseDTO,
@@ -15,6 +16,8 @@ export class SimulationStateService {
   private readonly DEFAULT_TMI = 30;
   private portfolioSubject = new BehaviorSubject<PortfolioItem[]>([]);
   portfolio$ = this.portfolioSubject.asObservable();
+  private countriesSubject = new BehaviorSubject<CountryData[]>([]);
+  countries$ = this.countriesSubject.asObservable();
 
   private summarySubject = new BehaviorSubject<SimulationSummary>({
     id: null,
@@ -33,6 +36,10 @@ export class SimulationStateService {
 
   getSummarySnapshot(): SimulationSummary {
     return this.summarySubject.getValue();
+  }
+
+  getCountriesSnapshot(): CountryData[] {
+    return this.countriesSubject.getValue();
   }
 
   loadSimulation(sim: any): void {
@@ -87,6 +94,7 @@ export class SimulationStateService {
     }
 
     this.portfolioSubject.next(portfolio);
+    this.calculateCountries(portfolio);
     this.recomputeSummary();
   }
 
@@ -110,6 +118,7 @@ updateShares(scpiId: number, newShares: number) {
   });
 
   this.portfolioSubject.next(updated);
+  this.calculateCountries(updated);
   this.recalculateSummary();  
 }
 
@@ -148,6 +157,7 @@ recalculateSummary() {
       .filter(item => item.scpi.id !== scpiId);
 
     this.portfolioSubject.next(portfolio);
+    this.calculateCountries(portfolio)
     this.recomputeSummary();
   }
 
@@ -160,7 +170,7 @@ recalculateSummary() {
 
   resetSimulation(): void {
     this.portfolioSubject.next([]);
-
+    this.countriesSubject.next([]);
     this.summarySubject.next({
       id: null,
       name: 'Nouvelle simulation',
@@ -209,7 +219,8 @@ recalculateSummary() {
       yieldDistributionRate: 0,
       sharePrice: 0,
       minimumSubscription: 0,
-      sectors: []
+      sectors: [],
+      locations:  [] 
     },
     shares: i.shares,
     amount: i.amount,
@@ -228,6 +239,51 @@ recalculateSummary() {
 
   this.portfolioSubject.next(portfolio);
   this.summarySubject.next(summary);
+  this.calculateCountries(portfolio);
+}
+
+private calculateCountries(portfolio: PortfolioItem[]): void {
+  if (!portfolio?.length) {
+    this.countriesSubject.next([]);
+    return;
+  }
+
+  const countryAmountMap = new Map<string, number>();
+  let totalPortfolioAmount = 0;
+
+  portfolio.forEach(item => {
+    totalPortfolioAmount += item.amount;
+    const locations = item.scpi.locations ?? [];
+
+    locations.forEach(loc => {
+      const percentage = Number(loc.percentage);
+      if (isNaN(percentage) || percentage <= 0) return;
+
+      const allocatedAmount = item.amount * (percentage / 100);
+      const current = countryAmountMap.get(loc.label) ?? 0;
+      countryAmountMap.set(loc.label, current + allocatedAmount);
+    });
+  });
+
+  if (countryAmountMap.size === 0) {
+    this.countriesSubject.next([]);
+    return;
+  }
+
+  const countries = Array.from(countryAmountMap.entries()).map(([countryName, amount]) => {
+    const portfolioPercentage = (amount / totalPortfolioAmount) * 100;
+    
+    return {
+      name: countryName,
+      label: countryName,
+      amount: Math.round(amount),
+      percentage: Number(portfolioPercentage.toFixed(2)),
+      value: Number(portfolioPercentage.toFixed(2))
+    };
+  });
+
+  const sortedCountries = countries.sort((a, b) => b.percentage - a.percentage);
+  this.countriesSubject.next(sortedCountries);
 }
 
 }

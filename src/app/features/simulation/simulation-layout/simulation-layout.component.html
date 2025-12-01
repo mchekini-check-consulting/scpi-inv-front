@@ -1,4 +1,5 @@
 <div class="simulation-layout">
+  <p-toast></p-toast>
   <button class="back-button" (click)="goBack()">
     <i class="pi pi-arrow-left"></i>
     Retour
@@ -67,16 +68,9 @@
 
     <main class="analysis-column">
       <div class="analysis-content">
-
-        <div class="card chart-card">
-          <div class="card-header">
-            <h3>Répartition géographique</h3>
-            <p class="card-subtitle">Détail de vos investissements par pays</p>
+          <div class="card chart-card">
+            <app-geo-repartition [geographicalData]="countries"></app-geo-repartition>
           </div>
-          <div class="chart-container">
-            <app-geographic-chart></app-geographic-chart>
-          </div>
-        </div>
 
         <div class="card table-card">
           <div class="card-header">

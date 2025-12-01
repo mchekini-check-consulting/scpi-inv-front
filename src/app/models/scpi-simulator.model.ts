@@ -7,6 +7,7 @@ export interface ScpiSimulator {
   sharePrice: number;
   minimumSubscription: number;
   sectors: RepartitionItem[];
+  locations?: Location[];
 }
 
 export interface PortfolioItem {
@@ -15,6 +16,7 @@ export interface PortfolioItem {
   shares: number;
   amount: number;
   annualReturn: number;
+  locations?: Location[];
 }
 
 export interface SimulationSummary {
@@ -78,4 +80,17 @@ export interface PerformanceDetail {
   amount: number;
   rate: number;
   annualRevenue: number;
+}
+
+export interface Location {
+  label: string;       
+  percentage: number;
+}
+
+export interface CountryData {
+  name: string;
+  label: string;
+  amount: number;
+  percentage: number;
+  value: number;
 }

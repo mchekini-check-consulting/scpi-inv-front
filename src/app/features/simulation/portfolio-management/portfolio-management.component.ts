@@ -8,6 +8,8 @@ import { EditSharesModalComponent } from '../edit-shares-modal/edit-shares-modal
 import { FormatFieldPipe } from '../../../core/pipe/format-field.pipe';
 import { SimulationStateService } from '../../../services/simulationState.service';
 import { ScpiService } from '../../../services/scpi.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-portfolio-management',
@@ -18,6 +20,7 @@ import { ScpiService } from '../../../services/scpi.service';
     ConfirmationModalComponent,
     EditSharesModalComponent,
     FormatFieldPipe,
+     ToastModule
   ],
   templateUrl: './portfolio-management.component.html',
   styleUrl: './portfolio-management.component.scss',
@@ -32,25 +35,23 @@ export class PortfolioManagementComponent implements OnInit {
   editingItem: PortfolioItem | null = null;
   showAddModal = false;
 
-  constructor(private simulationState: SimulationStateService, private scpiService:ScpiService) {}
+  constructor(private simulationState: SimulationStateService, private scpiService:ScpiService , private messageService: MessageService) {}
 
-ngOnInit(): void {
-  let summary = this.simulationState.getSummarySnapshot();
-  const savedId = localStorage.getItem('currentSimulationId');
+  ngOnInit(): void {
+    let summary = this.simulationState.getSummarySnapshot();
+    const savedId = localStorage.getItem('currentSimulationId');
 
-  if (!summary.id && savedId) {
-    this.scpiService.getSimulationById(+savedId).subscribe(sim => {
-      this.simulationState.setSimulationFromResponseDTO(sim);
+    if (!summary.id && savedId) {
+      this.scpiService.getSimulationById(+savedId).subscribe(sim => {
+        this.simulationState.setSimulationFromResponseDTO(sim);
+      });
+    }
+
+    this.simulationState.portfolio$.subscribe(portfolio => {
+      this.portfolio = portfolio;
+      this.calculateTotal();
     });
   }
-
-  this.simulationState.portfolio$.subscribe(portfolio => {
-    this.portfolio = portfolio;
-    this.calculateTotal();
-  });
-}
-
-
 
   private calculateTotal(): void {
     this.totalInvestment = this.portfolio.reduce(
@@ -70,6 +71,12 @@ ngOnInit(): void {
   addToPortfolio(event: { scpi: any; shares: number }): void {
     this.simulationState.addOrUpdateScpi(event.scpi, event.shares);
     this.closeAddModal();
+      this.messageService.add({
+      severity: 'success',
+      summary: 'Ajout réussi',
+      detail: `${event.scpi.name} ajoutée au portefeuille`,
+      life: 2000
+    });
   }
 
   incrementShares(id: string): void {
@@ -98,7 +105,6 @@ ngOnInit(): void {
     this.itemToDelete = item;
   }
 
-
   cancelDelete(): void {
     this.itemToDelete = null;
   }
@@ -112,14 +118,22 @@ ngOnInit(): void {
       next: (updatedSimulation: SimulationResponseDTO) => {
         this.simulationState.setSimulationFromResponseDTO(updatedSimulation);
         this.itemToDelete = null;
+         this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'SCPI supprimée du portefeuille'
+          });
       },
       error: (err) => {
         console.error('Erreur suppression SCPI:', err);
-        alert('Erreur lors de la suppression');
+         this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Impossible de supprimer la SCPI'
+          });
       }
     });
 }
-
 
   openEditSharesModal(item: PortfolioItem): void {
     this.editingItem = item;
@@ -134,14 +148,22 @@ updateShares(event: { id: number; shares: number }): void {
       next: (updatedSimulation: SimulationResponseDTO) => {
         this.simulationState.setSimulationFromResponseDTO(updatedSimulation);
         this.editingItem = null;
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Nombre de parts mis à jour'
+          });
       },
       error: (err) => {
         console.error('Erreur mise à jour parts SCPI :', err);
-        alert('Impossible de mettre à jour les parts.');
+           this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'Impossible de mettre à jour les parts'
+          });
       }
     });
 }
-
 
   getPrimarySector(sectors: RepartitionItem[]): string {
     if (!sectors || sectors.length === 0) return 'Autre';
