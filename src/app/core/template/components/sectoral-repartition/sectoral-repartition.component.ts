@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { RepartitionItem } from '../../../../models/scpi-repartition.model';
 import { InvestmentService } from '../../../../services/investment.service';
+import { FormatFieldPipe } from '../../../pipe/format-field.pipe';
 
 @Component({
   selector: 'app-sectoral-repartition',
   standalone: true,
-  imports: [CommonModule, ChartModule],
+  imports: [CommonModule, ChartModule, FormatFieldPipe],
   templateUrl: './sectoral-repartition.component.html',
   styleUrls: ['./sectoral-repartition.component.scss'],
 })

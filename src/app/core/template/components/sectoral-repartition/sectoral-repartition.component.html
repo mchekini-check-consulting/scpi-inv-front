@@ -28,16 +28,16 @@
             class="stat-color" 
             [style.background-color]="sectoralChartData?.datasets[0]?.backgroundColor[i]">
           </div>
-          <span class="stat-label">{{ sector.label }}</span>
+          <span class="!text-xs">{{ sector.label }}</span>
           
-          <!-- Mode Portfolio: afficher les euros -->
-          <span class="stat-value" *ngIf="totalAmount > 0">
-            {{ calculateAmount(sector.percentage) | number:'1.0-0' }} €
+       
+          <span class="!text-xs" *ngIf="totalAmount > 0">
+            {{ calculateAmount(sector.percentage) | formatField : 'currency' }}
           </span>
           
-          <!-- Mode SCPI: afficher les pourcentages -->
+        
           <span class="stat-value" *ngIf="totalAmount === 0">
-            {{ sector.percentage | number:'1.1-1' }}%
+            {{ sector.percentage | formatField : 'percent' }}
           </span>
         </div>
       </div>
