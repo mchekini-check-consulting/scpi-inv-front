@@ -1,0 +1,69 @@
+<div class="h-full flex flex-col">
+  
+  <div class="mb-6">
+    <h3 class="!text-tertiary text-lg font-semibold mb-1">Cumul des Revenus</h3>
+    <p class="!text-secondary text-sm">Revenus cumulés depuis l'origine</p>
+  </div>
+
+  <div class="flex gap-4 mb-6">
+    <div class="flex-1">
+      <label class="text-sm text-gray-600 mb-2 block">Année</label>
+      <p-dropdown 
+        [options]="years" 
+        [(ngModel)]="selectedYear"
+        (onChange)="onFilterChange()"
+        optionLabel="label" 
+        optionValue="value"
+        placeholder="Toutes les années"
+        styleClass="w-full">
+      </p-dropdown>
+    </div>
+    
+    <div class="flex-1">
+      <label class="text-sm text-gray-600 mb-2 block">SCPI</label>
+      <p-dropdown 
+        [options]="scpis" 
+        [(ngModel)]="selectedScpiId"
+        (onChange)="onFilterChange()"
+        optionLabel="label" 
+        optionValue="value"
+        placeholder="Toutes les SCPI"
+        styleClass="w-full">
+      </p-dropdown>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="flex-1 flex items-center justify-center">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
+  </div>
+
+  <div *ngIf="!loading && revenue" class="flex-1 flex flex-col">
+  
+    <div class="mb-4">
+      <div class="flex flex-col gap-1">
+        <span class="text-4xl font-bold text-gray-800">
+          {{ getTotalCumul() | number:'1.0-0' }} €
+        </span>
+        <span class="text-sm text-gray-500">
+          Total distribué depuis {{ getFirstInvestmentDate() }}
+        </span>
+      </div>
+    </div>
+
+    
+    <div class="flex-1 min-h-[250px]">
+      <p-chart 
+        type="line" 
+        [data]="chartData" 
+        [options]="chartOptions"
+        [style]="{'height': '100%'}">
+      </p-chart>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !revenue" 
+       class="flex-1 flex flex-col items-center justify-center text-gray-400">
+    <i class="pi pi-chart-line text-6xl mb-4"></i>
+    <p>Aucune donnée disponible</p>
+  </div>
+</div>

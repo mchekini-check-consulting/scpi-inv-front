@@ -7,6 +7,7 @@ export interface InvestmentRequestDTO {
 }
 
 export interface ScpiRevenueDetail {
+  scpiId: number;
   scpiName: string;
   monthlyRevenue: number;
   investmentAmount: number;
@@ -23,6 +24,7 @@ export interface MonthlyRevenueHistory {
 export interface MonthlyRevenue {
   totalMonthlyRevenue: number;
   totalFutureMonthlyRevenue: number;
+  totalCumulRevenue: number;
   details: ScpiRevenueDetail[];
   history: MonthlyRevenueHistory[];
 }
