@@ -3,11 +3,11 @@
     Répartition Sectorielle
   </h3>
 
-
   <div *ngIf="loading" class="flex-1 flex items-center justify-center">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 !border-secondary"></div>
+    <div
+      class="animate-spin rounded-full h-12 w-12 border-b-2 !border-secondary"
+    ></div>
   </div>
-
 
   <div *ngIf="!loading && sectoralData.length > 0" class="flex flex-col flex-1">
     <div class="chart-container flex-1 min-h-0">
@@ -19,34 +19,30 @@
       ></p-chart>
     </div>
 
-    <div class="stats-container mt-4 flex-shrink-0">
-      <div class="stats-grid">
-        <div 
-          class="stat-item" 
-          *ngFor="let sector of sectoralData; let i = index">
-          <div 
-            class="stat-color" 
-            [style.background-color]="sectoralChartData?.datasets[0]?.backgroundColor[i]">
-          </div>
-          <span class="!text-xs">{{ sector.label }}</span>
-          
-       
-          <span class="!text-xs" *ngIf="totalAmount > 0">
-            {{ calculateAmount(sector.percentage) | formatField : 'currency' }}
-          </span>
-          
-        
-          <span class="stat-value" *ngIf="totalAmount === 0">
-            {{ sector.percentage | formatField : 'percent' }}
-          </span>
-        </div>
+    <div class="mt-4 grid grid-cols-2 truncate flex-shrink-0">
+      <div
+        class="flex items-center gap-2"
+        *ngFor="let sector of sectoralData; let i = index"
+      >
+        <div
+          class="stat-color"
+          [style.background-color]="
+            sectoralChartData?.datasets[0]?.backgroundColor[i]
+          "
+        ></div>
+        <span class="!text-sm">{{ sector.label }}</span>
+
+        <span class="!text-sm" *ngIf="totalAmount > 0">
+          {{ calculateAmount(sector.percentage) | formatField : "currency" }}
+        </span>
       </div>
     </div>
   </div>
 
-
-  <div *ngIf="!loading && sectoralData.length === 0" 
-       class="flex-1 flex flex-col items-center justify-center text-gray-400">
+  <div
+    *ngIf="!loading && sectoralData.length === 0"
+    class="flex-1 flex flex-col items-center justify-center text-gray-400"
+  >
     <i class="pi pi-chart-pie text-6xl mb-4"></i>
     <p>Aucune donnée à afficher</p>
   </div>
