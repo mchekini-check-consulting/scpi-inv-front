@@ -19,6 +19,10 @@ export class SimulationStateService {
   private countriesSubject = new BehaviorSubject<CountryData[]>([]);
   countries$ = this.countriesSubject.asObservable();
 
+  private sectorsSubject = new BehaviorSubject<{ label: string; percentage: number }[]>([]);
+  sectors$ = this.sectorsSubject.asObservable();
+
+
   private summarySubject = new BehaviorSubject<SimulationSummary>({
     id: null,
     name: 'Nouvelle simulation',
@@ -95,7 +99,10 @@ export class SimulationStateService {
 
     this.portfolioSubject.next(portfolio);
     this.calculateCountries(portfolio);
+    this.calculateSectors(portfolio);
     this.recomputeSummary();
+
+    this.savePortfolioToLocalStorage();
   }
 
 updateShares(scpiId: number, newShares: number) {
@@ -119,7 +126,9 @@ updateShares(scpiId: number, newShares: number) {
 
   this.portfolioSubject.next(updated);
   this.calculateCountries(updated);
+  this.calculateSectors(updated);
   this.recalculateSummary();  
+  this.savePortfolioToLocalStorage();
 }
 
 recalculateSummary() {
@@ -152,14 +161,21 @@ recalculateSummary() {
 
   this.summarySubject.next(summary);
 }
-  removeScpi(scpiId: number): void {
-    const portfolio = this.portfolioSubject.getValue()
-      .filter(item => item.scpi.id !== scpiId);
 
-    this.portfolioSubject.next(portfolio);
-    this.calculateCountries(portfolio)
+  
+  removeScpi(scpiId: number | string): void {
+    const idToRemove = Number(scpiId);
+    const current = this.portfolioSubject.getValue() || [];
+    const updated = current.filter(item => Number(item.scpi.id) !== idToRemove);
+
+    this.portfolioSubject.next([...updated]);
+
+    this.calculateSectors(updated);
+    this.calculateCountries(updated);
     this.recomputeSummary();
+    this.savePortfolioToLocalStorage();
   }
+
 
 
   setTmi(tmi: number): void {
@@ -171,6 +187,7 @@ recalculateSummary() {
   resetSimulation(): void {
     this.portfolioSubject.next([]);
     this.countriesSubject.next([]);
+    this.sectorsSubject.next([]);
     this.summarySubject.next({
       id: null,
       name: 'Nouvelle simulation',
@@ -284,6 +301,57 @@ private calculateCountries(portfolio: PortfolioItem[]): void {
 
   const sortedCountries = countries.sort((a, b) => b.percentage - a.percentage);
   this.countriesSubject.next(sortedCountries);
+}
+
+  private calculateSectors(portfolio: PortfolioItem[]): void {
+  if (!portfolio?.length) {
+    this.sectorsSubject.next([]);
+    return;
+  }
+
+  const sectorMap = new Map<string, number>();
+  let totalAmount = 0;
+
+  portfolio.forEach(item => {
+    const amount = Number(item.amount) || 0;
+    totalAmount += amount;
+
+    (item.scpi.sectors ?? []).forEach(sec => {
+      const percentage = Number(sec.percentage) || 0;
+      const allocatedAmount = amount * (percentage / 100);
+
+      const current = sectorMap.get(sec.label) ?? 0;
+      sectorMap.set(sec.label, current + allocatedAmount);
+    });
+  });
+
+  if (totalAmount === 0) {
+    this.sectorsSubject.next([]);
+    return;
+  }
+
+  const sectors = Array.from(sectorMap.entries()).map(([label, amount]) => ({
+    label,
+    percentage: Number(((amount / totalAmount) * 100).toFixed(2))
+  }));
+
+  this.sectorsSubject.next([...sectors].sort((a, b) => b.percentage - a.percentage));
+}
+
+private savePortfolioToLocalStorage(): void {
+  const portfolio = this.getPortfolioSnapshot();
+  localStorage.setItem('unsavedPortfolio', JSON.stringify(portfolio));
+}
+public loadUnsavedPortfolio(portfolio: PortfolioItem[]): void {
+  this.portfolioSubject.next(portfolio);
+  this.calculateCountries(portfolio);
+  this.calculateSectors(portfolio);
+  this.recomputeSummary();
+}
+public resetSimulationState(): void {
+  this.resetSimulation(); 
+  localStorage.removeItem('unsavedPortfolio'); 
+  localStorage.removeItem('currentSimulationId');
 }
 
 }

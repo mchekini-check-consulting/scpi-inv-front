@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { RepartitionItem } from '../../../../models/scpi-repartition.model';
@@ -33,7 +33,15 @@ export class SectoralRepartitionComponent implements OnInit {
       this.prepareSectoralChart();
     }
   }
-
+  
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['sectoralData'] && !this.loadFromApi) {
+          this.prepareSectoralChart();
+        }
+        if (changes['totalAmount']) {
+          this.setChartOptions();
+        }
+      }
   loadPortfolioDistribution(): void {
     this.loading = true;
     this.investmentService.getPortfolioDistribution().subscribe({
