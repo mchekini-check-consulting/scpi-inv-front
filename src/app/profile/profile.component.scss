@@ -1,0 +1,144 @@
+$green-main: #2e7d32;
+$green-soft-bg: #fdf8f0;
+$card-bg: #ffffff;
+$shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+:host {
+  display: block;
+  padding: 40px 16px;
+  background-color: $green-soft-bg;
+}
+.container{
+  margin-left: auto ;
+  margin-right:auto ;
+  max-width: 100% ;
+
+
+
+  }
+
+.profile-card {
+  max-width: 480px;
+  margin: 0 auto;
+  border-radius: 16px;
+  background-color: $card-bg;
+  box-shadow: $shadow-soft;
+  padding: 24px 24px 32px;
+  border: none;
+}
+
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+.title-icon {
+  font-size: 32px;
+  color: $green-main;
+}
+
+.title-texts {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: $green-main;
+  margin: 0 0 4px 0;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 16px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 24px 0 8px;
+}
+
+.section-icon {
+  font-size: 20px;
+  color: $green-main;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: $green-main;
+  margin: 0;
+}
+
+.field {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #444;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.custom-field .p-inputtext,
+.custom-field .p-dropdown-label,
+.custom-field .p-inputnumber-input {
+  background-color: #fbf4ea;
+  border-radius: 8px !important;
+  border: 1px solid transparent !important;
+  padding: 0.6rem 0.75rem !important;
+  box-shadow: none !important;
+  font-size: 14px;
+}
+
+.custom-field .p-inputtext:focus,
+.custom-field.p-dropdown.p-focus .p-dropdown-label,
+.custom-field .p-inputnumber-input:focus {
+  border-color: $green-main !important;
+  outline: none;
+}
+
+.p-error {
+  font-size: 12px;
+  color: #d32f2f;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.green-button {
+  background-color: $green-main !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 600;
+  padding: 0.5rem 1.8rem !important;
+  border-radius: 999px !important;
+  text-transform: none !important;
+  font-size: 14px;
+}
+.p-panel .p-panel-header {
+  border: none;
+  background: transparent;
+  padding-bottom: 8px;
+}
+
+.p-panel .p-panel-content {
+  border: none;
+  padding: 0;
+}
