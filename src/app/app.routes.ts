@@ -30,7 +30,7 @@ export const routes: Routes = [
       { path: 'profile', component: UploadFileComponent },
       { path: 'history', component: HistoryComponent },
       { path: 'comparator', component: ComparatorScpiComponent },
-      { path: 'mon-profil', component: ProfileComponent }
+      { path: 'mon-profil', component: ProfileComponent },
       { path: 'simulation', component: ScpiSimulatorHomeComponent },
       { path: 'simulation/nouvelle', component: SimulationLayoutComponent},
       { path: 'portefeuille', component: PortefeuilleScpiComponent }
