@@ -31,7 +31,8 @@ export interface InvestmentResponse {
 export interface PortfolioSummary {
   totalInvestedAmount: number;
   totalInvestments: number;
-  totalScpis: number;
+  totalMonthRevenu: number;
+  totalCumulRevenu: number;
   investments: InvestmentResponse[];
 }
 

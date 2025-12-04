@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
-import { InvestmentRequestDTO } from '../models/investment.model';
+import {
+  InvestmentRequestDTO,
+  MonthlyRevenue,
+} from '../models/investment.model';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { InvestorPortfolioDistribution, PortfolioSummary } from '../models/scpi-investment.model';
+import {
+  InvestorPortfolioDistribution,
+  PortfolioSummary,
+} from '../models/scpi-investment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,12 +22,58 @@ export class InvestmentService {
     return this.http.post<void>(`${this.apiUrl}/investment`, investment);
   }
 
-  getMyPortfolio(sortBy: 'date' | 'amount' = 'date'): Observable<PortfolioSummary> {
+  getMyPortfolio(
+    sortBy: 'date' | 'amount' = 'date'
+  ): Observable<PortfolioSummary> {
     const params = new HttpParams().set('sortBy', sortBy);
-    return this.http.get<PortfolioSummary>(`${this.apiUrl}/investment/my-portfolio`, { params });
+    return this.http.get<PortfolioSummary>(
+      `${this.apiUrl}/investment/my-portfolio`,
+      { params }
+    );
   }
 
   getPortfolioDistribution(): Observable<InvestorPortfolioDistribution> {
-    return this.http.get<InvestorPortfolioDistribution>(`${this.apiUrl}/investment/portfolio-distribution`);
+    return this.http.get<InvestorPortfolioDistribution>(
+      `${this.apiUrl}/investment/portfolio-distribution`
+    );
+  }
+
+  getMonthlyRevenue(
+    months: number = 6,
+    year?: number,
+    scpiId?: number
+  ): Observable<MonthlyRevenue> {
+    let params = `months=${months}`;
+
+    if (year) {
+      params += `&year=${year}`;
+    }
+
+    if (scpiId) {
+      params += `&scpiId=${scpiId}`;
+    }
+
+    return this.http.get<MonthlyRevenue>(
+      `${this.apiUrl}/investment/monthly-revenue?${params}`
+    );
+  }
+
+  getFullMonthlyRevenueHistory(
+    year?: number,
+    scpiId?: number
+  ): Observable<MonthlyRevenue> {
+    let params = '';
+
+    if (year) {
+      params += `?year=${year}`;
+    }
+
+    if (scpiId) {
+      params += params ? `&scpiId=${scpiId}` : `?scpiId=${scpiId}`;
+    }
+
+    return this.http.get<MonthlyRevenue>(
+      `${this.apiUrl}/investment/monthly-revenue/full-history${params}`
+    );
   }
 }
