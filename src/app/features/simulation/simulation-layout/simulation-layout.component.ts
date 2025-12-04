@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { GeographicChartComponent } from '../geographic-chart/geographic-chart.component';
 import { ScpiSelectionModalComponent } from '../scpi-selection-modal/scpi-selection-modal.component';
 import { PortfolioManagementComponent } from '../portfolio-management/portfolio-management.component';
 import { FormatFieldPipe } from '../../../core/pipe/format-field.pipe';
 import { ScpiSimulator, SimulationSummary } from '../../../models/scpi-simulator.model';
 import { SimulationStateService } from '../../../services/simulationState.service';
 import { ScpiService } from '../../../services/scpi.service';
+import { GeoRepartitionComponent } from '../../../core/template/components/geo-repartition/geo-repartition.component';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-simulation-layout',
@@ -16,11 +18,13 @@ import { ScpiService } from '../../../services/scpi.service';
   imports: [
     CommonModule,
     FormsModule,
-    GeographicChartComponent,
     ScpiSelectionModalComponent,
     PortfolioManagementComponent,
-    FormatFieldPipe
+    FormatFieldPipe,
+    GeoRepartitionComponent, 
+    ToastModule
   ],
+   providers: [MessageService],
   templateUrl: './simulation-layout.component.html',
   styleUrl: './simulation-layout.component.scss',
 })
@@ -41,43 +45,41 @@ export class SimulationLayoutComponent implements OnInit {
   constructor(
     private router: Router,
     private simulationState: SimulationStateService,
-    private scpiService: ScpiService
+    private scpiService: ScpiService,
+    private cdr: ChangeDetectorRef,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
-  this.simulationState.summary$.subscribe(summary => {
-    this.summary = summary;
-    this.tmiValue = summary.taxRate;
-    this.simulationName = summary.name;
-    this.updateGeography();
-    this.recalculateTax();
-  });
-
-  const savedId = this.simulationState.getSummarySnapshot().id 
-                  ?? localStorage.getItem('currentSimulationId');
-  if (savedId) {
-    this.scpiService.getSimulationById(+savedId).subscribe(sim => {
-      this.simulationState.setSimulationFromResponseDTO(sim);
+    this.simulationState.countries$.subscribe(countries => {
+      this.countries = countries;
+      this.cdr.detectChanges();
     });
-  }
-}
 
+    this.simulationState.summary$.subscribe(summary => {
+      this.summary = summary;
+      this.tmiValue = summary.taxRate;
+      this.simulationName = summary.name;
+      this.recalculateTax(); 
+    });
+
+    const savedId = this.simulationState.getSummarySnapshot().id 
+                    ?? localStorage.getItem('currentSimulationId');
+    if (savedId) {
+      this.scpiService.getSimulationById(+savedId).subscribe(sim => {
+        this.simulationState.setSimulationFromResponseDTO(sim);
+      });
+    }
+
+    setTimeout(() => {
+      const portfolio = this.simulationState.getPortfolioSnapshot();
+      if (portfolio && portfolio.length > 0) {
+      }
+    }, 100);
+  }
 
   onNameChange() {
     this.simulationState.setSimulationName(this.simulationName);
-  }
-
-  updateGeography() {
-    const total = this.summary.totalInvestment;
-    if (total <= 0) {
-      this.countries = [];
-      return;
-    }
-
-    this.countries = [
-      { name: 'France', amount: total * 0.33, percentage: 33 },
-      { name: 'Espagne', amount: total * 0.67, percentage: 67 }
-    ];
   }
 
   recalculateTax() {
@@ -104,40 +106,52 @@ export class SimulationLayoutComponent implements OnInit {
 
 
   saveSimulation() {
-  const portfolio = this.simulationState.getPortfolioSnapshot();
-  const summary = this.simulationState.getSummarySnapshot();
+    const portfolio = this.simulationState.getPortfolioSnapshot();
+    const summary = this.simulationState.getSummarySnapshot();
 
-  if (!portfolio || portfolio.length === 0) {
-    alert('Veuillez ajouter au moins une SCPI avant de sauvegarder.');
-    return;
-  }
-
-  const payload = {
-    id: summary.id, 
-    name: summary.name,
-    taxRate: summary.taxRate,
-    items: portfolio.map(p => ({
-      scpiId: p.scpi.id,
-      shares: p.shares
-    }))
-  };
-
-  this.scpiService.saveSimulation(payload).subscribe({
-    next: res => {
-      alert('Simulation sauvegardée');
-      if (!summary.id) {
-        this.simulationState.setSimulationId(res.id);
-      }
-          localStorage.setItem('currentSimulationId', res.id!.toString());
-
-    },
-    error: err => {
-      console.error(err);
-      alert('Erreur lors de la sauvegarde');
+    if (!portfolio || portfolio.length === 0) {
+      this.messageService.add({
+            severity: 'warn',
+            summary: 'Action impossible',
+            detail: 'Veuillez ajouter au moins une SCPI avant de sauvegarder.'
+          });   
+          return;
     }
-  });
-}
 
+    const payload = {
+      id: summary.id, 
+      name: summary.name,
+      taxRate: summary.taxRate,
+      items: portfolio.map(p => ({
+        scpiId: p.scpi.id,
+        shares: p.shares
+      }))
+    };
+
+    this.scpiService.saveSimulation(payload).subscribe({
+      next: res => {
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Votre simulation a été sauvegardée avec succès.'
+          });
+          setTimeout(() => {}, 2500);
+        if (!summary.id) {
+          this.simulationState.setSimulationId(res.id);
+        }
+            localStorage.setItem('currentSimulationId', res.id!.toString());
+
+      },
+      error: err => {
+        console.error(err);
+        this.messageService.add({
+              severity: 'error',
+              summary: 'Erreur',
+              detail: 'Une erreur est survenue lors de la sauvegarde.'
+            });    
+          }
+    });
+}
 
   goBack() {
     this.router.navigate(['/dashboard/simulation']);

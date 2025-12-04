@@ -86,7 +86,5 @@ export class ScpiService {
     getSimulationById(simulationId: number): Observable<SimulationResponseDTO> {
       return this.http.get<SimulationResponseDTO>(`${this.apiUrl}/simulations/${simulationId}`);
     }
-
-
 }
  
