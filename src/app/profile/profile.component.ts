@@ -7,9 +7,9 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 
-import { ProfileService, ProfileRequest } from './profile.service';
+import { ProfileRequest, ProfileResponse } from '../models/profile.model';
+import { ProfileService } from './profile.service';
 
-// PrimeNG
 import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -32,7 +32,6 @@ import { ButtonModule } from 'primeng/button';
 export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
 
-  // options pour le dropdown
   statusOptions = [
     { label: 'Célibataire', value: 'CELIBATAIRE' },
     { label: 'Marié',       value: 'MARIE' },
@@ -55,10 +54,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  /**
-   * Utilitaire : récupère la vraie valeur du statut sous forme de string
-   * (gère le cas où le dropdown renvoie un objet {label, value}).
-   */
   private getStatusValue(): string | null {
     const raw = this.profileForm.get('status')?.value;
 
@@ -66,16 +61,13 @@ export class ProfileComponent implements OnInit {
       return null;
     }
 
-    // Si c’est un objet { label, value }
     if (typeof raw === 'object' && 'value' in raw) {
       return (raw as any).value;
     }
 
-    // Sinon c’est déjà une string
     return raw as string;
   }
 
-  /** Affiche les revenus du conjoint si statut = MARIE ou PACSE */
   get showConjointIncome(): boolean {
     const status = this.getStatusValue();
     return status === 'MARIE' || status === 'PACSE';
@@ -87,22 +79,21 @@ export class ProfileComponent implements OnInit {
 
       const status = this.getStatusValue();
 
-      // On reconstruit un payload propre pour l'API
       const payload: ProfileRequest = {
         ...raw,
-        status: status            // on force bien une string
+        status: status
       } as ProfileRequest;
 
       console.log('Payload envoyé au backend :', payload);
 
       this.profileService.saveProfile(payload).subscribe({
         next: () => {
-          alert('✅ Profil enregistré avec succès');
+          alert(' Profil enregistré avec succès');
           this.profileForm.reset();
         },
         error: (err) => {
           console.error('Erreur lors de l’enregistrement', err);
-          alert('❌ Erreur lors de l’enregistrement');
+          alert(' Erreur lors de l’enregistrement');
         }
       });
     } else {

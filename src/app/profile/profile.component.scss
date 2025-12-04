@@ -16,7 +16,7 @@ $shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
 
 
   }
-/* Carte principale */
+
 .profile-card {
   max-width: 480px;
   margin: 0 auto;
@@ -27,7 +27,7 @@ $shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: none;
 }
 
-/* Header du panel */
+
 .title-row {
   display: flex;
   align-items: center;
@@ -58,7 +58,6 @@ $shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin: 0 0 16px;
 }
 
-/* Sections */
 .section-header {
   display: flex;
   align-items: center;
@@ -78,7 +77,6 @@ h3 {
   margin: 0;
 }
 
-/* Champs */
 .field {
   margin-bottom: 12px;
 }
@@ -95,7 +93,6 @@ label {
   width: 100%;
 }
 
-/* Style des composants PrimeNG */
 .custom-field .p-inputtext,
 .custom-field .p-dropdown-label,
 .custom-field .p-inputnumber-input {
@@ -107,7 +104,6 @@ label {
   font-size: 14px;
 }
 
-/* Focus */
 .custom-field .p-inputtext:focus,
 .custom-field.p-dropdown.p-focus .p-dropdown-label,
 .custom-field .p-inputnumber-input:focus {
@@ -115,13 +111,11 @@ label {
   outline: none;
 }
 
-/* Message d’erreur */
 .p-error {
   font-size: 12px;
   color: #d32f2f;
 }
 
-/* Bouton */
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -138,8 +132,6 @@ label {
   text-transform: none !important;
   font-size: 14px;
 }
-
-/* Nettoyage du panel PrimeNG */
 .p-panel .p-panel-header {
   border: none;
   background: transparent;
