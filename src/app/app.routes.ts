@@ -8,17 +8,20 @@ import { ScpiDetailComponent } from './features/scpi-detail/scpi-detail.componen
 import { ScpiInvestComponent } from './features/scpi-invest/scpi-invest.component';
 import {HistoryComponent} from "./features/history/history.component";
 import { ComparatorScpiComponent } from './features/comparator-scpi/comparator-scpi.component';
+import { ProfileComponent } from './profile/profile.component';
 import { SimulationLayoutComponent } from './features/simulation/simulation-layout/simulation-layout.component';
 import { PortefeuilleScpiComponent } from './features/portefeuille-scpi/portefeuille-scpi.component';
 import { ScpiSimulatorHomeComponent } from './features/simulation/scpi-simulator-home/scpi-simulator-home.component';
 
 export const routes: Routes = [
 
+
+  { path: '', component: HomeComponent },
+
   {
-    path : '', component : HomeComponent
-  },
-  {
-    path: 'dashboard', component: TemplateComponent, canActivate: [AuthGuard],
+    path: 'dashboard',
+    component: TemplateComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'scpi', pathMatch: 'full' },
       { path: 'scpi', component: ScpiCatalogComponent, pathMatch: 'full' },
@@ -27,6 +30,7 @@ export const routes: Routes = [
       { path: 'profile', component: UploadFileComponent },
       { path: 'history', component: HistoryComponent },
       { path: 'comparator', component: ComparatorScpiComponent },
+      { path: 'mon-profil', component: ProfileComponent }
       { path: 'simulation', component: ScpiSimulatorHomeComponent },
       { path: 'simulation/nouvelle', component: SimulationLayoutComponent},
       { path: 'portefeuille', component: PortefeuilleScpiComponent }

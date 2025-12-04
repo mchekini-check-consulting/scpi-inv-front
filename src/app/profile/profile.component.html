@@ -1,0 +1,131 @@
+<div
+  class ="container">
+  <p-panel styleClass="profile-card">
+    <!-- Header personnalisé -->
+    <ng-template pTemplate="header">
+      <div class="title-row">
+        <i class="pi pi-id-card title-icon"></i>
+        <div class="title-texts">
+          <h2 class="form-title">Informations personnelles</h2>
+          <p class="form-subtitle">
+            Renseignez vos informations pour calculer votre fiscalité
+          </p>
+        </div>
+      </div>
+    </ng-template>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
+      <div class="section-header">
+        <i class="pi pi-users section-icon"></i>
+        <h3>Situation familiale</h3>
+      </div>
+
+      <div class="field">
+        <label for="status">Statut*</label>
+        <p-dropdown
+          inputId="status"
+          class="full-width custom-field"
+          [options]="statusOptions"
+          formControlName="status"
+          placeholder="Sélectionnez votre situation"
+          optionLabel="label"
+          [showClear]="true"
+        ></p-dropdown>
+
+        <small
+          *ngIf="
+          profileForm.get('status')?.invalid &&
+          profileForm.get('status')?.touched
+        "
+          class="p-error"
+        >
+          Le statut marital est obligatoire.
+        </small>
+      </div>
+
+
+      <div class="section-header">
+        <i class="pi pi-eye section-icon"></i>
+        <h3>Enfants</h3>
+      </div>
+
+      <div class="field">
+        <label for="children">Nombre d'enfants*</label>
+        <p-inputNumber
+          inputId="children"
+          class="full-width custom-field"
+          formControlName="children"
+          mode="decimal"
+        ></p-inputNumber>
+
+        <small
+          *ngIf="
+          profileForm.get('children')?.errors?.['min'] &&
+          profileForm.get('children')?.touched
+        "
+          class="p-error"
+        >
+          Doit être supérieur ou égal à 0.
+        </small>
+      </div>
+
+
+      <div class="section-header">
+        <i class="pi pi-euro section-icon"></i>
+        <h3>Revenus annuels</h3>
+      </div>
+
+      <div class="field">
+        <label for="incomeInvestor">Revenus de l'utilisateur (€)*</label>
+        <p-inputNumber
+          inputId="incomeInvestor"
+          class="full-width custom-field"
+          formControlName="incomeInvestor"
+          mode="decimal"
+        ></p-inputNumber>
+
+        <small
+          *ngIf="
+          profileForm.get('incomeInvestor')?.errors?.['min'] &&
+          profileForm.get('incomeInvestor')?.touched
+        "
+          class="p-error"
+        >
+          Doit être supérieur ou égal à 0.
+        </small>
+      </div>
+
+      <div class="field" *ngIf="showConjointIncome">
+        <label for="incomeConjoint">Revenus du conjoint (€)</label>
+        <p-inputNumber
+          inputId="incomeConjoint"
+          class="full-width custom-field"
+          formControlName="incomeConjoint"
+          mode="decimal"
+        ></p-inputNumber>
+
+        <small
+          *ngIf="
+          profileForm.get('incomeConjoint')?.errors?.['min'] &&
+          profileForm.get('incomeConjoint')?.touched
+        "
+          class="p-error"
+        >
+          Doit être supérieur ou égal à 0.
+        </small>
+      </div>
+
+      <!-- ================= BOUTON ================= -->
+      <div class="actions">
+        <button
+          pButton
+          type="submit"
+          label="Continuer"
+          class="green-button"
+        ></button>
+      </div>
+    </form>
+  </p-panel>
+</div>
+
