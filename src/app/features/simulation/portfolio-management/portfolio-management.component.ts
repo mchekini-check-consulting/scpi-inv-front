@@ -71,11 +71,11 @@ export class PortfolioManagementComponent implements OnInit {
   addToPortfolio(event: { scpi: any; shares: number }): void {
     this.simulationState.addOrUpdateScpi(event.scpi, event.shares);
     this.closeAddModal();
-      this.messageService.add({
+    this.messageService.add({
       severity: 'success',
-      summary: 'Ajout réussi',
-      detail: `${event.scpi.name} ajoutée au portefeuille`,
-      life: 2000
+      summary: 'SCPI ajoutée',
+      detail: `« ${event.scpi.name} » a bien été ajoutée à votre portefeuille.`,
+      life: 2500
     });
   }
 
@@ -111,7 +111,16 @@ export class PortfolioManagementComponent implements OnInit {
 
   deleteScpi(item: PortfolioItem): void {
   const simulationId = this.simulationState.getSummarySnapshot().id;
-  if (!simulationId) return;
+  if (!simulationId) {  
+    this.simulationState.removeScpi(item.scpi.id);
+    this.itemToDelete = null;
+
+    this.messageService.add({
+      severity: 'success',
+      summary: 'SCPI supprimée',
+      detail: `La SCPI « ${item.scpi.name} » a été supprimée avec succès de votre portefeuille.`,
+    });
+    return };
 
   this.scpiService.deleteScpiFromSimulation(simulationId, item.scpi.id)
     .subscribe({
@@ -120,8 +129,9 @@ export class PortfolioManagementComponent implements OnInit {
         this.itemToDelete = null;
          this.messageService.add({
             severity: 'success',
-            summary: 'Succès',
-            detail: 'SCPI supprimée du portefeuille'
+            summary: 'SCPI supprimée',
+              detail: `La SCPI « ${item.scpi.name} » a été supprimée avec succès de votre simulation.`,
+
           });
       },
       error: (err) => {
@@ -139,7 +149,8 @@ export class PortfolioManagementComponent implements OnInit {
     this.editingItem = item;
   }
 
-updateShares(event: { id: number; shares: number }): void {
+  updateShares(event: { id: number; shares: number }): void {
+    this.simulationState.updateShares(event.id, event.shares);
   const simulationId = this.simulationState.getSummarySnapshot().id;
   if (!simulationId) return;
 
@@ -150,16 +161,16 @@ updateShares(event: { id: number; shares: number }): void {
         this.editingItem = null;
         this.messageService.add({
             severity: 'success',
-            summary: 'Succès',
-            detail: 'Nombre de parts mis à jour'
+            summary: 'Modification réussie',
+            detail: `Le nombre de parts a été mis à jour avec succès.`,
           });
       },
       error: (err) => {
         console.error('Erreur mise à jour parts SCPI :', err);
            this.messageService.add({
             severity: 'error',
-            summary: 'Erreur',
-            detail: 'Impossible de mettre à jour les parts'
+            summary: 'Échec de la mise à jour',
+            detail: `Impossible de modifier le nombre de parts. Veuillez réessayer.`,
           });
       }
     });

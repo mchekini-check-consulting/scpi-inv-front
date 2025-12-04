@@ -68,9 +68,12 @@
 
     <main class="analysis-column">
       <div class="analysis-content">
-          <div class="card chart-card">
-            <app-geo-repartition [geographicalData]="countries"></app-geo-repartition>
-          </div>
+          <app-geo-repartition [geographicalData]="countries"></app-geo-repartition>
+          <app-sectoral-repartition
+              *ngIf="repartition"
+              [sectoralData]="repartition.sectoral"
+              class="h-full">
+            </app-sectoral-repartition>
 
         <div class="card table-card">
           <div class="card-header">

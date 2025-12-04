@@ -5,12 +5,13 @@ import { Router } from '@angular/router';
 import { ScpiSelectionModalComponent } from '../scpi-selection-modal/scpi-selection-modal.component';
 import { PortfolioManagementComponent } from '../portfolio-management/portfolio-management.component';
 import { FormatFieldPipe } from '../../../core/pipe/format-field.pipe';
-import { ScpiSimulator, SimulationSummary } from '../../../models/scpi-simulator.model';
+import { PortfolioItem, ScpiSimulator, SimulationSummary } from '../../../models/scpi-simulator.model';
 import { SimulationStateService } from '../../../services/simulationState.service';
 import { ScpiService } from '../../../services/scpi.service';
 import { GeoRepartitionComponent } from '../../../core/template/components/geo-repartition/geo-repartition.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { SectoralRepartitionComponent } from "../../../core/template/components/sectoral-repartition/sectoral-repartition.component";
 
 @Component({
   selector: 'app-simulation-layout',
@@ -21,9 +22,10 @@ import { MessageService } from 'primeng/api';
     ScpiSelectionModalComponent,
     PortfolioManagementComponent,
     FormatFieldPipe,
-    GeoRepartitionComponent, 
-    ToastModule
-  ],
+    GeoRepartitionComponent,
+    ToastModule,
+    SectoralRepartitionComponent
+],
    providers: [MessageService],
   templateUrl: './simulation-layout.component.html',
   styleUrl: './simulation-layout.component.scss',
@@ -41,7 +43,7 @@ export class SimulationLayoutComponent implements OnInit {
   taxableIncome = 0;
   incomeTax = 0;
   socialTax = 0;
-
+  repartition: { sectoral: { label: string, percentage: number }[] } | null = null;
   constructor(
     private router: Router,
     private simulationState: SimulationStateService,
@@ -70,12 +72,23 @@ export class SimulationLayoutComponent implements OnInit {
         this.simulationState.setSimulationFromResponseDTO(sim);
       });
     }
+          const savedPortfolio = localStorage.getItem('unsavedPortfolio');
+      if (!this.simulationState.getSummarySnapshot().id && savedPortfolio) {
+        const portfolio: PortfolioItem[] = JSON.parse(savedPortfolio);
+        this.simulationState.loadUnsavedPortfolio(portfolio);
+      }
+
 
     setTimeout(() => {
       const portfolio = this.simulationState.getPortfolioSnapshot();
       if (portfolio && portfolio.length > 0) {
       }
     }, 100);
+
+    this.simulationState.sectors$.subscribe(sectors => {
+    this.repartition = { sectoral: [...sectors] };
+    this.cdr.detectChanges();
+  });
   }
 
   onNameChange() {
@@ -132,15 +145,17 @@ export class SimulationLayoutComponent implements OnInit {
       next: res => {
         this.messageService.add({
             severity: 'success',
-            summary: 'Succès',
-            detail: 'Votre simulation a été sauvegardée avec succès.'
+            summary: 'Simulation sauvegardée',
+            detail: 'Votre simulation a été enregistrée avec succès.',
+            life: 2500
           });
-          setTimeout(() => {}, 2500);
         if (!summary.id) {
           this.simulationState.setSimulationId(res.id);
         }
             localStorage.setItem('currentSimulationId', res.id!.toString());
-
+        setTimeout(() => {
+          this.router.navigate(['/dashboard/simulation']);
+        }, 1000); 
       },
       error: err => {
         console.error(err);
