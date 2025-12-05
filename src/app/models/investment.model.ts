@@ -4,6 +4,9 @@ export interface InvestmentRequestDTO {
   numberOfShares: number;
   investmentAmount: number;
   dismembermentYears: number | null;
+  paymentType: 'ONE_SHOT' | 'SCHEDULED';
+  scheduledPaymentDate: string;
+  monthlyAmount: number;
 }
 
 export interface ScpiRevenueDetail {
