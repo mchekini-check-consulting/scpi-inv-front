@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { NgForOf, NgIf } from "@angular/common";
 import { RouterLink } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
+import { PermissionService } from "../../../../services/permission.service";
+import { PERMISSION_MAPPING } from "../../../config/permission.config";
 
 declare interface RouteInfo {
   path: string;
@@ -61,7 +63,7 @@ export const ROUTES: RouteInfo[] = [
     class: "",
     feature: "history",
   },
-    {
+  {
     path: "/dashboard/comparator",
     title: "Comparateur Scpi",
     key: "SIDEBAR.COMPARATOR",
@@ -69,12 +71,11 @@ export const ROUTES: RouteInfo[] = [
     class: "",
     feature: "comparator",
   }
-
 ];
 
 @Component({
   selector: "app-sidebar",
-  imports: [NgForOf, TranslateModule, RouterLink, NgIf],
+  imports: [NgForOf, TranslateModule, RouterLink],
   templateUrl: "./sidebar.component.html",
   standalone: true,
   styleUrl: "./sidebar.component.css",
@@ -82,14 +83,43 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
   version = "1.0.0";
   menuItems: RouteInfo[] = [];
-
-  constructor() {
-
-  }
+  userRole: 'standard' | 'premium' = 'standard';
+  
+  constructor(private permissionService: PermissionService) {}
 
   ngOnInit() {
-    this.menuItems = ROUTES.filter((menuItem) => menuItem);
+    // Initialiser les permissions avec le rôle du token
+    this.permissionService.initialize().subscribe();
+
+    // Écouter les changements de permissions
+    this.permissionService.userPermissions$.subscribe(() => {
+      this.filterMenuItems();
+    });
+
+    // Écouter les changements de rôle
+    this.permissionService.currentRole$.subscribe(role => {
+      this.userRole = role;
+      console.log(`👤 Rôle utilisateur: ${role}`);
+    });
   }
 
+  private filterMenuItems(): void {
+    this.menuItems = ROUTES.filter(menuItem => {
+      const requiredPermission = PERMISSION_MAPPING[menuItem.feature];
+      
+      // Si pas de permission requise, on affiche toujours
+      if (!requiredPermission) {
+        return true;
+      }
+      
+      // Sinon, on vérifie si l'utilisateur a la permission
+      const hasPermission = this.permissionService.hasPermission(requiredPermission);
+      
+      console.log(`🔍 Menu "${menuItem.title}" (${requiredPermission}): ${hasPermission ? '✅' : '❌'}`);
+      
+      return hasPermission;
+    });
 
+    console.log(`📋 Menu items affichés:`, this.menuItems.map(m => m.title));
+  }
 }

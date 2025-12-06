@@ -4,6 +4,6 @@ export const PERMISSION_MAPPING: { [key: string]: string } = {
   'scheduled-payment': 'VIEW_SCHEDULED_PAYMENTS',
   'simulation': 'VIEW_SIMULATIONS',
   'profile': 'VIEW_DOCUMENTS',
-  'request-history': 'VIEW_REQUEST_HISTORY',
+  'history': 'VIEW_REQUEST_HISTORY',
   'comparator': 'VIEW_COMPARATOR'
 };
