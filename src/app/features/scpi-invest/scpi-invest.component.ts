@@ -297,6 +297,11 @@ export class ScpiInvestComponent implements OnInit {
       numberOfShares: this.recapData.numberOfShares,
       investmentAmount: this.currentInvestmentAmount,
       dismembermentYears: this.selectedDuration || null,
+      paymentType : "ONE_SHOT",
+      monthlyAmount:0,
+      scheduledPaymentDate:" " 
+
+
     };
 
     this.investmentService.createInvestment(request).subscribe({

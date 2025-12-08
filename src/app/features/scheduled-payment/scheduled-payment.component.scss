@@ -1,0 +1,21 @@
+
+.p-calendar .p-datepicker {
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.p-inputnumber input {
+  border-radius: 9999px; 
+}
+
+.my-calendar-panel {
+  position: fixed !important;
+  left: 50% !important;
+  top: 40% !important;
+
+  transform: translateX(-50%);
+  border-radius: 1rem !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15) !important;
+  z-index: 9999 !important;
+}

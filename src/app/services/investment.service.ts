@@ -5,10 +5,8 @@ import {
 } from '../models/investment.model';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import {
-  InvestorPortfolioDistribution,
-  PortfolioSummary,
-} from '../models/scpi-investment.model';
+import { InvestorPortfolioDistribution, PortfolioSummary } from '../models/scpi-investment.model';
+import { ScheduledPaymentRequest, ScpiSummary } from '../models/scheduled-payment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -76,4 +74,13 @@ export class InvestmentService {
       `${this.apiUrl}/investment/monthly-revenue/full-history${params}`
     );
   }
+
+
+  hasInvested(scpiId: number): Observable<boolean> {
+    const params = new HttpParams().set('scpiId', scpiId.toString());
+    return this.http.get<boolean>(`${this.apiUrl}/investment/hasinvested`, { params });
+  }
+
+
+
 }

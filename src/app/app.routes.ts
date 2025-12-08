@@ -12,6 +12,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { SimulationLayoutComponent } from './features/simulation/simulation-layout/simulation-layout.component';
 import { PortefeuilleScpiComponent } from './features/portefeuille-scpi/portefeuille-scpi.component';
 import { ScpiSimulatorHomeComponent } from './features/simulation/scpi-simulator-home/scpi-simulator-home.component';
+import { ScheduledPaymentComponent } from './features/scheduled-payment/scheduled-payment.component';
 
 export const routes: Routes = [
 
@@ -33,7 +34,8 @@ export const routes: Routes = [
       { path: 'mon-profil', component: ProfileComponent },
       { path: 'simulation', component: ScpiSimulatorHomeComponent },
       { path: 'simulation/nouvelle', component: SimulationLayoutComponent},
-      { path: 'portefeuille', component: PortefeuilleScpiComponent }
+      { path: 'portefeuille', component: PortefeuilleScpiComponent },
+      { path: 'scheduled-payment', component: ScheduledPaymentComponent }
 
     ],
   }
