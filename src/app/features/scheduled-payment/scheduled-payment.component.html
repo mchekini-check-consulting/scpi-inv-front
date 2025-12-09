@@ -1,19 +1,21 @@
 <p-toast></p-toast>
 
-<div class="min-h-screen bg-[#fff7e6] flex justify-center px-4 py-10">
+<div class="min-h-screen bg-[#fff7e6] px-4 py-10">
   <div class="w-full max-w-4xl">
-
-    <h1 class="text-2xl font-bold text-gray-900 mb-6">
-      Versements Programmés
-    </h1>
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">Versements Programmés</h1>
     <p class="text-sm text-gray-600 mb-6">
-      Configurez vos versements mensuels automatiques pour investir régulièrement dans votre SCPI.
+      Configurez vos versements mensuels automatiques pour investir
+      régulièrement dans votre SCPI.
     </p>
 
-    <section class="bg-white rounded-2xl shadow-sm border border-green-100 p-6 mb-8">
+    <section
+      class="bg-white rounded-2xl shadow-sm border border-green-100 p-6 mb-8"
+    >
       <div class="flex items-start gap-3">
         <div class="mt-1">
-          <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700">
+          <span
+            class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700"
+          >
             <i class="pi pi-info-circle"></i>
           </span>
         </div>
@@ -22,18 +24,25 @@
             Informations importantes
           </h2>
           <ul class="list-disc ml-5 space-y-1 text-sm text-gray-700">
-            <li>Le versement programmé nécessite un premier investissement si vous n’avez jamais investi.</li>
+            <li>
+              Le versement programmé nécessite un premier investissement si vous
+              n’avez jamais investi.
+            </li>
             <li>Le montant mensuel doit être au moins égal à une part.</li>
             <li>Les versements seront prélevés automatiquement chaque mois.</li>
-            <li>Les performances passées ne préjugent pas des performances futures.</li>
+            <li>
+              Les performances passées ne préjugent pas des performances
+              futures.
+            </li>
           </ul>
         </div>
       </div>
     </section>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-8">
-
-      <section class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+      <section
+        class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6"
+      >
         <label class="block text-sm font-semibold text-gray-800 mb-2">
           Sélectionnez la SCPI
         </label>
@@ -51,18 +60,25 @@
           class="w-full"
         ></p-dropdown>
 
-        <div *ngIf="showValidationErrors && form.get('scpiId')?.invalid"
-             class="mt-2 text-xs text-red-600">
+        <div
+          *ngIf="showValidationErrors && form.get('scpiId')?.invalid"
+          class="mt-2 text-xs text-red-600"
+        >
           La sélection d’une SCPI est obligatoire.
         </div>
 
         <div *ngIf="selectedScpi" class="mt-4 text-sm text-gray-700 space-y-1">
-          <p><span class="font-medium">Gestionnaire :</span> {{ selectedScpi.manager }}</p>
-          <p><span class="font-medium">Pays :</span> {{ selectedScpi.country }}</p>
+          <p>
+            <span class="font-medium">Gestionnaire :</span>
+            {{ selectedScpi.manager }}
+          </p>
+          <p>
+            <span class="font-medium">Pays :</span> {{ selectedScpi.country }}
+          </p>
           <p>
             <span class="font-medium">Prix d’une part :</span>
             <span class="font-semibold text-blue-700">
-              {{ selectedScpi.sharePrice | number:'1.0-2' }} €
+              {{ selectedScpi.sharePrice | number : "1.0-2" }} €
             </span>
           </p>
           <p *ngIf="selectedScpi.minimumSubscription">
@@ -74,10 +90,16 @@
         <div *ngIf="checkingInvestStatus" class="mt-3 text-xs text-gray-500">
           Vérification de votre historique d’investissement…
         </div>
-        <div *ngIf="hasAlreadyInvested === true" class="mt-3 text-xs text-green-700">
+        <div
+          *ngIf="hasAlreadyInvested === true"
+          class="mt-3 text-xs text-green-700"
+        >
           Vous avez déjà investi dans cette SCPI.
         </div>
-        <div *ngIf="hasAlreadyInvested === false" class="mt-3 text-xs text-amber-700">
+        <div
+          *ngIf="hasAlreadyInvested === false"
+          class="mt-3 text-xs text-amber-700"
+        >
           Premier versement obligatoire.
         </div>
       </section>
@@ -93,24 +115,30 @@
         <p class="text-sm text-gray-700 mb-4">
           Prix d’une part :
           <span class="font-semibold text-blue-700">
-            {{ selectedScpi.sharePrice | number:'1.0-2' }} €
+            {{ selectedScpi.sharePrice | number : "1.0-2" }} €
           </span>
         </p>
 
         <div class="flex items-center justify-between gap-4 flex-wrap mb-4">
           <div class="flex flex-col gap-1">
-            <span class="text-sm text-gray-700 font-medium">Nombre de parts</span>
+            <span class="text-sm text-gray-700 font-medium"
+              >Nombre de parts</span
+            >
 
             <div class="flex items-center gap-3">
-
               <button
                 type="button"
                 pButton
                 icon="pi pi-minus"
                 class="p-button-rounded p-button-text border border-gray-200"
-                (click)="form.patchValue({
-                  firstShares: max(1, (form.get('firstShares')?.value || 1) - 1)
-                })"
+                (click)="
+                  form.patchValue({
+                    firstShares: max(
+                      1,
+                      (form.get('firstShares')?.value || 1) - 1
+                    )
+                  })
+                "
               ></button>
 
               <p-inputNumber
@@ -126,18 +154,20 @@
                 pButton
                 icon="pi pi-plus"
                 class="p-button-rounded p-button-text border border-gray-200"
-                (click)="form.patchValue({
-                  firstShares: (form.get('firstShares')?.value || 1) + 1
-                })"
+                (click)="
+                  form.patchValue({
+                    firstShares: (form.get('firstShares')?.value || 1) + 1
+                  })
+                "
               ></button>
-
             </div>
 
-            <div *ngIf="showValidationErrors && form.get('firstShares')?.invalid"
-                 class="text-xs text-red-600 mt-1">
+            <div
+              *ngIf="showValidationErrors && form.get('firstShares')?.invalid"
+              class="text-xs text-red-600 mt-1"
+            >
               Le nombre de parts doit être au moins égal à 1.
             </div>
-
           </div>
 
           <div class="text-right flex-1">
@@ -145,7 +175,7 @@
               Montant total du premier versement
             </p>
             <p class="text-3xl font-bold text-blue-700">
-              {{ firstPaymentAmount | number:'1.0-2' }} €
+              {{ firstPaymentAmount | number : "1.0-2" }} €
             </p>
           </div>
         </div>
@@ -166,13 +196,15 @@
         <p class="text-sm text-gray-700 mb-4">
           Prix d’une part :
           <span class="font-semibold text-blue-700">
-            {{ selectedScpi.sharePrice | number:'1.0-2' }} €
+            {{ selectedScpi.sharePrice | number : "1.0-2" }} €
           </span>
         </p>
 
         <div class="flex items-center justify-between gap-4 flex-wrap mb-4">
           <div class="flex flex-col gap-1">
-            <span class="text-sm text-gray-700 font-medium">Nombre de parts mensuelles</span>
+            <span class="text-sm text-gray-700 font-medium"
+              >Nombre de parts mensuelles</span
+            >
 
             <div class="flex items-center gap-3">
               <button
@@ -180,9 +212,14 @@
                 pButton
                 icon="pi pi-minus"
                 class="p-button-rounded p-button-text border border-gray-200"
-                (click)="form.patchValue({
-                  monthlyShares: max(1, (form.get('monthlyShares')?.value || 1) - 1)
-                })"
+                (click)="
+                  form.patchValue({
+                    monthlyShares: max(
+                      1,
+                      (form.get('monthlyShares')?.value || 1) - 1
+                    )
+                  })
+                "
               ></button>
 
               <p-inputNumber
@@ -197,14 +234,18 @@
                 pButton
                 icon="pi pi-plus"
                 class="p-button-rounded p-button-text border border-gray-200"
-                (click)="form.patchValue({
-                  monthlyShares: (form.get('monthlyShares')?.value || 1) + 1
-                })"
+                (click)="
+                  form.patchValue({
+                    monthlyShares: (form.get('monthlyShares')?.value || 1) + 1
+                  })
+                "
               ></button>
             </div>
 
-            <div *ngIf="showValidationErrors && form.get('monthlyShares')?.invalid"
-                 class="text-xs text-red-600 mt-1">
+            <div
+              *ngIf="showValidationErrors && form.get('monthlyShares')?.invalid"
+              class="text-xs text-red-600 mt-1"
+            >
               Vous devez investir au moins une part par mois.
             </div>
           </div>
@@ -214,7 +255,7 @@
               Montant du versement programmé
             </p>
             <p class="text-3xl font-bold text-blue-700">
-              {{ monthlyAmount | number:'1.0-2' }} €
+              {{ monthlyAmount | number : "1.0-2" }} €
               <span class="text-base font-semibold">/ mois</span>
             </p>
           </div>
@@ -249,7 +290,8 @@
               <span
                 class="w-8 h-8 flex items-center justify-center rounded-full text-sm"
                 [ngClass]="{
-                  'pointer-events-none opacity-40 text-gray-400': isDateDisabled(dateMeta),
+                  'pointer-events-none opacity-40 text-gray-400':
+                    isDateDisabled(dateMeta),
                   'hover:bg-indigo-100 cursor-pointer':
                     !isDateDisabled(dateMeta) && !dateMeta.otherMonth,
                   'bg-indigo-600 text-white':
@@ -261,30 +303,197 @@
             </ng-template>
           </p-calendar>
 
-          <div *ngIf="showValidationErrors && form.get('firstDebitDate')?.invalid"
-               class="mt-2 text-xs text-red-600">
+          <div
+            *ngIf="showValidationErrors && form.get('firstDebitDate')?.invalid"
+            class="mt-2 text-xs text-red-600"
+          >
             La date de prélèvement est obligatoire.
           </div>
         </div>
       </section>
 
-      <div class="sticky bottom-0 bg-gradient-to-t from-[#fff7e6] pt-4 pb-2">
-        <button
-          pButton
-          type="submit"
-          [disabled]="isSubmitDisabled || submitting"
-          class="w-full rounded-full py-3 text-white text-sm font-semibold
-                 bg-[#4c6fff] hover:bg-[#3f5ae0] disabled:bg-gray-300 disabled:cursor-not-allowed
-                 shadow-md shadow-blue-200 transition"
+      <button
+        pButton
+        type="submit"
+        [disabled]="isSubmitDisabled || submitting"
+        class="w-full rounded-xl py-4 text-white text-base font-semibold bg-[#4c6fff] hover:bg-[#3f5ae0] disabled:bg-gray-300 disabled:cursor-not-allowed shadow-lg shadow-blue-200/50 hover:shadow-xl hover:shadow-blue-300/50 transition-all duration-200 transform hover:scale-[1.02]"
+      >
+        <span
+          *ngIf="!submitting"
+          class="flex items-center justify-center gap-2"
         >
-          <span *ngIf="!submitting">Configurer mon versement programmé</span>
-          <span *ngIf="submitting" class="flex items-center justify-center gap-2">
-            <i class="pi pi-spin pi-spinner"></i>
-            Traitement en cours...
-          </span>
-        </button>
+          <i class="pi pi-check-circle"></i>
+          Configurer mon versement programmé
+        </span>
+        <span *ngIf="submitting" class="flex items-center justify-center gap-2">
+          <i class="pi pi-spin pi-spinner"></i>
+          Traitement en cours...
+        </span>
+      </button>
+    </form>
+  </div>
+  <div class="w-full max-w-4xl">
+    <section
+      *ngIf="selectedScpi && form.valid"
+      class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mt-8"
+    >
+      <h1 class="text-2xl font-bold text-gray-900 mb-2">
+        Projection de votre investissement dans le temps
+      </h1>
+      <p class="text-sm text-gray-600 mb-8">
+        Visualisez l'évolution estimée de votre patrimoine selon différents
+        scénarios sur 5, 10, 15 ou 20 ans.
+      </p>
+
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+          Période de simulation
+        </h3>
+        <div class="grid grid-cols-4 gap-4">
+          <button
+            *ngFor="let year of [5, 10, 15, 20]"
+            type="button"
+            (click)="selectPeriod(year)"
+            [class]="
+              projectionYears === year
+                ? '!bg-secondary text-white'
+                : 'bg-[#fff7e6] text-gray-700 hover:bg-[#ffe8c1]'
+            "
+            class="py-3 px-6 rounded-xl font-semibold transition-all duration-200"
+          >
+            {{ year }} ans
+          </button>
+        </div>
       </div>
 
-    </form>
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">
+          Scénario de revalorisation
+        </h3>
+        <div class="grid grid-cols-3 gap-4 mb-4">
+          <button
+            type="button"
+            (click)="selectScenario('realistic')"
+            [class]="
+              selectedScenario === 'realistic'
+                ? '!bg-secondary text-white'
+                : 'bg-[#fff7e6] text-gray-700 hover:bg-[#ffe8c1]'
+            "
+            class="py-4 px-6 rounded-xl transition-all duration-200"
+          >
+            <div class="font-semibold">Réaliste</div>
+            <div class="text-sm mt-1">1,3% / an</div>
+          </button>
+
+          <button
+            type="button"
+            (click)="selectScenario('optimistic')"
+            [class]="
+              selectedScenario === 'optimistic'
+                ? 'bg-[#4c6fff] text-white'
+                : 'bg-[#fff7e6] text-gray-700 hover:bg-[#ffe8c1]'
+            "
+            class="py-4 px-6 rounded-xl transition-all duration-200"
+          >
+            <div class="font-semibold">Optimiste</div>
+            <div class="text-sm mt-1">2% / an</div>
+          </button>
+
+          <button
+            type="button"
+            (click)="selectScenario('pessimistic')"
+            [class]="
+              selectedScenario === 'pessimistic'
+                ? 'bg-[#4c6fff] text-white'
+                : 'bg-[#fff7e6] text-gray-700 hover:bg-[#ffe8c1]'
+            "
+            class="py-4 px-6 rounded-xl transition-all duration-200"
+          >
+            <div class="font-semibold">Pessimiste</div>
+            <div class="text-sm mt-1">-0,5% / an</div>
+          </button>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Choisir un pourcentage personnalisé de revalorisation annuelle du
+            prix de part
+          </label>
+          <div class="flex items-center gap-2 max-w-xs">
+            <input
+              type="number"
+              [(ngModel)]="customRate"
+              (ngModelChange)="onCustomRateChange()"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="Ex: 1,5"
+              step="0.1"
+              class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <span class="text-gray-600 font-medium">% / an</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-8 p-4 bg-[#fff7e6] rounded-xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-base font-semibold text-gray-900">
+              Réinvestissement automatique des loyers
+            </h3>
+            <p class="text-sm text-gray-600 mt-1">
+              Je réinvestis automatiquement mes loyers chaque mois (intérêts
+              composés)
+            </p>
+          </div>
+          <p-inputSwitch
+            [(ngModel)]="autoReinvest"
+            [ngModelOptions]="{ standalone: true }"
+            (onChange)="calculateProjection()"
+          ></p-inputSwitch>
+        </div>
+      </div>
+
+      <div class="mb-8 p-6 bg-white rounded-xl border border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+          Évolution du patrimoine global
+        </h3>
+        <p class="text-sm text-gray-600 mb-6">
+          Visualisez la croissance de votre capital investi dans le temps
+        </p>
+
+        <p-chart
+          type="bar"
+          [data]="chartData"
+          [options]="chartOptions"
+          class="w-full"
+        />
+      </div>
+
+      <div class="space-y-4">
+        <div class="p-6 bg-blue-50 rounded-xl">
+          <p class="text-sm text-gray-600 mb-1">Patrimoine final estimé :</p>
+          <p class="text-3xl font-bold !text-tertiary">
+            {{ finalCapital | number : "1.0-0" }} €
+          </p>
+          <p class="text-xs text-gray-500 mt-2">
+            Basé sur {{ projectionYears }} ans d'investissement avec un taux de
+            revalorisation de {{ currentRate }}% / an
+          </p>
+        </div>
+
+        <div class="p-6 bg-blue-50 rounded-xl">
+          <p class="text-sm text-gray-600 mb-1">
+            Loyer mensuel estimé (année {{ projectionYears }}) :
+          </p>
+          <p class="text-3xl font-bold !text-tertiary">
+            {{ finalMonthlyRent | number : "1.0-0" }} €
+          </p>
+          <p class="text-xs text-gray-500 mt-2">
+            {{ autoReinvest ? "Avec" : "Sans" }} réinvestissement automatique
+            des loyers
+          </p>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
