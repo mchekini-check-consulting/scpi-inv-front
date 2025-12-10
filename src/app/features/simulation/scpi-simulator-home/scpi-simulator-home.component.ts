@@ -21,4 +21,8 @@ export class ScpiSimulatorHomeComponent {
     this.simulationState.resetSimulationState();
     this.router.navigate(['/dashboard/simulation/nouvelle']);
   }
+
+  goToMySimulations(): void {
+    this.router.navigate(['/dashboard/simulation/mes-simulations']);
+  }
 }

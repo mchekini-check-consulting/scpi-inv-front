@@ -78,7 +78,9 @@
   <app-scpi-selection-modal 
     *ngIf="showAddModal" 
     (close)="closeAddModal()"
-    (addScpi)="addToPortfolio($event)">
+    (addScpi)="addToPortfolio($event)"
+    [selectedIds]="selectedIds" 
+    >
   </app-scpi-selection-modal>
 
   <app-confirmation-modal
