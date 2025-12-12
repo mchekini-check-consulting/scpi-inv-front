@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToastModule } from 'primeng/toast';
+import { ChartModule } from 'primeng/chart';
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { MessageService } from 'primeng/api';
 import { ScpiSummary } from '../../models/scheduled-payment.model';
 import { InvestmentService } from '../../services/investment.service';
@@ -18,11 +20,14 @@ import { InvestmentRequestDTO } from '../../models/investment.model';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     DropdownModule,
     CalendarModule,
     ButtonModule,
     InputNumberModule,
-    ToastModule
+    ToastModule,
+    ChartModule,
+    InputSwitchModule
   ],
   providers: [MessageService],
   templateUrl: './scheduled-payment.component.html',
@@ -42,16 +47,35 @@ export class ScheduledPaymentComponent implements OnInit {
 
   showValidationErrors = false;
 
+  // ============ PROJECTION ============
+  projectionYears: number = 10;
+  selectedScenario: 'realistic' | 'optimistic' | 'pessimistic' | 'custom' = 'realistic';
+  customRate: number = 1.3;
+  autoReinvest: boolean = false;
+
+  finalCapital: number = 0;
+  finalMonthlyRent: number = 0;
+
+  chartData: any = {};
+  chartOptions: any = {};
+
+  scenarios = {
+    realistic: 1.3,
+    optimistic: 2.0,
+    pessimistic: -0.5,
+  };
+
   constructor(
     private fb: FormBuilder,
     private messageService: MessageService,
-    private investmentService:InvestmentService,
-    private scpiService:ScpiService
+    private investmentService: InvestmentService,
+    private scpiService: ScpiService
   ) {}
 
   ngOnInit(): void {
     this.buildForm();
     this.loadScpis();
+    this.initChartOptions();
   }
 
   private buildForm(): void {
@@ -80,19 +104,19 @@ export class ScheduledPaymentComponent implements OnInit {
     });
   }
 
-onScpiChange(scpiId: number): void {
-  this.selectedScpi = this.scpis.find(scpi => scpi.id === scpiId) || null;
+  onScpiChange(scpiId: number): void {
+    this.selectedScpi = this.scpis.find(scpi => scpi.id === scpiId) || null;
 
-  if (!this.selectedScpi) return;
-  this.form.patchValue({
-    firstShares: 1,
-    monthlyShares: 1
-  });
+    if (!this.selectedScpi) return;
 
-  this.hasAlreadyInvested = null;
-  this.checkInvestStatus(scpiId);
-}
+    this.form.patchValue({
+      firstShares: 1,
+      monthlyShares: 1
+    });
 
+    this.hasAlreadyInvested = null;
+    this.checkInvestStatus(scpiId);
+  }
 
   private checkInvestStatus(scpiId: number): void {
     this.checkingInvestStatus = true;
@@ -101,6 +125,11 @@ onScpiChange(scpiId: number): void {
       next: (hasInvested) => {
         this.hasAlreadyInvested = hasInvested;
         this.updateFirstSharesValidators(hasInvested);
+        
+        // Calculer la projection dès que les données sont prêtes
+        if (this.selectedScpi) {
+          this.calculateProjection();
+        }
       },
       error: () => {
         this.messageService.add({
@@ -148,15 +177,13 @@ onScpiChange(scpiId: number): void {
     return dateMeta.day > 28;
   }
 
+  private formatDate(date: any): string {
+    if (!date) throw new Error("Date is required");
+    const d = new Date(date);
+    return d.toISOString().substring(0, 10); // "YYYY-MM-DD"
+  }
 
- private formatDate(date: any): string {
-  if (!date) throw new Error("Date is required");
-  const d = new Date(date);
-  return d.toISOString().substring(0, 10); // "YYYY-MM-DD"
-}
-
-
-get isSubmitDisabled(): boolean {
+  get isSubmitDisabled(): boolean {
     if (!this.form.valid) return true;
     if (!this.selectedScpi) return true;
     if (this.monthlyAmount <= 0) return true;
@@ -168,18 +195,17 @@ get isSubmitDisabled(): boolean {
     return false;
   }
 
+  decreaseFirstShares(): void {
+    if (!this.selectedScpi) return;
 
-decreaseFirstShares(): void {
-  if (!this.selectedScpi) return;
+    const current = this.form.get('firstShares')?.value || 0;
+    this.form.patchValue({ firstShares: current - 1 });
+  }
 
-  const current = this.form.get('firstShares')?.value || 0;
-  this.form.patchValue({ firstShares: current - 1 });
-}
-
-increaseFirstShares(): void {
-  const current = this.form.get('firstShares')?.value || 0;
-  this.form.patchValue({ firstShares: current + 1 });
-}
+  increaseFirstShares(): void {
+    const current = this.form.get('firstShares')?.value || 0;
+    this.form.patchValue({ firstShares: current + 1 });
+  }
 
   onSubmit(): void {
     this.showValidationErrors = true;
@@ -197,21 +223,19 @@ increaseFirstShares(): void {
     const fv = this.form.value;
 
     const payload: InvestmentRequestDTO = {
-     scpiId: fv.scpiId,
+      scpiId: fv.scpiId,
       investmentAmount: this.hasAlreadyInvested === false ? this.firstPaymentAmount : 0,
       monthlyAmount: this.monthlyAmount,
       numberOfShares: fv.monthlyShares,
-      paymentType:"SCHEDULED",
+      paymentType: "SCHEDULED",
       scheduledPaymentDate: this.formatDate(fv.firstDebitDate),
-     investmentType: "FULL_OWNERSHIP",
-
-  dismembermentYears: null,
-
+      investmentType: "FULL_OWNERSHIP",
+      dismembermentYears: null,
     };
 
     console.log("firstDebitDate FV =", fv.firstDebitDate);
-console.log("type =", typeof fv.firstDebitDate);
-console.log(payload)
+    console.log("type =", typeof fv.firstDebitDate);
+    console.log(payload);
 
     this.submitting = true;
 
@@ -232,5 +256,185 @@ console.log(payload)
       },
       complete: () => (this.submitting = false)
     });
+  }
+
+  // ============ PROJECTION METHODS ============
+
+  get currentRate(): number {
+    return this.selectedScenario === 'custom' 
+      ? this.customRate 
+      : this.scenarios[this.selectedScenario];
+  }
+
+  initChartOptions(): void {
+    this.chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            usePointStyle: true,
+            padding: 15,
+            font: {
+              size: 12,
+              family: 'Inter, system-ui, sans-serif'
+            }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          padding: 12,
+          cornerRadius: 8,
+          titleFont: {
+            size: 14,
+            weight: 'bold'
+          },
+          bodyFont: {
+            size: 13
+          },
+          callbacks: {
+            label: (context: any) => {
+              const label = context.dataset.label || '';
+              const value = context.parsed.y;
+              return `${label}: ${value.toLocaleString('fr-FR')} €`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: (value: any) => {
+              if (value >= 1000) {
+                return (value / 1000) + 'k';
+              }
+              return value + ' €';
+            },
+            font: {
+              size: 11
+            }
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          },
+          ticks: {
+            font: {
+              size: 11
+            }
+          }
+        }
+      }
+    };
+  }
+
+  selectPeriod(years: number): void {
+    this.projectionYears = years;
+    this.calculateProjection();
+  }
+
+  selectScenario(scenario: 'realistic' | 'optimistic' | 'pessimistic'): void {
+    this.selectedScenario = scenario;
+    this.calculateProjection();
+  }
+
+  onCustomRateChange(): void {
+    this.selectedScenario = 'custom';
+    this.calculateProjection();
+  }
+
+  calculateProjection(): void {
+    if (!this.selectedScpi) return;
+
+    const annualYield = 4.5;
+    const annualRevalo = this.currentRate;
+
+ 
+    const monthlyYield = annualYield / 100 / 12;
+    const monthlyRevalo = annualRevalo / 100 / 12;
+
+
+    const initialInvestment = this.hasAlreadyInvested === false 
+      ? this.firstPaymentAmount 
+      : 0;
+    const monthlyInvestment = this.monthlyAmount;
+
+
+    let capital = initialInvestment;
+    let totalInvested = initialInvestment;
+
+    const totalMonths = this.projectionYears * 12;
+    const yearlyData: any[] = [];
+
+
+    for (let month = 1; month <= totalMonths; month++) {
+   
+      capital += monthlyInvestment;
+      totalInvested += monthlyInvestment;
+
+
+      capital = capital * (1 + monthlyRevalo);
+
+
+      const monthlyRent = capital * monthlyYield;
+
+ 
+      if (this.autoReinvest) {
+        capital += monthlyRent;
+      }
+
+  
+      if (month % 12 === 0) {
+        const year = month / 12;
+        yearlyData.push({
+          year: `Y${year}`,
+          capital: Math.round(capital),
+          totalInvested: Math.round(totalInvested),
+          rent: Math.round(monthlyRent)
+        });
+      }
+    }
+
+
+    const lastData = yearlyData[yearlyData.length - 1];
+    this.finalCapital = lastData.capital;
+    this.finalMonthlyRent = lastData.rent;
+
+
+    this.chartData = {
+      labels: yearlyData.map(d => d.year),
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Capital investi',
+          data: yearlyData.map(d => d.totalInvested),
+          backgroundColor: 'rgba(134, 188, 183, 0.6)',
+          borderColor: 'rgba(134, 188, 183, 1)',
+          borderWidth: 1,
+          borderRadius: 8
+        },
+        {
+          type: 'line',
+          label: 'Patrimoine total',
+          data: yearlyData.map(d => d.capital),
+          borderColor: 'rgba(255, 159, 64, 1)',
+          backgroundColor: 'rgba(255, 159, 64, 0.1)',
+          borderWidth: 3,
+          tension: 0.4,
+          pointRadius: 5,
+          pointHoverRadius: 7,
+          pointBackgroundColor: 'rgba(255, 159, 64, 1)',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2
+        }
+      ]
+    };
   }
 }
