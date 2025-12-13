@@ -13,7 +13,7 @@ import { ScpiSummary } from '../../models/scheduled-payment.model';
 import { InvestmentService } from '../../services/investment.service';
 import { ScpiService } from '../../services/scpi.service';
 import { InvestmentRequestDTO } from '../../models/investment.model';
-import { DistributionRate } from '../../models/distribution-rate.model';
+
 
 @Component({
   selector: 'app-scheduled-payment',
