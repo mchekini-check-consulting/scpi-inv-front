@@ -39,6 +39,7 @@ export interface PortfolioSummary {
 export interface RepartitionItem {
   label: string;
   percentage: number;
+  amount?: number
 }
 
 export interface InvestorPortfolioDistribution {

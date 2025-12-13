@@ -13,6 +13,8 @@
   
   <app-geo-repartition 
     *ngIf="!loading && geographicalData.length > 0"
-    [geographicalData]="geographicalData">
+    [geographicalData]="geographicalData"
+    [totalInvested]="totalInvested"
+    >
   </app-geo-repartition>
 </div>
