@@ -14,6 +14,7 @@ import { ScpiService } from '../../services/scpi.service';
 import { ScpiWithRates } from '../../models/scpi.model';
 import localeFr from '@angular/common/locales/fr';
 import { Location } from '@angular/common';
+import {FormatFieldPipe} from "../../core/pipe/format-field.pipe";
 
 registerLocaleData(localeFr);
 
@@ -30,6 +31,7 @@ registerLocaleData(localeFr);
     SliderModule,
     SelectModule,
     ProgressSpinnerModule,
+    FormatFieldPipe,
   ],
   providers: [{ provide: 'LOCALE_ID', useValue: 'fr-FR' }],
 })
@@ -142,13 +144,6 @@ export class ComparatorScpiComponent implements OnInit {
   formatEuroNoCents(value: number | null | undefined): string {
     if (value == null) return '-';
     return value.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) + ' €';
-  }
-
-  getCapitalization(scpi: ScpiWithRates | null): string {
-    if (!scpi?.capitalization) return '-';
-    const value = Number(scpi.capitalization);
-    if (isNaN(value)) return '-';
-    return `${Math.round(value / 1_000_000)} M€`;
   }
 
   getEnjoymentDelayLabel(scpi: ScpiWithRates | null): string {
