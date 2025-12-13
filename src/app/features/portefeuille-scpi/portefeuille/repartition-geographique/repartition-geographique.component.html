@@ -1,1 +1,18 @@
-<p>repartition-geographique works!</p>
+<div class="w-full h-full">
+
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 !border-secondary"></div>
+  </div>
+
+
+  <div *ngIf="!loading && geographicalData.length === 0" class="text-center py-12">
+    <i class="pi pi-map-marker text-6xl text-gray-300 mb-4"></i>
+    <p class="text-gray-500">Aucune donnée géographique disponible</p>
+  </div>
+
+  
+  <app-geo-repartition 
+    *ngIf="!loading && geographicalData.length > 0"
+    [geographicalData]="geographicalData">
+  </app-geo-repartition>
+</div>

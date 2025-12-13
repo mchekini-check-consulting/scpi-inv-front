@@ -9,7 +9,7 @@ import { SectoralRepartitionComponent } from '../../core/template/components/sec
 @Component({
   selector: 'app-portefeuille-scpi',
   standalone: true,
-  imports: [RevenusMensuelsComponent, CumulRevenusComponent, SectoralRepartitionComponent, RepartitionGeographiqueComponent, ListeInvestissementsComponent, PortfolioSummaryComponent ],
+  imports: [RevenusMensuelsComponent, CumulRevenusComponent,RepartitionGeographiqueComponent, SectoralRepartitionComponent, ListeInvestissementsComponent, PortfolioSummaryComponent ],
   templateUrl: './portefeuille-scpi.component.html',
   styleUrl: './portefeuille-scpi.component.scss',
   encapsulation: ViewEncapsulation.None

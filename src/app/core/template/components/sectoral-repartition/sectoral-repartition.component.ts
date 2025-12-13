@@ -13,11 +13,10 @@ import { FormatFieldPipe } from '../../../pipe/format-field.pipe';
   styleUrls: ['./sectoral-repartition.component.scss'],
 })
 export class SectoralRepartitionComponent implements OnInit {
-
   @Input() sectoralData: RepartitionItem[] = [];
   @Input() loadFromApi: boolean = false;
   @Input() totalAmount: number = 0;
-  
+
   sectoralChartData: any;
   chartOptions: any;
   loading = false;
@@ -26,22 +25,22 @@ export class SectoralRepartitionComponent implements OnInit {
 
   ngOnInit(): void {
     this.setChartOptions();
-    
+
     if (this.loadFromApi) {
       this.loadPortfolioDistribution();
     } else {
       this.prepareSectoralChart();
     }
   }
-  
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['sectoralData'] && !this.loadFromApi) {
-          this.prepareSectoralChart();
-        }
-        if (changes['totalAmount']) {
-          this.setChartOptions();
-        }
-      }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sectoralData'] && !this.loadFromApi) {
+      this.prepareSectoralChart();
+    }
+    if (changes['totalAmount']) {
+      this.setChartOptions();
+    }
+  }
   loadPortfolioDistribution(): void {
     this.loading = true;
     this.investmentService.getPortfolioDistribution().subscribe({
@@ -54,16 +53,16 @@ export class SectoralRepartitionComponent implements OnInit {
       error: (err) => {
         console.error('Erreur lors du chargement de la répartition', err);
         this.loading = false;
-      }
+      },
     });
   }
 
   prepareSectoralChart(): void {
     this.sectoralChartData = {
-      labels: this.sectoralData.map(item => item.label),
+      labels: this.sectoralData.map((item) => item.label),
       datasets: [
         {
-          data: this.sectoralData.map(item => item.percentage),
+          data: this.sectoralData.map((item) => item.percentage),
           backgroundColor: [
             '#EF5350',
             '#EC407A',
@@ -102,16 +101,15 @@ export class SectoralRepartitionComponent implements OnInit {
             label: (context: any) => {
               const label = context.label || '';
               const value = context.parsed || 0;
-              
-           
+
               if (this.totalAmount > 0) {
                 const amount = this.calculateAmount(value);
                 return [
                   `${label}: ${value.toFixed(1)}%`,
-                  `${amount.toLocaleString('fr-FR')} €`
+                  `${amount.toLocaleString('fr-FR')} €`,
                 ];
               }
-              
+
               return `${label}: ${value.toFixed(1)}%`;
             },
           },
