@@ -1,27 +1,35 @@
-import {Component, Input, OnChanges, SimpleChanges, ViewEncapsulation} from '@angular/core';
-import {CountryData, GeographicalItem} from "../../../../models/geo-repartition.model";
-import {NgxEchartsDirective, provideEcharts} from "ngx-echarts";
+import { Component, Input, OnChanges, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import * as echarts from "echarts";
-import {RepartitionItem} from "../../../../models/scpi-repartition.model";
-import {CommonModule, NgForOf, NgIf} from "@angular/common";
+import { RepartitionItem } from "../../../../models/scpi-repartition.model";
+import { FormatFieldPipe } from '../../../pipe/format-field.pipe';
+
+interface CountryData {
+  name: string;
+  value: number;
+  amount?: number;  
+}
 
 @Component({
   selector: 'app-geo-repartition',
   standalone: true,
-  imports: [NgxEchartsDirective, NgForOf, NgIf, CommonModule],
+  imports: [NgxEchartsDirective, CommonModule, FormatFieldPipe],
   providers: [provideEcharts()],
   templateUrl: './geo-repartition.component.html',
   styleUrl: './geo-repartition.component.scss',
   encapsulation: ViewEncapsulation.None
 })
-export class GeoRepartitionComponent implements  OnChanges {
+export class GeoRepartitionComponent implements OnChanges {
 
   @Input() geographicalData: RepartitionItem[] = [];
+  @Input() totalInvested: number = 0; 
+  
   geoMapOptions: any;
   countriesLegend: CountryData[] = [];
   mapLoaded = false;
 
-   ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {
     setTimeout(() => this.loadMap(), 0);
   }
 
@@ -44,7 +52,7 @@ export class GeoRepartitionComponent implements  OnChanges {
   }
 
   prepareGeographicalMap(): void {
-      if (!this.geographicalData || this.geographicalData.length === 0) {
+    if (!this.geographicalData || this.geographicalData.length === 0) {
       this.countriesLegend = [];
       
       this.geoMapOptions = {
@@ -89,10 +97,12 @@ export class GeoRepartitionComponent implements  OnChanges {
         ],
       };
     } else {
+   
       const countries: CountryData[] = this.geographicalData
-        .map((item: GeographicalItem): CountryData => ({
+        .map((item: any): CountryData => ({
           name: item.label,
           value: item.percentage,
+          amount: item.amount  
         }));
 
       this.countriesLegend = countries;
@@ -105,11 +115,19 @@ export class GeoRepartitionComponent implements  OnChanges {
         maxValue = 100;
       }
 
-
       this.geoMapOptions = {
         tooltip: {
           trigger: 'item',
-          formatter: (params: any) => `${params.name} : ${params.value || 0}%`,
+         
+          formatter: (params: any) => {
+            const country = this.countriesLegend.find(c => c.name === params.name);
+            if (country && country.amount) {
+              return `${params.name}<br/>
+                      ${params.value || 0}%<br/>
+                      ${country.amount.toFixed(2)} €`;
+            }
+            return `${params.name} : ${params.value || 0}%`;
+          },
         },
         visualMap: {
           min: minValue,
@@ -150,5 +168,13 @@ export class GeoRepartitionComponent implements  OnChanges {
         ],
       };
     }
+  }
+
+  getCountryColor(percentage: number): string {
+    if (percentage > 40) return '#2E7D32';
+    if (percentage > 20) return '#66BB6A';
+    if (percentage > 10) return '#A5D6A7';
+    if (percentage > 5) return '#C8E6C9';
+    return '#E8F5E9';
   }
 }
