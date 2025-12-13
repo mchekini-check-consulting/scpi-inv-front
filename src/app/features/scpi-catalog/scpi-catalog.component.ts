@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { ScpiService } from '../../services/scpi.service';
+import { ScpiService } from '../../core/service/scpi.service';
 
 import { ScpiCardComponent } from '../../core/template/components/scpi-card/scpi-card.component';
-import { Scpi } from '../../models/scpi.model';
+import { Scpi } from '../../core/model/scpi.model';
 import { Subject } from 'rxjs';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InvestmentResponse, PortfolioSummary } from '../../../../models/scpi-investment.model';
-import { InvestmentService } from '../../../../services/investment.service';
+import { InvestmentResponse, PortfolioSummary } from '../../../../core/model/scpi-investment.model';
+import { InvestmentService } from '../../../../core/service/investment.service';
 import { FormatFieldPipe } from '../../../../core/pipe/format-field.pipe';
 import { generateScpiSlug } from '../../../../utils/slug-util';
 import { Router } from '@angular/router';

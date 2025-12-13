@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import {
   InvestmentRequestDTO,
   MonthlyRevenue,
-} from '../models/investment.model';
+} from '../model/investment.model';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { InvestorPortfolioDistribution, PortfolioSummary } from '../models/scpi-investment.model';
-import { ScheduledPaymentRequest, ScpiSummary } from '../models/scheduled-payment.model';
+import { InvestorPortfolioDistribution, PortfolioSummary } from '../model/scpi-investment.model';
+import { ScheduledPaymentRequest, ScpiSummary } from '../model/scheduled-payment.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ import { ScheduledPaymentRequest, ScpiSummary } from '../models/scheduled-paymen
 export class InvestmentService {
   constructor(private http: HttpClient) {}
 
-  private apiUrl = '/api';
+  private apiUrl = '/api/v1';
 
   createInvestment(investment: InvestmentRequestDTO): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/investment`, investment);

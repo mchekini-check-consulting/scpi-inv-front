@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SimulationStateService } from '../../../services/simulationState.service';
+import { SimulationStateService } from '../../../core/service/simulationState.service';
 
 @Component({
   selector: 'app-edit-shares-modal',
@@ -34,8 +34,8 @@ export class EditSharesModalComponent {
   }
 
 save() {
-  this.saveShares.emit({ 
-    id: this.item.scpi.id,  
+  this.saveShares.emit({
+    id: this.item.scpi.id,
     shares: this.shares
   });
   this.close.emit();

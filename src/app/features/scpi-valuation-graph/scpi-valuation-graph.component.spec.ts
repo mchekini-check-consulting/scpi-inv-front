@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChartModule } from 'primeng/chart';
 import { CurrencyPipe } from '@angular/common';
 import {ScpiValuationGraphComponent} from "./scpi-valuation-graph.component";
-import {ScpiDetail} from "../../models/scpi.model";
+import {ScpiDetail} from "../../core/model/scpi.model";
 
 describe('ScpiValuationTimelineComponent', () => {
   let component: ScpiValuationGraphComponent;

@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-import { SimulationStateService } from '../../../services/simulationState.service';
+import { SimulationStateService } from '../../../core/service/simulationState.service';
 
 @Component({
   selector: 'app-scpi-simulator-home',
@@ -13,11 +13,11 @@ import { SimulationStateService } from '../../../services/simulationState.servic
 export class ScpiSimulatorHomeComponent {
 
   constructor(private router: Router, private simulationState:SimulationStateService) {
-  
+
   }
   goToNewSimulation() {
-    localStorage.removeItem('currentSimulationId');  
-    this.simulationState.resetSimulation(); 
+    localStorage.removeItem('currentSimulationId');
+    this.simulationState.resetSimulation();
     this.simulationState.resetSimulationState();
     this.router.navigate(['/dashboard/simulation/nouvelle']);
   }

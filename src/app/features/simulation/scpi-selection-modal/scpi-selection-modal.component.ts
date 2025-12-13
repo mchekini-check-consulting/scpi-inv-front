@@ -2,9 +2,9 @@
 import { Component, type OnInit, Output, EventEmitter } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule } from "@angular/forms"
-import { ScpiService } from "../../../services/scpi.service"
-import { RepartitionItem } from "../../../models/scpi-repartition.model"
-import { ScpiSimulator } from "../../../models/scpi-simulator.model"
+import { ScpiService } from "../../../core/service/scpi.service"
+import { RepartitionItem } from "../../../core/model/scpi-repartition.model"
+import { ScpiSimulator } from "../../../core/model/scpi-simulator.model"
 import { FormatFieldPipe } from "../../../core/pipe/format-field.pipe";
 
 @Component({
@@ -16,7 +16,7 @@ import { FormatFieldPipe } from "../../../core/pipe/format-field.pipe";
 })
 export class ScpiSelectionModalComponent implements OnInit {
  @Output() close = new EventEmitter<void>()
- @Output() addScpi = new EventEmitter<{ scpi: ScpiSimulator, shares: number }>() 
+ @Output() addScpi = new EventEmitter<{ scpi: ScpiSimulator, shares: number }>()
 
  scpiList: ScpiSimulator[] = []
  filteredList: ScpiSimulator[] = []
@@ -45,13 +45,13 @@ export class ScpiSelectionModalComponent implements OnInit {
 
  selectScpi(scpi: ScpiSimulator): void {
   this.selectedScpi = scpi
-  
+
   const sharePrice = scpi.sharePrice ?? 0;
   const minSubscription = scpi.minimumSubscription ?? 0;
 
   const minShares = sharePrice > 0 ? Math.ceil(minSubscription / sharePrice) : 1;
   this.shares = minShares;
-  
+
   this.step = "configuration"
  }
 
@@ -68,7 +68,7 @@ export class ScpiSelectionModalComponent implements OnInit {
 
  confirmAdd(): void {
   if (this.selectedScpi) {
-   this.addScpi.emit({ scpi: this.selectedScpi, shares: this.shares }) 
+   this.addScpi.emit({ scpi: this.selectedScpi, shares: this.shares })
    this.close.emit()
   }
  }
@@ -83,7 +83,7 @@ export class ScpiSelectionModalComponent implements OnInit {
  getSectorColor(sector: string): string {
   const colors: { [key: string]: string } = {
    Santé: "#10b981", Bureaux: "#3b82f6", Commerces: "#f59e0b", Commerce: "#f59e0b",
-   Residentiel: "#8b5cf6", Résidentiel: "#8b5cf6", Logistique: "#ef4444", 
+   Residentiel: "#8b5cf6", Résidentiel: "#8b5cf6", Logistique: "#ef4444",
    Hotels: "#06b6d4", Hôtellerie: "#06b6d4", Locaux: "#64748b",
    "Locaux d'activite": "#94a3b8", Transport: "#f97316", Autre: "#6b7280", Autres: "#6b7280",
   }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { UploadResponse } from '../model/UploadResponse';
-import { UserDocument } from '../../models/userDocument.model';
+import { UserDocument } from '../model/userDocument.model';
 
 @Injectable({
   providedIn: 'root',

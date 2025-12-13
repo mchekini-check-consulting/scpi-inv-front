@@ -7,8 +7,8 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 
-import { ProfileRequest, ProfileResponse } from '../models/profile.model';
-import { ProfileService } from './profile.service';
+import { ProfileRequest, ProfileResponse } from '../core/model/profile.model';
+import { ProfileService } from '../core/service/profile.service';
 
 import { PanelModule } from 'primeng/panel';
 import { DropdownModule } from 'primeng/dropdown';

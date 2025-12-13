@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AuthService } from '../core/service/auth.service';
+import { AuthService } from './auth.service';
 
 export interface PermissionResponse {
   permissionName: string;
@@ -44,7 +44,7 @@ export class PermissionService {
 
 
   initialize(): Observable<PermissionResponse[]> {
- 
+
     const userRole = this.getAuthService().getUserRole();
     this.currentRoleSubject.next(userRole);
 
@@ -56,7 +56,7 @@ export class PermissionService {
   loadAllPermissions(): Observable<PermissionResponse[]> {
     return this.http.get<PermissionResponse[]>(this.apiUrl).pipe(
       tap(permissions => {
-      
+
         this.allPermissionsSubject.next(permissions);
         this.updateUserPermissions();
       })
@@ -77,7 +77,7 @@ export class PermissionService {
       })
       .map(p => p.permissionName);
 
- 
+
     this.userPermissionsSubject.next(filteredPermissions);
   }
 

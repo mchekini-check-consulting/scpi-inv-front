@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { Subject, takeUntil } from 'rxjs';
-import { InvestmentService } from '../../../../services/investment.service';
-import { MonthlyRevenue } from '../../../../models/investment.model';
+import { InvestmentService } from '../../../../core/service/investment.service';
+import { MonthlyRevenue } from '../../../../core/model/investment.model';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 
@@ -138,15 +138,15 @@ export class CumulRevenusComponent implements OnInit, OnDestroy {
       'Nov',
       'Déc',
     ];
-    
+
     const currentYear = new Date().getFullYear();
     const monthLabel = months[month - 1] || '';
-    
+
     // Si l'année est différente de l'année actuelle, afficher l'année
     if (year !== currentYear) {
       return `${monthLabel} ${year}`;
     }
-    
+
     return monthLabel;
   }
 
@@ -216,13 +216,13 @@ export class CumulRevenusComponent implements OnInit, OnDestroy {
     if (!this.revenue || !this.revenue.history || this.revenue.history.length === 0) {
       return 'l\'origine';
     }
-    
+
     const firstMonth = this.revenue.history[0];
     const months = [
       'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
       'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
     ];
-    
+
     return `${months[firstMonth.month - 1]} ${firstMonth.year}`;
   }
 }

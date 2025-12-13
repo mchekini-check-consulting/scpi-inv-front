@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {History} from '../models/history.model';
+import {History} from '../model/history.model';
 import {HttpClient} from "@angular/common/http";
 
 @Injectable({

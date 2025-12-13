@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
-import { RepartitionItem } from '../../../../models/scpi-repartition.model';
-import { InvestmentService } from '../../../../services/investment.service';
+import { RepartitionItem } from '../../../model/scpi-repartition.model';
+import { InvestmentService } from '../../../service/investment.service';
 import { FormatFieldPipe } from '../../../pipe/format-field.pipe';
 
 @Component({

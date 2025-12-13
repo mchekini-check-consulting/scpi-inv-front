@@ -5,9 +5,9 @@ import { Router } from '@angular/router';
 import { ScpiSelectionModalComponent } from '../scpi-selection-modal/scpi-selection-modal.component';
 import { PortfolioManagementComponent } from '../portfolio-management/portfolio-management.component';
 import { FormatFieldPipe } from '../../../core/pipe/format-field.pipe';
-import { PortfolioItem, ScpiSimulator, SimulationSummary } from '../../../models/scpi-simulator.model';
-import { SimulationStateService } from '../../../services/simulationState.service';
-import { ScpiService } from '../../../services/scpi.service';
+import { PortfolioItem, ScpiSimulator, SimulationSummary } from '../../../core/model/scpi-simulator.model';
+import { SimulationStateService } from '../../../core/service/simulationState.service';
+import { ScpiService } from '../../../core/service/scpi.service';
 import { GeoRepartitionComponent } from '../../../core/template/components/geo-repartition/geo-repartition.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -62,10 +62,10 @@ export class SimulationLayoutComponent implements OnInit {
       this.summary = summary;
       this.tmiValue = summary.taxRate;
       this.simulationName = summary.name;
-      this.recalculateTax(); 
+      this.recalculateTax();
     });
 
-    const savedId = this.simulationState.getSummarySnapshot().id 
+    const savedId = this.simulationState.getSummarySnapshot().id
                     ?? localStorage.getItem('currentSimulationId');
     if (savedId) {
       this.scpiService.getSimulationById(+savedId).subscribe(sim => {
@@ -127,12 +127,12 @@ export class SimulationLayoutComponent implements OnInit {
             severity: 'warn',
             summary: 'Action impossible',
             detail: 'Veuillez ajouter au moins une SCPI avant de sauvegarder.'
-          });   
+          });
           return;
     }
 
     const payload = {
-      id: summary.id, 
+      id: summary.id,
       name: summary.name,
       taxRate: summary.taxRate,
       items: portfolio.map(p => ({
@@ -155,7 +155,7 @@ export class SimulationLayoutComponent implements OnInit {
             localStorage.setItem('currentSimulationId', res.id!.toString());
         setTimeout(() => {
           this.router.navigate(['/dashboard/simulation']);
-        }, 1000); 
+        }, 1000);
       },
       error: err => {
         console.error(err);
@@ -163,7 +163,7 @@ export class SimulationLayoutComponent implements OnInit {
               severity: 'error',
               summary: 'Erreur',
               detail: 'Une erreur est survenue lors de la sauvegarde.'
-            });    
+            });
           }
     });
 }

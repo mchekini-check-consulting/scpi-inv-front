@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PortfolioItem,SimulationResponseDTO } from '../../../models/scpi-simulator.model';
-import { RepartitionItem } from '../../../models/scpi-repartition.model';
+import { PortfolioItem,SimulationResponseDTO } from '../../../core/model/scpi-simulator.model';
+import { RepartitionItem } from '../../../core/model/scpi-repartition.model';
 import { ScpiSelectionModalComponent } from '../scpi-selection-modal/scpi-selection-modal.component';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { EditSharesModalComponent } from '../edit-shares-modal/edit-shares-modal.component';
 import { FormatFieldPipe } from '../../../core/pipe/format-field.pipe';
-import { SimulationStateService } from '../../../services/simulationState.service';
-import { ScpiService } from '../../../services/scpi.service';
+import { SimulationStateService } from '../../../core/service/simulationState.service';
+import { ScpiService } from '../../../core/service/scpi.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 
@@ -111,7 +111,7 @@ export class PortfolioManagementComponent implements OnInit {
 
   deleteScpi(item: PortfolioItem): void {
   const simulationId = this.simulationState.getSummarySnapshot().id;
-  if (!simulationId) {  
+  if (!simulationId) {
     this.simulationState.removeScpi(item.scpi.id);
     this.itemToDelete = null;
 

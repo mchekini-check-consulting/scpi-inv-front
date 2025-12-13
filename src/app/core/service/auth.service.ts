@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { authConfig } from '../config/auth.config';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-import { PermissionService } from '../../services/permission.service';
+import { PermissionService } from './permission.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

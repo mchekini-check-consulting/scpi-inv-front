@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InvestmentService } from '../../../../services/investment.service';
-import { PortfolioSummary } from '../../../../models/scpi-investment.model';
+import { InvestmentService } from '../../../../core/service/investment.service';
+import { PortfolioSummary } from '../../../../core/model/scpi-investment.model';
 import { FormatFieldPipe } from '../../../../core/pipe/format-field.pipe';
 import { number } from 'echarts';
 import { DurationPipe } from '../../../../core/pipe/duration.pipe';
@@ -64,7 +64,7 @@ export class PortfolioSummaryComponent implements OnInit {
     )}`;
   }
 
-  
+
   calculateAverageHoldingPeriod(investments: any[]): void {
     if (!investments || investments.length === 0) {
       this.averageHoldingMonths = 0;

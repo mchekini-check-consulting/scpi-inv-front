@@ -6,7 +6,7 @@ import {
   ScpiSimulator,
   SimulationResponseDTO,
   SimulationSummary
-} from '../models/scpi-simulator.model';
+} from '../model/scpi-simulator.model';
 
 @Injectable({
   providedIn: 'root'
@@ -127,7 +127,7 @@ updateShares(scpiId: number, newShares: number) {
   this.portfolioSubject.next(updated);
   this.calculateCountries(updated);
   this.calculateSectors(updated);
-  this.recalculateSummary();  
+  this.recalculateSummary();
   this.savePortfolioToLocalStorage();
 }
 
@@ -162,7 +162,7 @@ recalculateSummary() {
   this.summarySubject.next(summary);
 }
 
-  
+
   removeScpi(scpiId: number | string): void {
     const idToRemove = Number(scpiId);
     const current = this.portfolioSubject.getValue() || [];
@@ -237,7 +237,7 @@ recalculateSummary() {
       sharePrice: 0,
       minimumSubscription: 0,
       sectors: [],
-      locations:  [] 
+      locations:  []
     },
     shares: i.shares,
     amount: i.amount,
@@ -251,7 +251,7 @@ recalculateSummary() {
     grossRevenue: sim.totalAnnualReturn,
     netRevenue: sim.totalAnnualReturn,
     totalScpis: portfolio.length,
-    taxRate: 30 
+    taxRate: 30
   };
 
   this.portfolioSubject.next(portfolio);
@@ -289,7 +289,7 @@ private calculateCountries(portfolio: PortfolioItem[]): void {
 
   const countries = Array.from(countryAmountMap.entries()).map(([countryName, amount]) => {
     const portfolioPercentage = (amount / totalPortfolioAmount) * 100;
-    
+
     return {
       name: countryName,
       label: countryName,
@@ -349,8 +349,8 @@ public loadUnsavedPortfolio(portfolio: PortfolioItem[]): void {
   this.recomputeSummary();
 }
 public resetSimulationState(): void {
-  this.resetSimulation(); 
-  localStorage.removeItem('unsavedPortfolio'); 
+  this.resetSimulation();
+  localStorage.removeItem('unsavedPortfolio');
   localStorage.removeItem('currentSimulationId');
 }
 

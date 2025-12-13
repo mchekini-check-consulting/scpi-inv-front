@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Scpi, ScpiDetail } from '../../../../models/scpi.model';
+import { Scpi, ScpiDetail } from '../../../model/scpi.model';
 import { Router, RouterLink } from '@angular/router';
 import { FormatFieldPipe } from '../../../pipe/format-field.pipe';
 

@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InvestmentService } from '../../../../services/investment.service';
+import { InvestmentService } from '../../../../core/service/investment.service';
 import { GeoRepartitionComponent } from '../../../../core/template/components/geo-repartition/geo-repartition.component';
 
 @Component({
@@ -25,7 +25,7 @@ export class RepartitionGeographiqueComponent implements OnInit {
 
   loadPortfolioDistribution(): void {
     this.loading = true;
-    
+
     this.investmentService.getPortfolioDistribution().subscribe({
       next: (data) => {
         this.geographicalData = (data.geographical || []).map(item => ({
@@ -34,10 +34,10 @@ export class RepartitionGeographiqueComponent implements OnInit {
           amount: item.amount,
           value: item.percentage
         }));
-        
+
         this.totalInvested = data.totalInvestedAmount;
         this.loading = false;
-        
+
         console.log('Données géographiques chargées:', this.geographicalData);
         console.log('Total investi:', this.totalInvested);
       },
@@ -51,10 +51,10 @@ export class RepartitionGeographiqueComponent implements OnInit {
 
 
   getCountryColor(percentage: number): string {
-    if (percentage > 40) return '#2E7D32'; 
-    if (percentage > 20) return '#66BB6A';  
-    if (percentage > 10) return '#A5D6A7'; 
-    if (percentage > 5) return '#C8E6C9';  
-    return '#E8F5E9';  
+    if (percentage > 40) return '#2E7D32';
+    if (percentage > 20) return '#66BB6A';
+    if (percentage > 10) return '#A5D6A7';
+    if (percentage > 5) return '#C8E6C9';
+    return '#E8F5E9';
   }
 }

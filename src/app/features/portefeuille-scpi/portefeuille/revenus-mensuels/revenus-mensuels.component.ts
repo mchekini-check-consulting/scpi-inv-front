@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { Subject, takeUntil } from 'rxjs';
-import { InvestmentService } from '../../../../services/investment.service';
-import { MonthlyRevenue } from '../../../../models/investment.model';
+import { InvestmentService } from '../../../../core/service/investment.service';
+import { MonthlyRevenue } from '../../../../core/model/investment.model';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class RevenusMensuelsComponent implements OnInit, OnDestroy {
   chartData: any;
   chartOptions: any;
   loading = false;
-  
+
   private destroy$ = new Subject<void>();
 
   constructor(private investmentService: InvestmentService) {}
@@ -35,18 +35,18 @@ export class RevenusMensuelsComponent implements OnInit, OnDestroy {
 
   loadRevenue(): void {
     this.loading = true;
-    
+
     this.investmentService
       .getMonthlyRevenue()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
           this.revenue = data;
-          
+
           if (data.history && data.history.length > 0) {
             this.prepareChartDataFromHistory(data.history);
           }
-          
+
           this.loading = false;
         },
         error: (err) => {
@@ -57,7 +57,7 @@ export class RevenusMensuelsComponent implements OnInit, OnDestroy {
   }
 
   prepareChartDataFromHistory(history: any[]): void {
-    
+
     const labels = history.map(h => this.getMonthLabel(h.month));
     const data = history.map(h => h.revenue);
 
@@ -68,7 +68,7 @@ export class RevenusMensuelsComponent implements OnInit, OnDestroy {
           label: 'Revenus mensuels',
           data: data,
           fill: false,
-          borderColor: '#EF4444', 
+          borderColor: '#EF4444',
           tension: 0.1,
           pointBackgroundColor: '#EF4444',
           pointBorderColor: '#fff',
@@ -82,7 +82,7 @@ export class RevenusMensuelsComponent implements OnInit, OnDestroy {
   }
 
   getMonthLabel(month: number): string {
-    const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 
+    const months = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin',
                     'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'];
     return months[month - 1] || '';
   }

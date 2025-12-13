@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ScpiService } from '../../services/scpi.service';
-import { ScpiInvestment } from '../../models/scpi-investment.model';
+import { ScpiService } from '../../core/service/scpi.service';
+import { ScpiInvestment } from '../../core/model/scpi-investment.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,14 +9,14 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
-import { InvestmentRequestDTO } from '../../models/investment.model';
+import { InvestmentRequestDTO } from '../../core/model/investment.model';
 import { ToastModule } from 'primeng/toast';
-import { InvestmentService } from '../../services/investment.service';
+import { InvestmentService } from '../../core/service/investment.service';
 import { FormatFieldPipe } from '../../core/pipe/format-field.pipe';
 
 import { DocumentService } from '../../core/service/document.service';
 import { AuthService } from '../../core/service/auth.service';
-import { UserDocument } from '../../models/userDocument.model';
+import { UserDocument } from '../../core/model/userDocument.model';
 
 @Component({
   selector: 'app-scpi-invest',
@@ -299,7 +299,7 @@ export class ScpiInvestComponent implements OnInit {
       dismembermentYears: this.selectedDuration || null,
       paymentType : "ONE_SHOT",
       monthlyAmount:0,
-      scheduledPaymentDate:" " 
+      scheduledPaymentDate:" "
 
 
     };

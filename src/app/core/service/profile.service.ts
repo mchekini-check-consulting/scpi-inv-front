@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import {ProfileRequest, ProfileResponse} from '../models/profile.model';
+import {ProfileRequest, ProfileResponse} from '../model/profile.model';
 
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-  private apiUrl = '/api/profile';
+  private apiUrl = '/api/v1/profile';
 
   constructor(private http: HttpClient) {}
 

@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { ChartModule, UIChart } from 'primeng/chart';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ScpiService } from '../../../services/scpi.service';
-import { DistributionRateChartResponse } from '../../../models/distribution-rate.model';
+import { ScpiService } from '../../../core/service/scpi.service';
+import { DistributionRateChartResponse } from '../../../core/model/distribution-rate.model';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

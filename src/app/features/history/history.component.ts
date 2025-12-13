@@ -7,8 +7,8 @@ import {FormsModule} from '@angular/forms';
 import {TagModule} from 'primeng/tag';
 import {ToolbarModule} from 'primeng/toolbar';
 import {MessageModule} from 'primeng/message';
-import {HistoryService} from "../../services/history.service";
-import {History} from '../../models/history.model';
+import {HistoryService} from "../../core/service/history.service";
+import {History} from '../../core/model/history.model';
 
 @Component({
   selector: 'app-history',

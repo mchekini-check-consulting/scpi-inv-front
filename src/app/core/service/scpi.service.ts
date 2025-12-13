@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
-import { Scpi,ScpiDetail, ScpiPage,ScpiWithRates } from '../models/scpi.model';
-import { ScpiInvestment } from '../models/scpi-investment.model';
-import { ScpiRepartition } from '../models/scpi-repartition.model';
-import { DistributionRateChartResponse } from '../models/distribution-rate.model';
-import { SimulationResponseDTO } from '../models/scpi-simulator.model';
-import { ScpiSummary } from '../models/scheduled-payment.model';
+import { Scpi,ScpiDetail, ScpiPage,ScpiWithRates } from '../model/scpi.model';
+import { ScpiInvestment } from '../model/scpi-investment.model';
+import { ScpiRepartition } from '../model/scpi-repartition.model';
+import { DistributionRateChartResponse } from '../model/distribution-rate.model';
+import { SimulationResponseDTO } from '../model/scpi-simulator.model';
+import { ScpiSummary } from '../model/scheduled-payment.model';
 
 @Injectable({
   providedIn: 'root'

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HistoryComponent } from './history.component';
-import { HistoryService } from '../../services/history.service';
+import { HistoryService } from '../../core/service/history.service';
 import { of, throwError } from 'rxjs';
-import { History } from '../../models/history.model';
+import { History } from '../../core/model/history.model';
 import { DropdownModule } from 'primeng/dropdown';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';

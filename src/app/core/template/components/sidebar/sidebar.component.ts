@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForOf, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { PermissionService } from '../../../../services/permission.service';
+import { PermissionService } from '../../../service/permission.service';
 import { PERMISSION_MAPPING } from '../../../config/permission.config';
 
 declare interface RouteInfo {

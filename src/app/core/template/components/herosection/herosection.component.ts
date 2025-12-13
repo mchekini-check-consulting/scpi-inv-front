@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ScpiCardComponent } from '../scpi-card/scpi-card.component';
-import { Scpi } from '../../../../models/scpi.model';
+import { Scpi } from '../../../model/scpi.model';
 import { AuthService } from '../../../service/auth.service';
 
 interface Advantage {
@@ -75,7 +75,7 @@ export class HerosectionComponent {
       number: '02',
       title: 'Explorez le catalogue',
       description: 'Parcourez plus de 100 SCPI et comparez leurs performances avec nos outils.',
-      image: 'img/financial-charts-and-scpi-portfolio-comparison-on-.jpg', 
+      image: 'img/financial-charts-and-scpi-portfolio-comparison-on-.jpg',
       imageAlt: 'Tablette affichant le catalogue SCPI Portfolio',
       imagePosition: 'left'
     },
@@ -83,7 +83,7 @@ export class HerosectionComponent {
       number: '03',
       title: 'Investissez et suivez',
       description: 'Constituez votre portefeuille et suivez vos investissements en temps réel.',
-      image: 'img/professional-investment-dashboard-with-real-time-d.jpg', 
+      image: 'img/professional-investment-dashboard-with-real-time-d.jpg',
       imageAlt: 'Dashboard Investment Portfolio Analytics',
       imagePosition: 'right'
     }

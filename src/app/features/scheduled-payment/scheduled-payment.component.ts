@@ -9,10 +9,10 @@ import { ToastModule } from 'primeng/toast';
 import { ChartModule } from 'primeng/chart';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { MessageService } from 'primeng/api';
-import { ScpiSummary } from '../../models/scheduled-payment.model';
-import { InvestmentService } from '../../services/investment.service';
-import { ScpiService } from '../../services/scpi.service';
-import { InvestmentRequestDTO } from '../../models/investment.model';
+import { ScpiSummary } from '../../core/model/scheduled-payment.model';
+import { InvestmentService } from '../../core/service/investment.service';
+import { ScpiService } from '../../core/service/scpi.service';
+import { InvestmentRequestDTO } from '../../core/model/investment.model';
 
 
 @Component({
@@ -125,7 +125,7 @@ export class ScheduledPaymentComponent implements OnInit {
       next: (hasInvested) => {
         this.hasAlreadyInvested = hasInvested;
         this.updateFirstSharesValidators(hasInvested);
-     
+
         if (this.selectedScpi) {
           this.calculateProjection();
         }
@@ -179,7 +179,7 @@ export class ScheduledPaymentComponent implements OnInit {
   private formatDate(date: any): string {
     if (!date) throw new Error("Date is required");
     const d = new Date(date);
-    return d.toISOString().substring(0, 10); 
+    return d.toISOString().substring(0, 10);
   }
 
   get isSubmitDisabled(): boolean {
@@ -257,8 +257,8 @@ export class ScheduledPaymentComponent implements OnInit {
 
 
   get currentRate(): number {
-    return this.selectedScenario === 'custom' 
-      ? this.customRate 
+    return this.selectedScenario === 'custom'
+      ? this.customRate
       : this.scenarios[this.selectedScenario];
   }
 
@@ -350,17 +350,17 @@ export class ScheduledPaymentComponent implements OnInit {
     if (!this.selectedScpi) return;
 
     const annualYield = this.selectedScpi.distributionRate;
-   
-    
+
+
     const annualRevalo = this.currentRate;
 
- 
+
     const monthlyYield = annualYield / 100 / 12;
     const monthlyRevalo = annualRevalo / 100 / 12;
 
 
-    const initialInvestment = this.hasAlreadyInvested === false 
-      ? this.firstPaymentAmount 
+    const initialInvestment = this.hasAlreadyInvested === false
+      ? this.firstPaymentAmount
       : 0;
     const monthlyInvestment = this.monthlyAmount;
 
@@ -373,7 +373,7 @@ export class ScheduledPaymentComponent implements OnInit {
 
 
     for (let month = 1; month <= totalMonths; month++) {
-   
+
       capital += monthlyInvestment;
       totalInvested += monthlyInvestment;
 
@@ -383,12 +383,12 @@ export class ScheduledPaymentComponent implements OnInit {
 
       const monthlyRent = capital * monthlyYield;
 
- 
+
       if (this.autoReinvest) {
         capital += monthlyRent;
       }
 
-  
+
       if (month % 12 === 0) {
         const year = month / 12;
         yearlyData.push({

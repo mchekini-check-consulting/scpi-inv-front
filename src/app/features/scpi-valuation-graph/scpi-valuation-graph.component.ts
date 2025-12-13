@@ -1,6 +1,6 @@
 import {Component, Input, OnChanges, SimpleChanges} from "@angular/core";
 import {CommonModule, CurrencyPipe} from "@angular/common";
-import {ScpiDetail} from "../../models/scpi.model";
+import {ScpiDetail} from "../../core/model/scpi.model";
 import {ChartModule} from "primeng/chart";
 
 
