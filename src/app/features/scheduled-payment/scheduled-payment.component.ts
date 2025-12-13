@@ -13,6 +13,7 @@ import { ScpiSummary } from '../../models/scheduled-payment.model';
 import { InvestmentService } from '../../services/investment.service';
 import { ScpiService } from '../../services/scpi.service';
 import { InvestmentRequestDTO } from '../../models/investment.model';
+import { DistributionRate } from '../../models/distribution-rate.model';
 
 @Component({
   selector: 'app-scheduled-payment',
@@ -47,7 +48,6 @@ export class ScheduledPaymentComponent implements OnInit {
 
   showValidationErrors = false;
 
-  // ============ PROJECTION ============
   projectionYears: number = 10;
   selectedScenario: 'realistic' | 'optimistic' | 'pessimistic' | 'custom' = 'realistic';
   customRate: number = 1.3;
@@ -125,8 +125,7 @@ export class ScheduledPaymentComponent implements OnInit {
       next: (hasInvested) => {
         this.hasAlreadyInvested = hasInvested;
         this.updateFirstSharesValidators(hasInvested);
-        
-        // Calculer la projection dès que les données sont prêtes
+     
         if (this.selectedScpi) {
           this.calculateProjection();
         }
@@ -180,7 +179,7 @@ export class ScheduledPaymentComponent implements OnInit {
   private formatDate(date: any): string {
     if (!date) throw new Error("Date is required");
     const d = new Date(date);
-    return d.toISOString().substring(0, 10); // "YYYY-MM-DD"
+    return d.toISOString().substring(0, 10); 
   }
 
   get isSubmitDisabled(): boolean {
@@ -233,9 +232,6 @@ export class ScheduledPaymentComponent implements OnInit {
       dismembermentYears: null,
     };
 
-    console.log("firstDebitDate FV =", fv.firstDebitDate);
-    console.log("type =", typeof fv.firstDebitDate);
-    console.log(payload);
 
     this.submitting = true;
 
@@ -258,7 +254,7 @@ export class ScheduledPaymentComponent implements OnInit {
     });
   }
 
-  // ============ PROJECTION METHODS ============
+
 
   get currentRate(): number {
     return this.selectedScenario === 'custom' 
@@ -353,7 +349,9 @@ export class ScheduledPaymentComponent implements OnInit {
   calculateProjection(): void {
     if (!this.selectedScpi) return;
 
-    const annualYield = 4.5;
+    const annualYield = this.selectedScpi.distributionRate;
+   
+    
     const annualRevalo = this.currentRate;
 
  
