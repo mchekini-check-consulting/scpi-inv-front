@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
 import * as echarts from "echarts";
 import { RepartitionItem } from "../../../../models/scpi-repartition.model";
+import { FormatFieldPipe } from '../../../pipe/format-field.pipe';
 
 interface CountryData {
   name: string;
@@ -13,7 +14,7 @@ interface CountryData {
 @Component({
   selector: 'app-geo-repartition',
   standalone: true,
-  imports: [NgxEchartsDirective, CommonModule],
+  imports: [NgxEchartsDirective, CommonModule, FormatFieldPipe],
   providers: [provideEcharts()],
   templateUrl: './geo-repartition.component.html',
   styleUrl: './geo-repartition.component.scss',
