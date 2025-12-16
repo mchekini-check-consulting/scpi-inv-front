@@ -26,16 +26,18 @@ import { MessageService } from 'primeng/api';
   styleUrl: './portfolio-management.component.scss',
 })
 export class PortfolioManagementComponent implements OnInit {
+
   portfolio: PortfolioItem[] = [];
   totalInvestment = 0;
-
   itemToDelete: PortfolioItem | null = null;
-
-
   editingItem: PortfolioItem | null = null;
   showAddModal = false;
+  selectedIds: number[] = [];
 
-  constructor(private simulationState: SimulationStateService, private scpiService:ScpiService , private messageService: MessageService) {}
+  constructor(private simulationState: SimulationStateService,
+    private scpiService:ScpiService ,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     let summary = this.simulationState.getSummarySnapshot();
@@ -50,7 +52,13 @@ export class PortfolioManagementComponent implements OnInit {
     this.simulationState.portfolio$.subscribe(portfolio => {
       this.portfolio = portfolio;
       this.calculateTotal();
+      this.updateSelectedIds();
     });
+
+  }
+
+  private updateSelectedIds(): void {
+    this.selectedIds = this.portfolio.map(p => p.scpi.id);
   }
 
   private calculateTotal(): void {
@@ -71,6 +79,8 @@ export class PortfolioManagementComponent implements OnInit {
   addToPortfolio(event: { scpi: any; shares: number }): void {
     this.simulationState.addOrUpdateScpi(event.scpi, event.shares);
     this.closeAddModal();
+    this.simulationState.updateGlobalFiscality();
+
     this.messageService.add({
       severity: 'success',
       summary: 'SCPI ajoutée',
@@ -109,38 +119,55 @@ export class PortfolioManagementComponent implements OnInit {
     this.itemToDelete = null;
   }
 
-  deleteScpi(item: PortfolioItem): void {
-  const simulationId = this.simulationState.getSummarySnapshot().id;
+ deleteScpi(item: PortfolioItem): void {
+  const simulationId = this.simulationState.getSummarySnapshot()?.id;
+
   if (!simulationId) {
     this.simulationState.removeScpi(item.scpi.id);
     this.itemToDelete = null;
+    this.simulationState.updateGlobalFiscality();
 
     this.messageService.add({
       severity: 'success',
       summary: 'SCPI supprimée',
       detail: `La SCPI « ${item.scpi.name} » a été supprimée avec succès de votre portefeuille.`,
     });
-    return };
+    return;
+  }
 
   this.scpiService.deleteScpiFromSimulation(simulationId, item.scpi.id)
     .subscribe({
-      next: (updatedSimulation: SimulationResponseDTO) => {
-        this.simulationState.setSimulationFromResponseDTO(updatedSimulation);
-        this.itemToDelete = null;
-         this.messageService.add({
+      next: (updatedSimulation: SimulationResponseDTO | null) => {
+        if (updatedSimulation) {
+          this.simulationState.setSimulationFromResponseDTO(updatedSimulation);
+          this.messageService.add({
             severity: 'success',
             summary: 'SCPI supprimée',
-              detail: `La SCPI « ${item.scpi.name} » a été supprimée avec succès de votre simulation.`,
-
+            detail: `La SCPI « ${item.scpi.name} » a été supprimée avec succès de votre simulation.`,
           });
+
+        } else {
+
+          this.simulationState.resetSimulationState();
+          localStorage.removeItem('currentSimulationId');
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Simulation supprimée',
+            detail: 'La dernière SCPI a été supprimée, la simulation a été supprimée.',
+          });
+        }
+
+        this.itemToDelete = null;
+        this.simulationState.updateGlobalFiscality();
       },
       error: (err) => {
         console.error('Erreur suppression SCPI:', err);
-         this.messageService.add({
-            severity: 'error',
-            summary: 'Erreur',
-            detail: 'Impossible de supprimer la SCPI'
-          });
+        this.itemToDelete = null;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Impossible de supprimer la SCPI',
+        });
       }
     });
 }
@@ -151,29 +178,31 @@ export class PortfolioManagementComponent implements OnInit {
 
   updateShares(event: { id: number; shares: number }): void {
     this.simulationState.updateShares(event.id, event.shares);
-  const simulationId = this.simulationState.getSummarySnapshot().id;
-  if (!simulationId) return;
+     this.simulationState.updateGlobalFiscality();
 
-  this.scpiService.updateScpiShares(simulationId, event.id, event.shares)
-    .subscribe({
-      next: (updatedSimulation: SimulationResponseDTO) => {
-        this.simulationState.setSimulationFromResponseDTO(updatedSimulation);
-        this.editingItem = null;
-        this.messageService.add({
-            severity: 'success',
-            summary: 'Modification réussie',
-            detail: `Le nombre de parts a été mis à jour avec succès.`,
-          });
-      },
-      error: (err) => {
-        console.error('Erreur mise à jour parts SCPI :', err);
-           this.messageService.add({
-            severity: 'error',
-            summary: 'Échec de la mise à jour',
-            detail: `Impossible de modifier le nombre de parts. Veuillez réessayer.`,
-          });
-      }
-    });
+    const simulationId = this.simulationState.getSummarySnapshot().id;
+    if (!simulationId) return;
+
+    this.scpiService.updateScpiShares(simulationId, event.id, event.shares)
+      .subscribe({
+        next: (updatedSimulation: SimulationResponseDTO) => {
+          this.simulationState.setSimulationFromResponseDTO(updatedSimulation);
+          this.editingItem = null;
+          this.messageService.add({
+              severity: 'success',
+              summary: 'Modification réussie',
+              detail: `Le nombre de parts a été mis à jour avec succès.`,
+            });
+        },
+        error: (err) => {
+          console.error('Erreur mise à jour parts SCPI :', err);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Échec de la mise à jour',
+              detail: `Impossible de modifier le nombre de parts. Veuillez réessayer.`,
+            });
+        }
+      });
 }
 
   getPrimarySector(sectors: RepartitionItem[]): string {
@@ -207,4 +236,5 @@ export class PortfolioManagementComponent implements OnInit {
 
     return colors[sector] || '#64748b';
   }
+
 }

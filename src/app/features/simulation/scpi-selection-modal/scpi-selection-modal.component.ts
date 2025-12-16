@@ -1,5 +1,5 @@
 
-import { Component, type OnInit, Output, EventEmitter } from "@angular/core"
+import { Component, type OnInit, Output, EventEmitter, Input } from "@angular/core"
 import { CommonModule } from "@angular/common"
 import { FormsModule } from "@angular/forms"
 import { ScpiService } from "../../../core/service/scpi.service"
@@ -25,23 +25,33 @@ export class ScpiSelectionModalComponent implements OnInit {
  searchTerm = ""
  step: "selection" | "configuration" = "selection"
  Math = Math;
+ @Input() selectedIds: number[] = [];
+
 
  constructor(private scpiService: ScpiService) {}
 
  ngOnInit(): void {
   this.scpiService.getScpiForSimulator().subscribe((scpis) => {
-   this.scpiList = scpis
-   this.filteredList = scpis
+   this.scpiList = scpis;
+   this.filteredList = scpis;
+       this.filteredList = this.scpiList.filter(
+      scpi => !this.selectedIds.includes(scpi.id)
+    );
   })
  }
 
- filterScpis(): void {
-  const term = this.searchTerm.toLowerCase()
-  this.filteredList = this.scpiList.filter(
-   (scpi) =>
-    scpi.name.toLowerCase().includes(term) || scpi.sectors.some((s) => s.label.toLowerCase().includes(term)),
-  )
- }
+  filterScpis(): void {
+    const term = this.searchTerm.toLowerCase();
+
+    this.filteredList = this.scpiList
+      .filter(scpi =>
+        !this.selectedIds.includes(scpi.id) && (
+          scpi.name.toLowerCase().includes(term) ||
+          scpi.sectors.some((s) => s.label.toLowerCase().includes(term))
+        )
+      );
+  }
+
 
  selectScpi(scpi: ScpiSimulator): void {
   this.selectedScpi = scpi

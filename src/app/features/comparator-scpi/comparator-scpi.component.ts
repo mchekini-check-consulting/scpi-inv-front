@@ -155,9 +155,6 @@ export class ComparatorScpiComponent implements OnInit {
     return index;
   }
 
-  goBack(): void {
-    this.location.back();
-  }
   getSubscriptionFeeRate(scpi: ScpiWithRates): number {
     return scpi.subscriptionFees ?? 0;
   }

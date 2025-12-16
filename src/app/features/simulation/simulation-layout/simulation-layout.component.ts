@@ -5,14 +5,14 @@ import { Router } from '@angular/router';
 import { ScpiSelectionModalComponent } from '../scpi-selection-modal/scpi-selection-modal.component';
 import { PortfolioManagementComponent } from '../portfolio-management/portfolio-management.component';
 import { FormatFieldPipe } from '../../../core/pipe/format-field.pipe';
-import { PortfolioItem, ScpiSimulator, SimulationSummary } from '../../../core/model/scpi-simulator.model';
+import { FiscalityResponse, PortfolioItem, ScpiSimulator, SimulationSummary } from '../../../core/model/scpi-simulator.model';
 import { SimulationStateService } from '../../../core/service/simulationState.service';
 import { ScpiService } from '../../../core/service/scpi.service';
 import { GeoRepartitionComponent } from '../../../core/template/components/geo-repartition/geo-repartition.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SectoralRepartitionComponent } from "../../../core/template/components/sectoral-repartition/sectoral-repartition.component";
-
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-simulation-layout',
   standalone: true,
@@ -24,8 +24,7 @@ import { SectoralRepartitionComponent } from "../../../core/template/components/
     FormatFieldPipe,
     GeoRepartitionComponent,
     ToastModule,
-    SectoralRepartitionComponent
-],
+    SectoralRepartitionComponent],
    providers: [MessageService],
   templateUrl: './simulation-layout.component.html',
   styleUrl: './simulation-layout.component.scss',
@@ -34,8 +33,8 @@ export class SimulationLayoutComponent implements OnInit {
 
   summary!: SimulationSummary;
 
-  tmiValue = 30;
-  simulationName = 'Nouvelle simulation';
+  tmiValue = 0;
+  simulationName = '';
 
   countries: any[] = [];
   showAddModal = false;
@@ -44,6 +43,10 @@ export class SimulationLayoutComponent implements OnInit {
   incomeTax = 0;
   socialTax = 0;
   repartition: { sectoral: { label: string, percentage: number }[] } | null = null;
+  fiscality: FiscalityResponse | null = null;
+  private fiscalityInitialized = false;
+  hasUnsavedChanges$!: Observable<boolean>;
+
   constructor(
     private router: Router,
     private simulationState: SimulationStateService,
@@ -60,52 +63,69 @@ export class SimulationLayoutComponent implements OnInit {
 
     this.simulationState.summary$.subscribe(summary => {
       this.summary = summary;
-      this.tmiValue = summary.taxRate;
       this.simulationName = summary.name;
-      this.recalculateTax();
+
+      if (summary?.taxRate != null) {
+        this.tmiValue = summary.taxRate;
+      }
     });
 
-    const savedId = this.simulationState.getSummarySnapshot().id
+    const savedId = this.simulationState.getSummarySnapshot()?.id
                     ?? localStorage.getItem('currentSimulationId');
+
     if (savedId) {
       this.scpiService.getSimulationById(+savedId).subscribe(sim => {
         this.simulationState.setSimulationFromResponseDTO(sim);
       });
+    } else {
+
+      const savedPortfolio = localStorage.getItem('unsavedPortfolio');
+      if (savedPortfolio) {
+        try {
+          const portfolio: PortfolioItem[] = JSON.parse(savedPortfolio);
+          this.simulationState.loadUnsavedPortfolio(portfolio);
+        } catch {
+          console.warn('Le portefeuille local est corrompu ou vide, réinitialisation.');
+          this.simulationState.resetSimulationState();
+        }
+      }
     }
-          const savedPortfolio = localStorage.getItem('unsavedPortfolio');
-      if (!this.simulationState.getSummarySnapshot().id && savedPortfolio) {
-        const portfolio: PortfolioItem[] = JSON.parse(savedPortfolio);
-        this.simulationState.loadUnsavedPortfolio(portfolio);
-      }
-
-
-    setTimeout(() => {
-      const portfolio = this.simulationState.getPortfolioSnapshot();
-      if (portfolio && portfolio.length > 0) {
-      }
-    }, 100);
 
     this.simulationState.sectors$.subscribe(sectors => {
-    this.repartition = { sectoral: [...sectors] };
-    this.cdr.detectChanges();
-  });
+      this.repartition = { sectoral: [...sectors] };
+      this.cdr.detectChanges();
+    });
+
+    this.simulationState.fiscality$.subscribe(fiscality => {
+      const portfolio = this.simulationState.getPortfolioSnapshot();
+
+      if (!portfolio || portfolio.length === 0) {
+        this.fiscality = null;
+        this.taxableIncome = 0;
+        this.incomeTax = 0;
+        this.socialTax = 0;
+        if (this.summary) this.summary.netRevenue = 0;
+        this.cdr.detectChanges();
+        return;
+      }
+
+      if (fiscality) {
+        this.fiscality = fiscality;
+        this.taxableIncome = fiscality.revenuScpiNet;
+        this.incomeTax = fiscality.impotTotal;
+        this.socialTax = fiscality.prelevementsSociaux;
+        this.tmiValue = fiscality.newTmi;
+        this.summary.netRevenue = fiscality.revenuNetApresFiscalite;
+        this.cdr.detectChanges();
+      }
+    });
+
+  this.hasUnsavedChanges$ = this.simulationState.dirty$;
+
   }
 
   onNameChange() {
     this.simulationState.setSimulationName(this.simulationName);
-  }
-
-  recalculateTax() {
-    const gross = this.summary.grossRevenue;
-    const tmi = this.summary.taxRate;
-
-    this.taxableIncome = gross;
-    this.incomeTax = -(gross * (tmi / 100));
-    this.socialTax = -(gross * 0.172);
-  }
-
-  updateTmi() {
-    this.simulationState.setTmi(this.tmiValue);
   }
 
   onOpenAddModal(open: boolean) {
@@ -152,9 +172,12 @@ export class SimulationLayoutComponent implements OnInit {
         if (!summary.id) {
           this.simulationState.setSimulationId(res.id);
         }
+           this.simulationState.markAsSaved();
+            this.cdr.detectChanges();
+
             localStorage.setItem('currentSimulationId', res.id!.toString());
         setTimeout(() => {
-          this.router.navigate(['/dashboard/simulation']);
+          this.router.navigate(['/dashboard/simulation/mes-simulations']);
         }, 1000);
       },
       error: err => {
@@ -171,4 +194,5 @@ export class SimulationLayoutComponent implements OnInit {
   goBack() {
     this.router.navigate(['/dashboard/simulation']);
   }
+
 }

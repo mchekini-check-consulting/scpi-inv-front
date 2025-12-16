@@ -5,8 +5,9 @@ import { Scpi,ScpiDetail, ScpiPage,ScpiWithRates } from '../model/scpi.model';
 import { ScpiInvestment } from '../model/scpi-investment.model';
 import { ScpiRepartition } from '../model/scpi-repartition.model';
 import { DistributionRateChartResponse } from '../model/distribution-rate.model';
-import { SimulationResponseDTO } from '../model/scpi-simulator.model';
 import { ScpiSummary } from '../model/scheduled-payment.model';
+import { FiscalityResponse, SimulationResponseDTO } from '../model/scpi-simulator.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -66,7 +67,7 @@ export class ScpiService {
     return this.http.post(`${this.apiUrl}/simulations`, payload);
   }
 
-  getMySimulations(): Observable<any[]> {
+  getSimulations(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/simulations`);
   }
 
@@ -74,17 +75,18 @@ export class ScpiService {
     return this.http.delete<void>(`${this.apiUrl}/simulations/${id}`);
   }
 
-  deleteScpiFromSimulation(simulationId: number, scpiId: number) {
-  return this.http.delete<SimulationResponseDTO>(`${this.apiUrl}/simulations/${simulationId}/scpis/${scpiId}`
-  );
-}
-    updateScpiShares(simulationId: number, scpiId: number, shares: number): Observable<SimulationResponseDTO> {
+    deleteScpiFromSimulation(simulationId: number, scpiId: number) {
+      return this.http.delete<SimulationResponseDTO>(`${this.apiUrl}/simulations/${simulationId}/scpis/${scpiId}`
+    );
+  }
+
+  updateScpiShares(simulationId: number, scpiId: number, shares: number): Observable<SimulationResponseDTO> {
       return this.http.put<SimulationResponseDTO>(`${this.apiUrl}/simulations/${simulationId}/scpis/${scpiId}`,
         { shares }
       );
-    }
+  }
 
-    getSimulationById(simulationId: number): Observable<SimulationResponseDTO> {
+  getSimulationById(simulationId: number): Observable<SimulationResponseDTO> {
       return this.http.get<SimulationResponseDTO>(`${this.apiUrl}/simulations/${simulationId}`);
     }
 
@@ -92,6 +94,10 @@ export class ScpiService {
       return this.http.get<ScpiSummary[]>(`${this.apiUrl}/scpiScheduledPayment`);
     }
 
+  calculerImpactFiscalGlobal(revenuScpiBrut: number,locations: { label: string; percentage: number }[]): Observable<FiscalityResponse> {
+    return this.http.post<FiscalityResponse>(`${this.apiUrl}/simulations/fiscalite`,{ revenuScpiBrut, locations }
+    );
+  }
 
 }
 

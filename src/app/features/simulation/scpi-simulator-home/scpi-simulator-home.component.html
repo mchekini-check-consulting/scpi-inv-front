@@ -1,41 +1,112 @@
-<div class="page-container">
-  <header class="header">
-    <h1>Simulateur Fiscalité SCPI</h1>
-    <p class="subtitle">Estimez immédiatement l'impact fiscal de votre portefeuille SCPI</p>
+<div class="simulator-home">
+  <header class="home-header">
+    <h1 class="home-title">Simulateur SCPI</h1>
+    <p class="home-subtitle">
+      Construisez et analysez votre portefeuille d'investissement immobilier
+    </p>
   </header>
 
-  <main class="main-content">
-    <div class="cards-grid">
-      <div class="card">
-        <div class="icon-wrapper green">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12h6m-6-4h6m-6 8h6m-3-8v8m-6-4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+  <main class="home-content">
+    <div class="cards-container">
+            <div class="action-card primary-card">
+        <div class="card-icon blue">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
           </svg>
         </div>
-        <h2>Nouvelle simulation</h2>
-        <p>Créez une nouvelle analyse fiscale pour votre investissement SCPI</p>
-        <button type="button"
-        class="primary"
-        (click)="goToNewSimulation()"
-        >
-          Créer une nouvelle simulation
+        
+        <h2 class="card-title">Nouvelle simulation</h2>
+        <p class="card-description">
+          Créez une nouvelle analyse fiscale pour votre investissement SCPI
+        </p>
+
+        <ul class="card-features">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Sélection de SCPI
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Calcul fiscal automatique
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Répartition géographique
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Analyse sectorielle
+          </li>
+        </ul>
+
+        <button class="card-button primary-button" (click)="goToNewSimulation()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          Créer une simulation
         </button>
       </div>
 
-      <div class="card">
-        <div class="icon-wrapper amber">
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      <div class="action-card secondary-card">
+        <div class="card-icon amber">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
           </svg>
         </div>
-        <h2>Mes simulations</h2>
-        <p>Accédez à vos simulations enregistrées et consultez vos résultats</p>
-        <button routerLink="/dashboard/simulation/mes-simulations" class="secondary">
+        
+        <h2 class="card-title">Mes simulations</h2>
+        <p class="card-description">
+          Accédez à vos simulations enregistrées et consultez vos résultats
+        </p>
+
+        <ul class="card-features">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Historique complet
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Modification possible
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Comparaison de scénarios
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Export des données
+          </li>
+        </ul>
+
+        <button class="card-button secondary-button" (click)="goToMySimulations()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
           Voir mes simulations
         </button>
       </div>
+
     </div>
   </main>
 </div>

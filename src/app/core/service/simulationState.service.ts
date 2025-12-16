@@ -2,16 +2,20 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import {
   CountryData,
+  FiscalityResponse,
   PortfolioItem,
   ScpiSimulator,
   SimulationResponseDTO,
   SimulationSummary
 } from '../model/scpi-simulator.model';
+import { ScpiService } from './scpi.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SimulationStateService {
+
+  constructor(private scpiService:ScpiService) {}
 
   private readonly DEFAULT_TMI = 30;
   private portfolioSubject = new BehaviorSubject<PortfolioItem[]>([]);
@@ -22,10 +26,15 @@ export class SimulationStateService {
   private sectorsSubject = new BehaviorSubject<{ label: string; percentage: number }[]>([]);
   sectors$ = this.sectorsSubject.asObservable();
 
+  private fiscalitySubject = new BehaviorSubject<FiscalityResponse | null>(null)
+  fiscality$ = this.fiscalitySubject.asObservable();
 
+  updateFiscality(fiscality: FiscalityResponse) {
+    this.fiscalitySubject.next(fiscality);
+  }
   private summarySubject = new BehaviorSubject<SimulationSummary>({
     id: null,
-    name: 'Nouvelle simulation',
+    name: this.generateSimulationName(),
     totalInvestment: 0,
     grossRevenue: 0,
     netRevenue: 0,
@@ -33,6 +42,10 @@ export class SimulationStateService {
     taxRate: this.DEFAULT_TMI
   });
   summary$ = this.summarySubject.asObservable();
+  private userHasCustomName = false;
+
+  private dirtySubject = new BehaviorSubject<boolean>(false);
+  dirty$ = this.dirtySubject.asObservable();
 
   getPortfolioSnapshot(): PortfolioItem[] {
     return this.portfolioSubject.getValue();
@@ -70,6 +83,7 @@ export class SimulationStateService {
 
   setSimulationName(name: string): void {
     const summary = this.summarySubject.getValue();
+    this.userHasCustomName = !!name?.trim();
     this.summarySubject.next({ ...summary, name });
   }
 
@@ -101,8 +115,9 @@ export class SimulationStateService {
     this.calculateCountries(portfolio);
     this.calculateSectors(portfolio);
     this.recomputeSummary();
-
     this.savePortfolioToLocalStorage();
+    this.dirtySubject.next(true);
+
   }
 
 updateShares(scpiId: number, newShares: number) {
@@ -129,6 +144,8 @@ updateShares(scpiId: number, newShares: number) {
   this.calculateSectors(updated);
   this.recalculateSummary();
   this.savePortfolioToLocalStorage();
+  this.dirtySubject.next(true);
+
 }
 
 recalculateSummary() {
@@ -151,7 +168,7 @@ recalculateSummary() {
 
   const summary: SimulationSummary = {
     id: previousSummary.id ?? null,
-    name: previousSummary.name ?? 'Nouvelle simulation',
+    name: previousSummary.name ?? this.generateSimulationName(),
     totalInvestment,
     grossRevenue,
     netRevenue,
@@ -174,6 +191,8 @@ recalculateSummary() {
     this.calculateCountries(updated);
     this.recomputeSummary();
     this.savePortfolioToLocalStorage();
+    this.dirtySubject.next(true);
+
   }
 
 
@@ -190,7 +209,7 @@ recalculateSummary() {
     this.sectorsSubject.next([]);
     this.summarySubject.next({
       id: null,
-      name: 'Nouvelle simulation',
+      name: this.generateSimulationName(),
       totalInvestment: 0,
       grossRevenue: 0,
       netRevenue: 0,
@@ -236,8 +255,8 @@ recalculateSummary() {
       yieldDistributionRate: 0,
       sharePrice: 0,
       minimumSubscription: 0,
-      sectors: [],
-      locations:  []
+      sectors: i.sectors ?? [],
+      locations: i.locations ?? []
     },
     shares: i.shares,
     amount: i.amount,
@@ -257,6 +276,8 @@ recalculateSummary() {
   this.portfolioSubject.next(portfolio);
   this.summarySubject.next(summary);
   this.calculateCountries(portfolio);
+  this.calculateSectors(portfolio);
+  this.dirtySubject.next(false);
 }
 
 private calculateCountries(portfolio: PortfolioItem[]): void {
@@ -350,9 +371,77 @@ public loadUnsavedPortfolio(portfolio: PortfolioItem[]): void {
 }
 public resetSimulationState(): void {
   this.resetSimulation();
+  this.dirtySubject.next(false);
   localStorage.removeItem('unsavedPortfolio');
   localStorage.removeItem('currentSimulationId');
 }
+
+  updateGlobalFiscality(): void {
+  const portfolio = this.getPortfolioSnapshot();
+
+  if (!portfolio || portfolio.length === 0) {
+    this.fiscalitySubject.next(null);
+
+    this.summarySubject.next({
+      ...this.getSummarySnapshot(),
+      grossRevenue: 0,
+      netRevenue: 0,
+      taxRate: this.DEFAULT_TMI
+    });
+    return;
+  }
+
+  const revenuScpiBrut = portfolio.reduce(
+    (sum, item) => sum + (item.annualReturn ?? 0),
+    0
+  );
+
+  const totalAmount = portfolio.reduce((s, i) => s + (i.amount ?? 0), 0);
+
+  const locations = portfolio.flatMap(item =>
+    (item.scpi.locations ?? []).map(loc => ({
+      label: loc.label,
+      percentage: totalAmount
+        ? (item.amount * (loc.percentage / 100)) / totalAmount * 100
+        : 0
+    }))
+  );
+
+  this.scpiService
+    .calculerImpactFiscalGlobal(revenuScpiBrut, locations)
+    .subscribe({
+      next: (fiscality: FiscalityResponse) => {
+
+        this.fiscalitySubject.next(fiscality);
+
+        this.summarySubject.next({
+          ...this.getSummarySnapshot(),
+          grossRevenue: revenuScpiBrut,
+          netRevenue: fiscality.revenuNetApresFiscalite,
+          taxRate: fiscality.newTmi
+        });
+      },
+      error: err => {
+        console.error('Erreur calcul fiscalité:', err);
+      }
+    });
+}
+
+
+    private generateSimulationName(): string {
+      const now = new Date();
+
+      const date = now.toLocaleDateString("fr-FR");
+      const time = now.toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      return `Simulation du ${date} à ${time}`;
+}
+  markAsSaved(): void {
+    this.dirtySubject.next(false);
+  }
 
 }
 

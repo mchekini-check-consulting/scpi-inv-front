@@ -17,6 +17,7 @@ export interface PortfolioItem {
   amount: number;
   annualReturn: number;
   locations?: Location[];
+  sectors?: SectorDistribution[]
 }
 
 export interface SimulationSummary {
@@ -41,6 +42,8 @@ export interface SimulationScpiResponseDTO {
   shares: number;
   amount: number;
   annualReturn: number;
+  locations?: Location[];
+  sectors?: RepartitionItem[];
 }
 
 export interface SimulationDTORequest {
@@ -93,4 +96,17 @@ export interface CountryData {
   amount: number;
   percentage: number;
   value: number;
+}
+
+export interface FiscalityResponse {
+  revenuProfil: number
+  revenuScpiNet: number
+  revenuGlobal: number
+  oldTmi: number
+  newTmi: number
+  tmiChanged: boolean
+  impotTotal: number
+  prelevementsSociaux: number
+  revenuNetApresFiscalite: number
+  tauxMoyen: number
 }
