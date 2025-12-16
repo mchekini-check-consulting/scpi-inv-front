@@ -68,8 +68,6 @@ export class SimulationLayoutComponent implements OnInit {
       if (summary?.taxRate != null) {
         this.tmiValue = summary.taxRate;
       }
-
-      this.initFiscalityIfNeeded();
     });
 
     const savedId = this.simulationState.getSummarySnapshot()?.id
@@ -78,7 +76,6 @@ export class SimulationLayoutComponent implements OnInit {
     if (savedId) {
       this.scpiService.getSimulationById(+savedId).subscribe(sim => {
         this.simulationState.setSimulationFromResponseDTO(sim);
-        this.initFiscalityIfNeeded();
       });
     } else {
 
@@ -87,7 +84,6 @@ export class SimulationLayoutComponent implements OnInit {
         try {
           const portfolio: PortfolioItem[] = JSON.parse(savedPortfolio);
           this.simulationState.loadUnsavedPortfolio(portfolio);
-          this.initFiscalityIfNeeded();
         } catch {
           console.warn('Le portefeuille local est corrompu ou vide, réinitialisation.');
           this.simulationState.resetSimulationState();
@@ -198,12 +194,5 @@ export class SimulationLayoutComponent implements OnInit {
   goBack() {
     this.router.navigate(['/dashboard/simulation']);
   }
-
-  private initFiscalityIfNeeded(): void {
-  if (!this.fiscalityInitialized && this.simulationState.getSummarySnapshot()?.id) {
-    this.simulationState.updateGlobalFiscality();
-    this.fiscalityInitialized = true;
-  }
-}
 
 }

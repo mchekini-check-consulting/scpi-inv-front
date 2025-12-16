@@ -115,7 +115,6 @@ export class SimulationStateService {
     this.calculateCountries(portfolio);
     this.calculateSectors(portfolio);
     this.recomputeSummary();
-    this.updateGlobalFiscality();
     this.savePortfolioToLocalStorage();
     this.dirtySubject.next(true);
 
