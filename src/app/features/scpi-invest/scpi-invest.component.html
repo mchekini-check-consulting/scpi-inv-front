@@ -220,7 +220,7 @@
             <p class="text-sm text-gray-600 mt-2">Nombre de parts</p>
             <p-inputnumber
               formControlName="shareCount"
-              [min]="!scpiInvestment?.hasInvested ? calculateMinShares() : 1"
+              [min]="1"
               [step]="1"
               showButtons="true"
               buttonLayout="horizontal"

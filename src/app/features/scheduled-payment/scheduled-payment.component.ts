@@ -40,13 +40,16 @@ export class ScheduledPaymentComponent implements OnInit {
 
   scpis: ScpiSummary[] = [];
   selectedScpi: ScpiSummary | null = null;
-  hasAlreadyInvested: boolean | null = null;
+  hasAlreadyInvested: boolean = false;
+
 
   loadingScpis = false;
   checkingInvestStatus = false;
   submitting = false;
 
   showValidationErrors = false;
+
+  minSharesError: boolean = false;
 
   projectionYears: number = 10;
   selectedScenario: 'realistic' | 'optimistic' | 'pessimistic' | 'custom' = 'realistic';
@@ -76,6 +79,14 @@ export class ScheduledPaymentComponent implements OnInit {
     this.buildForm();
     this.loadScpis();
     this.initChartOptions();
+
+     this.initChartOptions();
+  this.form.valueChanges.subscribe(() => {
+    if (this.selectedScpi) {
+      this.calculateProjection();
+    }
+  });
+
   }
 
   private buildForm(): void {
@@ -104,19 +115,27 @@ export class ScheduledPaymentComponent implements OnInit {
     });
   }
 
-  onScpiChange(scpiId: number): void {
-    this.selectedScpi = this.scpis.find(scpi => scpi.id === scpiId) || null;
+onScpiChange(scpiId: number): void {
+  this.selectedScpi = this.scpis.find(scpi => scpi.id === scpiId) || null;
+  if (!this.selectedScpi) return;
 
-    if (!this.selectedScpi) return;
+  const minShares = Math.max(
+    1,
+    Math.ceil(
+      (this.selectedScpi.minimumSubscription ?? 1) /
+      this.selectedScpi.sharePrice
+    )
+  );
 
-    this.form.patchValue({
-      firstShares: 1,
-      monthlyShares: 1
-    });
+  this.form.patchValue({
+    firstShares: minShares,
+    monthlyShares: 1
+  });
 
-    this.hasAlreadyInvested = null;
-    this.checkInvestStatus(scpiId);
-  }
+  this.minSharesError = false;
+  this.hasAlreadyInvested = false;
+  this.checkInvestStatus(scpiId);
+}
 
   private checkInvestStatus(scpiId: number): void {
     this.checkingInvestStatus = true;
@@ -139,6 +158,8 @@ export class ScheduledPaymentComponent implements OnInit {
       },
       complete: () => (this.checkingInvestStatus = false)
     });
+
+
   }
 
   private updateFirstSharesValidators(hasInvested: boolean): void {
@@ -176,11 +197,12 @@ export class ScheduledPaymentComponent implements OnInit {
     return dateMeta.day > 28;
   }
 
-  private formatDate(date: any): string {
-    if (!date) throw new Error("Date is required");
-    const d = new Date(date);
-    return d.toISOString().substring(0, 10);
-  }
+private formatDate(date: any): string {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
 
   get isSubmitDisabled(): boolean {
     if (!this.form.valid) return true;
@@ -194,17 +216,55 @@ export class ScheduledPaymentComponent implements OnInit {
     return false;
   }
 
-  decreaseFirstShares(): void {
-    if (!this.selectedScpi) return;
+decreaseFirstShares(): void {
+  if (!this.selectedScpi) return;
 
-    const current = this.form.get('firstShares')?.value || 0;
-    this.form.patchValue({ firstShares: current - 1 });
+  const ctrl = this.form.get('firstShares');
+  if (!ctrl) return;
+
+  const current = ctrl.value || 0;
+  const minShares = Math.max(
+    1,
+    Math.ceil(
+      (this.selectedScpi.minimumSubscription ?? 1) /
+      this.selectedScpi.sharePrice
+    )
+  );
+
+  if (current - 1 < minShares) {
+    this.minSharesError = true;
+    return;
   }
 
-  increaseFirstShares(): void {
-    const current = this.form.get('firstShares')?.value || 0;
-    this.form.patchValue({ firstShares: current + 1 });
-  }
+  this.minSharesError = false;
+  ctrl.patchValue(current - 1);
+}
+
+
+
+increaseFirstShares(): void {
+  const ctrl = this.form.get('firstShares');
+  if (!ctrl) return;
+
+  this.minSharesError = false;
+  ctrl.patchValue((ctrl.value || 0) + 1);
+}
+
+decreaseMonthlyShares(): void {
+  const ctrl = this.form.get('monthlyShares');
+  if (!ctrl) return;
+
+  const value = ctrl.value || 1;
+  ctrl.patchValue(Math.max(1, value - 1));
+}
+
+increaseMonthlyShares(): void {
+  const ctrl = this.form.get('monthlyShares');
+  if (!ctrl) return;
+
+  ctrl.patchValue((ctrl.value || 1) + 1);
+}
+
 
   onSubmit(): void {
     this.showValidationErrors = true;
@@ -225,14 +285,16 @@ export class ScheduledPaymentComponent implements OnInit {
       scpiId: fv.scpiId,
       investmentAmount: this.hasAlreadyInvested === false ? this.firstPaymentAmount : 0,
       monthlyAmount: this.monthlyAmount,
-      numberOfShares: fv.monthlyShares,
+      numberOfShares: this.hasAlreadyInvested === false ? fv.firstShares : 0,
       paymentType: "SCHEDULED",
       scheduledPaymentDate: this.formatDate(fv.firstDebitDate),
       investmentType: "FULL_OWNERSHIP",
       dismembermentYears: null,
+      numberOfSharesMonth: fv.monthlyShares
     };
 
-
+console.log(payload)
+  console.log("dans submit", this.hasAlreadyInvested);
     this.submitting = true;
 
     this.investmentService.createInvestment(payload).subscribe({

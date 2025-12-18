@@ -5,8 +5,9 @@ export interface InvestmentRequestDTO {
   investmentAmount: number;
   dismembermentYears: number | null;
   paymentType: 'ONE_SHOT' | 'SCHEDULED';
-  scheduledPaymentDate: string;
-  monthlyAmount: number;
+  scheduledPaymentDate?: string;
+  monthlyAmount?: number;
+  numberOfSharesMonth?:number;
 }
 
 export interface ScpiRevenueDetail {

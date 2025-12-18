@@ -76,10 +76,11 @@ export class InvestmentService {
   }
 
 
-  hasInvested(scpiId: number): Observable<boolean> {
-    const params = new HttpParams().set('scpiId', scpiId.toString());
-    return this.http.get<boolean>(`${this.apiUrl}/investment/hasinvested`, { params });
-  }
+hasInvested(scpiId: number): Observable<boolean> {
+  const params = new HttpParams().set('scpiId', scpiId.toString());
+  return this.http.get<boolean>(`${this.apiUrl}/investment/hasinvested`, { params });
+}
+
 
 
 
