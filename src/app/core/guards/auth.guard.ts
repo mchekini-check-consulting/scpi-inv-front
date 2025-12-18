@@ -18,6 +18,7 @@ export class AuthGuard implements CanActivate {
       await this.auth.logout();
       return this.router.parseUrl('/forbidden');
     }
+    
 
     return true;
   }
