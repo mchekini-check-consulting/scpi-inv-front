@@ -176,41 +176,27 @@ export class ScpiInvestComponent implements OnInit {
     );
   }
 
-  updateAmount(): void {
-    let parts = this.form.get('shareCount')?.value || 0;
-    const prix = this.scpiInvestment?.sharePrice || 0;
-    const minimumRequis = this.scpiInvestment?.minimumSubscription || 0;
+ updateAmount(): void {
+   const parts = Math.max(this.form.get('shareCount')?.value || 0, 0);
+   const prix = this.scpiInvestment?.sharePrice || 0;
+   const minimumRequis = this.scpiInvestment?.minimumSubscription || 0;
 
-    if (this.scpiInvestment && !this.scpiInvestment.hasInvested && prix > 0) {
-      const minShares = this.calculateMinShares();
-      if (parts < minShares) {
-        parts = minShares;
-        this.form.get('shareCount')?.setValue(minShares, { emitEvent: false });
-      }
-    }
+   this.currentInvestmentAmount = Math.max(parts * prix, 0);
+   this.form.get('amount')?.setValue(this.currentInvestmentAmount, { emitEvent: false });
 
-    this.currentInvestmentAmount = parts * prix;
-    this.form
-      .get('amount')
-      ?.setValue(this.currentInvestmentAmount, { emitEvent: false });
+   if (!this.scpiInvestment) {
+     this.isAmountValid = false;
+     return;
+   }
 
-    if (!this.scpiInvestment) {
-      this.isAmountValid = false;
-      this.cdr.detectChanges();
-      return;
-    }
+   if (this.scpiInvestment.hasInvested) {
+     this.isAmountValid =
+       this.totalInvestedAmount + this.currentInvestmentAmount >= minimumRequis;
+   } else {
+     this.isAmountValid = this.currentInvestmentAmount >= minimumRequis;
+   }
+ }
 
-    const totalApresInvestissement =
-      this.totalInvestedAmount + this.currentInvestmentAmount;
-
-    if (this.scpiInvestment.hasInvested) {
-      this.isAmountValid = totalApresInvestissement >= minimumRequis;
-    } else {
-      this.isAmountValid = this.currentInvestmentAmount >= minimumRequis;
-    }
-
-    this.cdr.detectChanges();
-  }
 
   get selectedInvestmentType(): string {
     return this.form.get('investmentType')?.value;
@@ -297,11 +283,7 @@ export class ScpiInvestComponent implements OnInit {
       numberOfShares: this.recapData.numberOfShares,
       investmentAmount: this.currentInvestmentAmount,
       dismembermentYears: this.selectedDuration || null,
-      paymentType : "ONE_SHOT",
-      monthlyAmount:0,
-      scheduledPaymentDate:" "
-
-
+      paymentType : "ONE_SHOT"
     };
 
     this.investmentService.createInvestment(request).subscribe({
