@@ -99,5 +99,9 @@ export class ScpiService {
     );
   }
 
+  exportSimulationPdf(id: number) {
+  return this.http.get(`${this.apiUrl}/simulations/${id}/export-pdf`,{ responseType: 'blob' }
+  );
+  }
 }
 

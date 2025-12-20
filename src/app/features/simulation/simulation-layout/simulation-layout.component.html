@@ -54,37 +54,19 @@
   <div class="content-grid">
 
     <aside class="portfolio-column">
-      <div class="simulation-name-card">
-          <label class="simulation-name-label">
-            Nom de la simulation
-          </label>
-
-          <div class="simulation-name-field">
-            <i class="pi pi-pencil"></i>
-
-            <input
-              type="text"
-              class="simulation-name-input"
-              [(ngModel)]="simulationName"
-              (blur)="onNameChange()"
-              (keyup.enter)="onNameChange()"
-              placeholder="Ex : Simulation risquée 2025"
-              maxlength="60"
-            />
-            <span class="char-count">
-              {{ simulationName.length || 0 }}/60
-            </span>
-          </div>
-
-            <small class="hint">
-              Ce nom vous permettra de retrouver facilement votre simulation.
-            </small>
-  </div>
       <div class="card portfolio-card">
           <app-portfolio-management></app-portfolio-management>
 
-           <div class="save-button-wrapper" *ngIf="hasUnsavedChanges$ | async">
-              <button class="btn-primary" (click)="saveSimulation()">
+           <div class="save-button-wrapper">
+             
+              <button
+                *ngIf="canExport" class="btn-secondary export-btn"
+                (click)="exportSimulation()">
+                <i class="pi pi-file-pdf"></i>
+                Exporter PDF
+              </button>
+
+              <button class="btn-primary"  (click)="openSaveModal()" *ngIf="hasUnsavedChanges$ | async">
                 <i class="pi pi-cloud-upload"></i>  
                   Enregistrer la simulation
               </button>
@@ -191,5 +173,13 @@
 
   <app-scpi-selection-modal *ngIf="showAddModal" (close)="onOpenAddModal(false)" (addScpi)="onAddScpi($event)">
   </app-scpi-selection-modal>
+
+  <app-save-simulation-modal
+    *ngIf="showSaveModal"
+    [initialName]="summary.name "
+    [required]="!summary.id"
+    (confirm)="saveSimulationWithName($event)"
+    (cancel)="closeSaveModal()">
+  </app-save-simulation-modal>
 
 </div>
