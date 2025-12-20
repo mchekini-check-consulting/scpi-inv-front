@@ -1,0 +1,56 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>
+        {{ required ? 'Nom de la simulation' : 'Modifier le nom (optionnel)' }}
+      </h2>
+      <button class="close-button" (click)="cancel.emit()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-subtitle">
+        {{ required
+          ? 'Donnez un nom à votre simulation pour la retrouver facilement.'
+          : 'Vous pouvez conserver le nom actuel ou le modifier.' }}
+      </p>
+
+      <div class="input-group">
+        <label for="name">Nom de la simulation</label>
+
+        <input
+          id="name"
+          type="text"
+          [(ngModel)]="name"
+          placeholder="Ex : Simulation SCPI équilibrée – 2025"
+          minlength="3"
+          maxlength="60"
+          autofocus
+        />
+
+        <span class="char-count">{{ name.length }}/60</span>
+
+        <small *ngIf="!required" class="hint">
+          Vous pouvez garder le nom actuel sans le modifier.
+        </small>
+
+        <small *ngIf="error" class="error">
+          {{ error }}
+        </small>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="cancel-button" (click)="cancel.emit()">
+        Annuler
+      </button>
+
+      <button
+        class="confirm-button"
+        (click)="onConfirm()"
+        [disabled]="required && !name.trim()">
+        Enregistrer
+      </button>
+    </div>
+  </div>
+</div>
+

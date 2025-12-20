@@ -54,55 +54,25 @@
   <div class="content-grid">
 
     <aside class="portfolio-column">
-      <div class="simulation-name-card">
-          <label class="simulation-name-label">
-            Nom de la simulation
-          </label>
-
-          <div class="simulation-name-field">
-            <i class="pi pi-pencil"></i>
-
-            <input
-              type="text"
-              class="simulation-name-input"
-              [(ngModel)]="simulationName"
-              (blur)="onNameChange()"
-              (keyup.enter)="onNameChange()"
-              placeholder="Ex : Simulation risquée 2025"
-              maxlength="60"
-            />
-            <span class="char-count">
-              {{ simulationName.length || 0 }}/60
-            </span>
-          </div>
-
-            <small class="hint">
-              Ce nom vous permettra de retrouver facilement votre simulation.
-            </small>
-  </div>
       <div class="card portfolio-card">
           <app-portfolio-management></app-portfolio-management>
 
-           <div class="save-button-wrapper" *ngIf="hasUnsavedChanges$ | async">
-              <button class="btn-primary" (click)="saveSimulation()">
+           <div class="save-button-wrapper">
+             
+              <button
+                *ngIf="canExport" class="btn-secondary export-btn"
+                (click)="exportSimulation()">
+                <i class="pi pi-file-pdf"></i>
+                Exporter PDF
+              </button>
+
+              <button class="btn-primary"  (click)="openSaveModal()" *ngIf="hasUnsavedChanges$ | async">
                 <i class="pi pi-cloud-upload"></i>  
                   Enregistrer la simulation
               </button>
            </div>
       </div>
-    </aside>
-
-    <main class="analysis-column">
-      <div class="analysis-content">
-
-          <app-geo-repartition [geographicalData]="countries"></app-geo-repartition>
-          <app-sectoral-repartition
-              *ngIf="repartition"
-              [sectoralData]="repartition.sectoral"
-              class="h-full">
-            </app-sectoral-repartition>
-
-        <div class="card table-card">
+       <div class="card table-card">
           <div class="card-header">
             <h3>Répartition par pays</h3>
             <p class="card-subtitle">Détail de vos investissements</p>
@@ -129,67 +99,85 @@
                 <p>Aucune donnée à afficher</p>
           </div>
         </div>
+    </aside>
 
-        <div class="card tax-card">
-          <div class="card-header">
-            <h3>Synthèse fiscale</h3>
-            <p class="card-subtitle">Estimation de l'impact fiscal annuel</p>
-          </div>
+    <main class="analysis-column">
+      <div class="analysis-content">
 
-          <div class="tax-details">
-            <div class="tax-row">
-              <span class="tax-label">Revenus locatifs estimés</span>
-              <span class="tax-value positive">{{ summary.grossRevenue| formatField:'currency' }}</span>
+          <app-geo-repartition [geographicalData]="countries"></app-geo-repartition>
+          <div class="card tax-card">
+            <div class="card-header">
+              <h3>Synthèse fiscale</h3>
+              <p class="card-subtitle">Estimation de l'impact fiscal annuel</p>
             </div>
-            <div class="tax-row">
-              <span class="tax-label">Revenus fonciers imposables</span>
-              <span class="tax-value positive">{{ (fiscality?.revenuProfil  || 0) | formatField:'currency' }}</span>
-            </div>
-            <div class="tax-row">
-              <span class="tax-label">Impôt sur le revenu estimé</span>
-              <span class="tax-value negative">{{ (fiscality?.impotTotal  || 0)| formatField:'currency' }}</span>
-            </div>
-            <div class="tax-row">
-              <span class="tax-label">Prélèvements sociaux (17,2%)</span>
-              <span class="tax-value negative">{{ (fiscality?.prelevementsSociaux || 0)| formatField:'currency' }}</span>
-            </div>
-            <div class="tax-row total">
-              <span class="tax-label">Revenus nets après fiscalité</span>
-              <span class="tax-value highlight">{{ (fiscality?.revenuNetApresFiscalite || 0) | formatField:'currency' }}</span>
-            </div>
-          </div>
-          <div class="tmi-section">
-  <div class="tmi-header">
-    <label>Tranche Marginale d'Imposition</label>
 
-    <div class="tmi-display">
-      <span class="tmi-value">{{ fiscality?.newTmi }}</span>
-      <span class="tmi-unit">%</span>
-    </div>
-  </div>
-  <input type="range"
-        class="tmi-slider readonly"
-        min="0"
-        max="45"
-        step="1"
-        [ngModel]="fiscality?.newTmi || 0"
-        disabled
-      />
+            <div class="tax-details">
+              <div class="tax-row">
+                <span class="tax-label">Revenus locatifs estimés</span>
+                <span class="tax-value positive">{{ summary.grossRevenue| formatField:'currency' }}</span>
+              </div>
+              <div class="tax-row">
+                <span class="tax-label">Revenus fonciers imposables</span>
+                <span class="tax-value positive">{{ (fiscality?.revenuProfil  || 0) | formatField:'currency' }}</span>
+              </div>
+              <div class="tax-row">
+                <span class="tax-label">Impôt sur le revenu estimé</span>
+                <span class="tax-value negative">{{ (fiscality?.impotTotal  || 0)| formatField:'currency' }}</span>
+              </div>
+              <div class="tax-row">
+                <span class="tax-label">Prélèvements sociaux (17,2%)</span>
+                <span class="tax-value negative">{{ (fiscality?.prelevementsSociaux || 0)| formatField:'currency' }}</span>
+              </div>
+              <div class="tax-row total">
+                <span class="tax-label">Revenus nets après fiscalité</span>
+                <span class="tax-value highlight">{{ (fiscality?.revenuNetApresFiscalite || 0) | formatField:'currency' }}</span>
+              </div>
+            </div>
+            <div class="tmi-section">
+    <div class="tmi-header">
+      <label>Tranche Marginale d'Imposition</label>
 
-      <div class="tmi-marks">
-        <span>0%</span>
-        <span>11%</span>
-        <span>30%</span>
-        <span>41%</span>
-        <span>45%</span>
+      <div class="tmi-display">
+        <span class="tmi-value">{{ fiscality?.newTmi }}</span>
+        <span class="tmi-unit">%</span>
       </div>
     </div>
+    <input type="range"
+          class="tmi-slider readonly"
+          min="0"
+          max="45"
+          step="1"
+          [ngModel]="fiscality?.newTmi || 0"
+          disabled
+        />
+
+        <div class="tmi-marks">
+          <span>0%</span>
+          <span>11%</span>
+          <span>30%</span>
+          <span>41%</span>
+          <span>45%</span>
         </div>
+      </div>
+          </div>
+          <app-sectoral-repartition
+                *ngIf="repartition"
+                [sectoralData]="repartition.sectoral"
+                class="h-full">
+          </app-sectoral-repartition>
       </div>
     </main>
   </div>
 
   <app-scpi-selection-modal *ngIf="showAddModal" (close)="onOpenAddModal(false)" (addScpi)="onAddScpi($event)">
   </app-scpi-selection-modal>
+
+  <app-save-simulation-modal
+    *ngIf="showSaveModal"
+    [initialName]="summary.name "
+    [required]="!summary.id"
+    (confirm)="saveSimulationWithName($event)"
+    (cancel)="closeSaveModal()">
+  </app-save-simulation-modal>
 
 </div>

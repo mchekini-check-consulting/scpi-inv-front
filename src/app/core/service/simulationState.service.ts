@@ -34,7 +34,7 @@ export class SimulationStateService {
   }
   private summarySubject = new BehaviorSubject<SimulationSummary>({
     id: null,
-    name: this.generateSimulationName(),
+    name:"",
     totalInvestment: 0,
     grossRevenue: 0,
     netRevenue: 0,
@@ -148,8 +148,9 @@ updateShares(scpiId: number, newShares: number) {
 
 }
 
-recalculateSummary() {
-  const portfolio = this.portfolioSubject.value ?? [];
+recalculateSummary(): void {
+  const portfolio = this.portfolioSubject.getValue() ?? [];
+  const current = this.summarySubject.getValue();
 
   let totalInvestment = 0;
   let grossRevenue = 0;
@@ -159,24 +160,17 @@ recalculateSummary() {
     grossRevenue += item.annualReturn ?? 0;
   });
 
-  const previousSummary = this.summarySubject.value ?? {};
-
-  const taxRate = previousSummary.taxRate ?? 0;
-  const incomeTax = -(grossRevenue * (taxRate / 100));
+  const incomeTax = -(grossRevenue * (current.taxRate / 100));
   const socialTax = -(grossRevenue * 0.172);
   const netRevenue = grossRevenue + incomeTax + socialTax;
 
-  const summary: SimulationSummary = {
-    id: previousSummary.id ?? null,
-    name: previousSummary.name ?? this.generateSimulationName(),
+  this.summarySubject.next({
+    ...current,            
     totalInvestment,
     grossRevenue,
     netRevenue,
-    totalScpis: portfolio.length,
-    taxRate
-  };
-
-  this.summarySubject.next(summary);
+    totalScpis: portfolio.length
+  });
 }
 
 
@@ -209,7 +203,7 @@ recalculateSummary() {
     this.sectorsSubject.next([]);
     this.summarySubject.next({
       id: null,
-      name: this.generateSimulationName(),
+      name: "",
       totalInvestment: 0,
       grossRevenue: 0,
       netRevenue: 0,
@@ -219,27 +213,35 @@ recalculateSummary() {
   }
 
   private recomputeSummary(): void {
-    const portfolio = this.portfolioSubject.getValue();
-    const current = this.summarySubject.getValue();
+  const portfolio = this.portfolioSubject.getValue() ?? [];
+  const current = this.summarySubject.getValue();
 
-    const totalInvestment = portfolio.reduce((s, i) => s + i.amount, 0);
-    const grossRevenue = portfolio.reduce((s, i) => s + i.annualReturn, 0);
-    const totalScpis = portfolio.length;
+  const totalInvestment = portfolio.reduce(
+    (sum, item) => sum + (item.amount ?? 0),
+    0
+  );
 
-    const tmi = current.taxRate;
+  const grossRevenue = portfolio.reduce(
+    (sum, item) => sum + (item.annualReturn ?? 0),
+    0
+  );
 
-    const incomeTax = -(grossRevenue * (tmi / 100));
-    const socialTax = -(grossRevenue * 0.172);
-    const netRevenue = grossRevenue + incomeTax + socialTax;
+  const totalScpis = portfolio.length;
+  const taxRate = current.taxRate;
 
-    this.summarySubject.next({
-      ...current,
-      totalInvestment,
-      grossRevenue,
-      netRevenue,
-      totalScpis
-    });
-  }
+  const incomeTax = -(grossRevenue * (taxRate / 100));
+  const socialTax = -(grossRevenue * 0.172);
+  const netRevenue = grossRevenue + incomeTax + socialTax;
+
+  this.summarySubject.next({
+    ...current,          
+    totalInvestment,
+    grossRevenue,
+    netRevenue,
+    totalScpis
+  });
+}
+
 
   setSimulationId(id: number) {
   const current = this.summarySubject.getValue();
@@ -376,69 +378,76 @@ public resetSimulationState(): void {
   localStorage.removeItem('currentSimulationId');
 }
 
-  updateGlobalFiscality(): void {
-  const portfolio = this.getPortfolioSnapshot();
+    updateGlobalFiscality(): void {
+      const portfolio = this.getPortfolioSnapshot();
 
-  if (!portfolio || portfolio.length === 0) {
-    this.fiscalitySubject.next(null);
-
-    this.summarySubject.next({
-      ...this.getSummarySnapshot(),
-      grossRevenue: 0,
-      netRevenue: 0,
-      taxRate: this.DEFAULT_TMI
-    });
-    return;
-  }
-
-  const revenuScpiBrut = portfolio.reduce(
-    (sum, item) => sum + (item.annualReturn ?? 0),
-    0
-  );
-
-  const totalAmount = portfolio.reduce((s, i) => s + (i.amount ?? 0), 0);
-
-  const locations = portfolio.flatMap(item =>
-    (item.scpi.locations ?? []).map(loc => ({
-      label: loc.label,
-      percentage: totalAmount
-        ? (item.amount * (loc.percentage / 100)) / totalAmount * 100
-        : 0
-    }))
-  );
-
-  this.scpiService
-    .calculerImpactFiscalGlobal(revenuScpiBrut, locations)
-    .subscribe({
-      next: (fiscality: FiscalityResponse) => {
-
-        this.fiscalitySubject.next(fiscality);
-
-        this.summarySubject.next({
-          ...this.getSummarySnapshot(),
-          grossRevenue: revenuScpiBrut,
-          netRevenue: fiscality.revenuNetApresFiscalite,
-          taxRate: fiscality.newTmi
-        });
-      },
-      error: err => {
-        console.error('Erreur calcul fiscalité:', err);
+      if (!portfolio || portfolio.length === 0) {
+        this.fiscalitySubject.next(null);
+        return;
       }
-    });
-}
 
+      const revenuScpiBrut = portfolio.reduce(
+        (sum, item) => sum + (item.annualReturn ?? 0),
+        0
+      );
 
-    private generateSimulationName(): string {
-      const now = new Date();
+      const countryRevenueMap = new Map<string, number>();
 
-      const date = now.toLocaleDateString("fr-FR");
-      const time = now.toLocaleTimeString("fr-FR", {
-        hour: "2-digit",
-        minute: "2-digit"
+      portfolio.forEach(item => {
+        const annualReturn = item.annualReturn ?? 0;
+
+        (item.scpi.locations ?? []).forEach(loc => {
+          const part = annualReturn * (loc.percentage / 100);
+          const current = countryRevenueMap.get(loc.label) ?? 0;
+          countryRevenueMap.set(loc.label, current + part);
+        });
       });
 
-      return `Simulation du ${date} à ${time}`;
-}
+      const totalRevenue = Array.from(countryRevenueMap.values())
+        .reduce((a, b) => a + b, 0);
+
+      const locations = Array.from(countryRevenueMap.entries()).map(
+        ([label, amount]) => ({
+          label,
+          percentage: totalRevenue
+            ? +(amount * 100 / totalRevenue).toFixed(2)
+            : 0
+        })
+      );
+
+      this.scpiService
+        .calculerImpactFiscalGlobal(revenuScpiBrut, locations)
+        .subscribe({
+          next: fiscality => {
+            this.fiscalitySubject.next(fiscality);
+            this.summarySubject.next({
+              ...this.getSummarySnapshot(),
+              grossRevenue: revenuScpiBrut,
+              netRevenue: fiscality.revenuNetApresFiscalite,
+              taxRate: fiscality.newTmi
+            });
+          },
+          error: err => console.error('Erreur fiscalité', err)
+        });
+    }
+
+    getCurrentSimulationId(): number | null {
+      return this.summarySubject.getValue()?.id ?? null;
+    }
+
+    getCurrentSimulationName(): string {
+      return this.summarySubject.getValue()?.name ?? '';
+    }
+
+    isExistingSimulation(): boolean {
+      return !!this.getCurrentSimulationId();
+    }
+
+
+  hasSimulationId(): boolean {
+    return !!this.summarySubject.getValue()?.id;
+  }
+
   markAsSaved(): void {
     this.dirtySubject.next(false);
   }

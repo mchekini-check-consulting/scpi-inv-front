@@ -14,12 +14,12 @@ $border-light: #e5e7eb;
 
 .simulation-layout {
   min-height: 100vh;
-  background: $bg;
+  background: white;
   padding-bottom: 2rem;
 }
 
 .simulation-header {
-  background-color: $bg;
+  background-color: white;
   color: rgb(7, 7, 7);
   padding: 0.5rem 2rem 2rem;
   margin-bottom: 0.2rem;
@@ -41,6 +41,7 @@ $border-light: #e5e7eb;
 .save-button-wrapper {
   display: flex;
   justify-content: flex-end;
+  gap: 0.75rem;
   margin-bottom: 1rem;
 
   .btn-primary {
@@ -74,6 +75,46 @@ $border-light: #e5e7eb;
       box-shadow: 0 4px 6px -1px rgba($blue-600, 0.25);
     }
   }
+
+    .export-btn {
+    padding: 0.7rem 1.15rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    margin-right: 1rem;
+
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    color: $red-600;
+    border: 1.5px solid lighten($red-600, 30%);
+    box-shadow: 0 2px 4px rgba($red-600, 0.12);
+    transition: all 0.25s ease;
+
+    i {
+      font-size: 1rem;
+      color: $red-600;
+    }
+
+    &:hover {
+      background: linear-gradient(
+        135deg,
+        lighten($red-600, 46%),
+        lighten($red-600, 52%)
+      );
+      border-color: $red-600;
+      box-shadow: 0 6px 12px rgba($red-600, 0.2);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba($red-600, 0.15);
+    }
+  }
+
 }
 
 

@@ -13,6 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SectoralRepartitionComponent } from "../../../core/template/components/sectoral-repartition/sectoral-repartition.component";
 import { Observable } from 'rxjs';
+import { SaveSimulationModalComponent } from "../save-simulation-modal/save-simulation-modal.component";
 @Component({
   selector: 'app-simulation-layout',
   standalone: true,
@@ -24,18 +25,27 @@ import { Observable } from 'rxjs';
     FormatFieldPipe,
     GeoRepartitionComponent,
     ToastModule,
-    SectoralRepartitionComponent],
+    SectoralRepartitionComponent,
+    SaveSimulationModalComponent
+],
    providers: [MessageService],
   templateUrl: './simulation-layout.component.html',
   styleUrl: './simulation-layout.component.scss',
 })
 export class SimulationLayoutComponent implements OnInit {
 
-  summary!: SimulationSummary;
+ summary: SimulationSummary = {
+    id: null,
+    name: '',
+    totalInvestment: 0,
+    grossRevenue: 0,
+    netRevenue: 0,
+    totalScpis: 0,
+    taxRate: 0
+  };
+
 
   tmiValue = 0;
-  simulationName = '';
-
   countries: any[] = [];
   showAddModal = false;
 
@@ -44,8 +54,10 @@ export class SimulationLayoutComponent implements OnInit {
   socialTax = 0;
   repartition: { sectoral: { label: string, percentage: number }[] } | null = null;
   fiscality: FiscalityResponse | null = null;
-  private fiscalityInitialized = false;
   hasUnsavedChanges$!: Observable<boolean>;
+  showSaveModal = false;
+  hasUnsavedChanges = false;
+
 
   constructor(
     private router: Router,
@@ -63,8 +75,6 @@ export class SimulationLayoutComponent implements OnInit {
 
     this.simulationState.summary$.subscribe(summary => {
       this.summary = summary;
-      this.simulationName = summary.name;
-
       if (summary?.taxRate != null) {
         this.tmiValue = summary.taxRate;
       }
@@ -121,11 +131,12 @@ export class SimulationLayoutComponent implements OnInit {
     });
 
   this.hasUnsavedChanges$ = this.simulationState.dirty$;
-
+  this.simulationState.dirty$.subscribe(dirty => {
+  this.hasUnsavedChanges = dirty;
+});
   }
-
-  onNameChange() {
-    this.simulationState.setSimulationName(this.simulationName);
+  get canExport(): boolean {
+    return !!this.summary.id && !this.hasUnsavedChanges;
   }
 
   onOpenAddModal(open: boolean) {
@@ -137,23 +148,33 @@ export class SimulationLayoutComponent implements OnInit {
     this.showAddModal = false;
   }
 
-
-  saveSimulation() {
+  saveSimulationWithName(nameFromModal: string | null): void {
     const portfolio = this.simulationState.getPortfolioSnapshot();
     const summary = this.simulationState.getSummarySnapshot();
-
-    if (!portfolio || portfolio.length === 0) {
+    
+    if (!portfolio?.length) {
       this.messageService.add({
-            severity: 'warn',
-            summary: 'Action impossible',
-            detail: 'Veuillez ajouter au moins une SCPI avant de sauvegarder.'
-          });
-          return;
+        severity: 'warn',
+        summary: 'Action impossible',
+        detail: 'Veuillez ajouter au moins une SCPI avant de sauvegarder.'
+      });
+      return;
+    }
+
+    const finalName = (nameFromModal ?? summary.name)?.trim();
+
+    if (!summary.id && !finalName) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Nom manquant',
+        detail: 'Veuillez saisir un nom pour la simulation.'
+      });
+      return;
     }
 
     const payload = {
       id: summary.id,
-      name: summary.name,
+      name: finalName,
       taxRate: summary.taxRate,
       items: portfolio.map(p => ({
         scpiId: p.scpi.id,
@@ -163,36 +184,74 @@ export class SimulationLayoutComponent implements OnInit {
 
     this.scpiService.saveSimulation(payload).subscribe({
       next: res => {
-        this.messageService.add({
-            severity: 'success',
-            summary: 'Simulation sauvegardée',
-            detail: 'Votre simulation a été enregistrée avec succès.',
-            life: 2500
-          });
+
         if (!summary.id) {
           this.simulationState.setSimulationId(res.id);
         }
-           this.simulationState.markAsSaved();
-            this.cdr.detectChanges();
 
-            localStorage.setItem('currentSimulationId', res.id!.toString());
+        if (finalName && finalName !== summary.name) {
+          this.simulationState.setSimulationName(finalName);
+        }
+
+        this.simulationState.markAsSaved();
+        localStorage.setItem('currentSimulationId', res.id!.toString());
+
+        this.closeSaveModal();
+
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Simulation sauvegardée',
+          detail: 'Votre simulation a été enregistrée avec succès.',
+          life: 2500
+        });
+
         setTimeout(() => {
           this.router.navigate(['/dashboard/simulation/mes-simulations']);
-        }, 1000);
+        }, 800);
       },
       error: err => {
         console.error(err);
         this.messageService.add({
-              severity: 'error',
-              summary: 'Erreur',
-              detail: 'Une erreur est survenue lors de la sauvegarde.'
-            });
-          }
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Une erreur est survenue lors de la sauvegarde.'
+        });
+      }
     });
-}
+  }
 
   goBack() {
     this.router.navigate(['/dashboard/simulation']);
   }
+openSaveModal(): void {
+  this.showSaveModal = true;
+}
+
+closeSaveModal(): void {
+  this.showSaveModal = false;
+}
+
+exportSimulation(): void {
+  if (!this.summary.id) return;
+
+  this.scpiService.exportSimulationPdf(this.summary.id).subscribe({
+    next: blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `simulation-${this.summary.name || 'scpi'}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    },
+    error: () => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Impossible d’exporter la simulation.'
+      });
+    }
+  });
+}
+
 
 }
