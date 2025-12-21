@@ -28,6 +28,8 @@ export class GeoRepartitionComponent implements OnChanges {
   geoMapOptions: any;
   countriesLegend: CountryData[] = [];
   mapLoaded = false;
+  minValue: number = 0;
+  maxValue: number = 100;
 
   ngOnChanges(changes: SimpleChanges): void {
     setTimeout(() => this.loadMap(), 0);
@@ -108,11 +110,11 @@ export class GeoRepartitionComponent implements OnChanges {
       this.countriesLegend = countries;
 
       const values = countries.map(c => c.value);
-      let minValue = Math.min(...values);
-      let maxValue = Math.max(...values);
-      if (minValue === maxValue) {
-        minValue = 0;
-        maxValue = 100;
+      this.minValue = Math.min(...values);
+      this.maxValue = Math.max(...values);
+      if (this.minValue === this.maxValue) {
+        this.minValue = 0;
+        this.maxValue = 100;
       }
 
       this.geoMapOptions = {
@@ -130,8 +132,8 @@ export class GeoRepartitionComponent implements OnChanges {
           },
         },
         visualMap: {
-          min: minValue,
-          max: maxValue,
+          min: this.minValue,
+          max: this.maxValue,
           show: true,
           calculable: true,
           inRange: {
@@ -171,10 +173,15 @@ export class GeoRepartitionComponent implements OnChanges {
   }
 
   getCountryColor(percentage: number): string {
-    if (percentage > 40) return '#2E7D32';
-    if (percentage > 20) return '#66BB6A';
-    if (percentage > 10) return '#A5D6A7';
-    if (percentage > 5) return '#C8E6C9';
-    return '#E8F5E9';
+    if (this.minValue === this.maxValue) {
+      return '#81C784';
+    }
+    
+    const colors = ['#E8F5E9', '#81C784', '#FFEB3B', '#FB8C00', '#E53935'];
+    const range = this.maxValue - this.minValue;
+    const normalizedValue = (percentage - this.minValue) / range;
+    const index = Math.min(Math.floor(normalizedValue * colors.length), colors.length - 1);
+    
+    return colors[index];
   }
 }

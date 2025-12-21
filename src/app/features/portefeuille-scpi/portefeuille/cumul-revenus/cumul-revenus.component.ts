@@ -43,7 +43,7 @@ export class CumulRevenusComponent implements OnInit, OnDestroy {
   loadRevenue(): void {
     this.loading = true;
 
-    // ✅ CHANGEMENT 1 : Utiliser getFullMonthlyRevenueHistory au lieu de getMonthlyRevenue
+
     this.investmentService
       .getFullMonthlyRevenueHistory(
         this.selectedYear || undefined,
@@ -92,7 +92,7 @@ export class CumulRevenusComponent implements OnInit, OnDestroy {
   }
 
   prepareChartDataFromHistory(history: any[]): void {
-    // ✅ CHANGEMENT 2 : Inclure l'année dans les labels
+
     const labels = history.map((h) => this.getMonthLabel(h.month, h.year));
 
     const cumulativeData: number[] = [];
