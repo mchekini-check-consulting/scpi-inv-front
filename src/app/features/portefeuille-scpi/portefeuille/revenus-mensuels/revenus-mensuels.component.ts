@@ -67,15 +67,14 @@ export class RevenusMensuelsComponent implements OnInit, OnDestroy {
         {
           label: 'Revenus mensuels',
           data: data,
-          fill: false,
+          fill: true,
+          backgroundColor: 'rgba(239, 68, 68, 0.2)',
           borderColor: '#EF4444',
-          tension: 0.1,
+          tension: 0.4,
           pointBackgroundColor: '#EF4444',
           pointBorderColor: '#fff',
-          pointHoverBackgroundColor: '#fff',
-          pointHoverBorderColor: '#EF4444',
           pointRadius: 6,
-          pointHoverRadius: 8
+          pointHoverRadius: 8,
         }
       ]
     };
@@ -107,18 +106,18 @@ export class RevenusMensuelsComponent implements OnInit, OnDestroy {
         x: {
           grid: {
             display: true,
-            color: '#374151',
-            drawBorder: false
+            color: '#e5e7eb',
+            drawBorder: false,
           },
           ticks: {
-            color: '#9CA3AF'
-          }
+            color: '#6b7280',
+          },
         },
         y: {
           grid: {
             display: true,
-            color: '#374151',
-            drawBorder: false
+            color: '#e5e7eb',
+            drawBorder: false,
           },
           ticks: {
             color: '#9CA3AF',
