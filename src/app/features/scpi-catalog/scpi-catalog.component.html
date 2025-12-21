@@ -3,45 +3,124 @@
     <h1 class="text-3xl font-bold text-gray-900 mb-2">Catalogue SCPI</h1>
   </div>
 
-  <div *ngIf="isLoading" class="flex justify-center items-center py-20">
-    <div
-      class="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary"
-    ></div>
-  </div>
+  <div class="flex">
+    <aside class="w-64 p-4 border-r">
+      <h2 class="font-bold mb-4">Filtres</h2>
 
-  <div
-    *ngIf="error"
-    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-  >
-    {{ error }}
-  </div>
+      <div class="space-y-6">
+        <div>
+          <label class="block text-sm font-medium mb-1">Pays d’investissement</label>
+          <p-multiSelect
+            [options]="locations"
+            [(ngModel)]="filters.countries"
+            placeholder="Sélectionner"
+            (onChange)="updateFilters({ countries: filters.countries })">
+          </p-multiSelect>
+        </div>
 
-  <div *ngIf="!isLoading && !error">
-    <div
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mb-8 auto-rows-fr"
-    >
-      <app-scpi-card *ngFor="let scpi of scpis" [scpi]="scpi"> </app-scpi-card>
-    </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Secteurs d’activité</label>
+          <p-multiSelect
+            [options]="sectors"
+            [(ngModel)]="filters.sectors"
+            placeholder="Sélectionner"
+            (onChange)="updateFilters({ sectors: filters.sectors })">
+          </p-multiSelect>
+        </div>
 
-    <div class="flex justify-center mt-8">
-      <p-paginator
-        [first]="first"
-        [rows]="rows"
-        [totalRecords]="totalRecords"
-        [rowsPerPageOptions]="rowsPerPageOptions"
-        (onPageChange)="onPageChange($event)"
-        [showCurrentPageReport]="true"
-        currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} SCPI"
-      >
-      </p-paginator>
-    </div>
-  </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Montant minimum</label>
+          <div class="mb-1 text-sm text-gray-700 text-right">
+            {{ filters.minimumSubscription | formatField:"currency" }}
+          </div>
+          <p-slider
+            [(ngModel)]="filters.minimumSubscription"
+            [min]="0" [max]="10000"
+            (onChange)="updateFilters({ minimumSubscription: filters.minimumSubscription })">
+          </p-slider>
 
-  <!-- Empty -->
-  <div
-    *ngIf="!isLoading && !error && scpis.length === 0"
-    class="text-center py-20"
-  >
-    <p class="text-gray-500 text-lg">Aucune SCPI disponible.</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Rendement minimum</label>
+          <div class="mb-1 text-sm text-gray-700 text-right">
+            {{ filters.yield | formatField:"percent" }}
+          </div>
+
+          <p-slider
+            [(ngModel)]="filters.yield"
+            [min]="0" [max]="12"
+            (onChange)="updateFilters({ yield: filters.yield })">
+          </p-slider>
+
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Fréquence des loyers</label>
+          <p-multiSelect
+            [options]="rentFrequencies"
+            [(ngModel)]="filters.rentFrequencies"
+            placeholder="Sélectionner"
+            (onChange)="updateFilters({ rentFrequencies: filters.rentFrequencies })">
+          </p-multiSelect>
+        </div>
+
+        <div class="pt-2">
+          <button (click)="resetFilters()" class="w-full bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">
+            Réinitialiser les filtres
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="flex-1">
+      <div class="flex flex-wrap gap-2 mb-2">
+        <span *ngFor="let country of filters.countries"
+              class="bg-blue-100 px-2 py-1 rounded cursor-pointer"
+              (click)="removeCountry(country)">
+          {{ country }} ✕
+        </span>
+        <span *ngFor="let sector of filters.sectors"
+              class="bg-green-100 px-2 py-1 rounded cursor-pointer"
+              (click)="removeSector(sector)">
+          {{ sector }} ✕
+        </span>
+        <span *ngFor="let freq of filters.rentFrequencies"
+              class="bg-purple-100 px-2 py-1 rounded cursor-pointer"
+              (click)="removeRentFrequency(freq)">
+          {{ freq }} ✕
+        </span>
+      </div>
+
+      <div *ngIf="isLoading" class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary"></div>
+      </div>
+
+      <div *ngIf="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        {{ error }}
+      </div>
+
+      <div *ngIf="!isLoading && !error">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 mb-8 auto-rows-fr">
+          <app-scpi-card *ngFor="let scpi of scpis" [scpi]="scpi"></app-scpi-card>
+        </div>
+
+        <div class="flex justify-center mt-8">
+          <p-paginator
+            [first]="first"
+            [rows]="rows"
+            [totalRecords]="totalRecords"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            (onPageChange)="onPageChange($event)"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Affichage de {first} à {last} sur {totalRecords} SCPI">
+          </p-paginator>
+        </div>
+      </div>
+
+      <div *ngIf="!isLoading && !error && scpis.length === 0" class="text-center py-20">
+        <p class="text-gray-500 text-lg">Aucune SCPI disponible.</p>
+      </div>
+    </main>
   </div>
 </div>
