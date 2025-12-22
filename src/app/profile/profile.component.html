@@ -1,5 +1,6 @@
 <div
   class ="container">
+  <p-toast></p-toast>
   <p-panel styleClass="profile-card">
     <ng-template pTemplate="header">
       <div class="title-row">
@@ -23,13 +24,10 @@
       <div class="field">
         <label for="status">Statut*</label>
         <p-dropdown
-          inputId="status"
-          class="full-width custom-field"
           [options]="statusOptions"
           formControlName="status"
-          placeholder="Sélectionnez votre situation"
           optionLabel="label"
-          [showClear]="true"
+          optionValue="value"
         ></p-dropdown>
 
         <small
@@ -122,6 +120,7 @@
           type="submit"
           label="Continuer"
           class="green-button"
+          [disabled]="profileForm.invalid"
         ></button>
       </div>
     </form>

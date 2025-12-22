@@ -21,7 +21,7 @@ export class ProfileService {
     );
   }
 
-  getProfiles(): Observable<ProfileResponse[]> {
-    return this.http.get<ProfileResponse[]>(this.apiUrl);
+  getProfile(): Observable<ProfileResponse> {
+    return this.http.get<ProfileResponse>(this.apiUrl);
   }
 }

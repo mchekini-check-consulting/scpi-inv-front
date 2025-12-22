@@ -1,19 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule
-} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 
-import { ProfileRequest, ProfileResponse } from '../core/model/profile.model';
-import { ProfileService } from '../core/service/profile.service';
+import {ProfileRequest} from '../core/model/profile.model';
+import {ProfileService} from '../core/service/profile.service';
 
-import { PanelModule } from 'primeng/panel';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { ButtonModule } from 'primeng/button';
+import {PanelModule} from 'primeng/panel';
+import {DropdownModule} from 'primeng/dropdown';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {ButtonModule} from 'primeng/button';
+import {ToastModule} from "primeng/toast";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-profile',
@@ -24,12 +21,15 @@ import { ButtonModule } from 'primeng/button';
     PanelModule,
     DropdownModule,
     InputNumberModule,
-    ButtonModule
+    ButtonModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+
   profileForm!: FormGroup;
 
   statusOptions = [
@@ -42,27 +42,47 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
     this.profileForm = this.fb.group({
-      status: ['', Validators.required],
+      status: [null, Validators.required],
       children: [0, [Validators.required, Validators.min(0)]],
-      incomeInvestor: [null, [Validators.required, Validators.min(0)]],
-      incomeConjoint: [null, [Validators.min(0)]]
+      incomeInvestor: [0, [Validators.required, Validators.min(0)]],
+      incomeConjoint: [0, [Validators.min(0)]]
+    });
+
+    this.loadProfile();
+  }
+
+  loadProfile(): void {
+    this.profileService.getProfile().subscribe({
+      next: (source) => {
+        if (source) {
+          this.profileForm.patchValue(source);
+        }
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Impossible de charger votre profil'
+        });
+      }
     });
   }
 
   private getStatusValue(): string | null {
-    const raw = this.profileForm.get('status')?.value;
+    const raw = this.profileForm?.get('status')?.value;
 
     if (!raw) {
       return null;
     }
 
     if (typeof raw === 'object' && 'value' in raw) {
-      return (raw as any).value;
+      return raw.value;
     }
 
     return raw as string;
@@ -74,30 +94,31 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.profileForm.valid) {
-      const raw = this.profileForm.getRawValue();
-
-      const status = this.getStatusValue();
-
-      const payload: ProfileRequest = {
-        ...raw,
-        status: status
-      } as ProfileRequest;
-
-      console.log('Payload envoyé au backend :', payload);
-
-      this.profileService.saveProfile(payload).subscribe({
-        next: () => {
-          alert(' Profil enregistré avec succès');
-          this.profileForm.reset();
-        },
-        error: (err) => {
-          console.error('Erreur lors de l’enregistrement', err);
-          alert(' Erreur lors de l’enregistrement');
-        }
-      });
-    } else {
+    if (this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
+      return;
     }
+
+    const payload: ProfileRequest = {
+      ...this.profileForm.getRawValue(),
+      status: this.getStatusValue()
+    };
+
+    this.profileService.saveProfile(payload).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Succès',
+          detail: 'Profil enregistré avec succès'
+        });
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'Une erreur est survenue lors de l’enregistrement'
+        });
+      }
+    });
   }
 }

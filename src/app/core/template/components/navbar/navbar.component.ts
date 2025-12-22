@@ -62,11 +62,6 @@ export class NavbarComponent implements OnInit {
         routerLink: ['/dashboard/mon-profil']
       },
       {
-        label: 'Modifier mon Profil',
-        icon: 'pi pi-user-edit',
-
-      },
-      {
         separator: true
       },
       {
