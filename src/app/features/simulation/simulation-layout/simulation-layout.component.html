@@ -45,8 +45,8 @@
         </svg>
       </div>
       <div class="kpi-content">
-        <p class="kpi-label">Revenus Nets Annuels</p>
-        <p class="kpi-value">{{ (fiscality?.revenuNetApresFiscalite || 0) | formatField:'currency' }}</p>
+        <p class="kpi-label">Revenus nets SCPI Annuels</p>
+        <p class="kpi-value">{{(fiscality?.revenuScpiNet || 0) | formatField:'currency' }}</p>
       </div>
     </div>
   </div>
@@ -118,11 +118,11 @@
               </div>
               <div class="tax-row">
                 <span class="tax-label">Revenus fonciers imposables</span>
-                <span class="tax-value positive">{{ (fiscality?.revenuProfil  || 0) | formatField:'currency' }}</span>
+                <span class="tax-value positive">{{ (fiscality?.revenuScpiBrut  || 0) | formatField:'currency' }}</span>
               </div>
               <div class="tax-row">
                 <span class="tax-label">Impôt sur le revenu estimé</span>
-                <span class="tax-value negative">{{ (fiscality?.impotTotal  || 0)| formatField:'currency' }}</span>
+                <span class="tax-value negative">{{ (fiscality?.impotScpi   || 0)| formatField:'currency' }}</span>
               </div>
               <div class="tax-row">
                 <span class="tax-label">Prélèvements sociaux (17,2%)</span>
@@ -130,7 +130,7 @@
               </div>
               <div class="tax-row total">
                 <span class="tax-label">Revenus nets après fiscalité</span>
-                <span class="tax-value highlight">{{ (fiscality?.revenuNetApresFiscalite || 0) | formatField:'currency' }}</span>
+                <span class="tax-value highlight">{{ (fiscality?.revenuScpiNet || 0) | formatField:'currency' }}</span>
               </div>
             </div>
             <div class="tmi-section">
