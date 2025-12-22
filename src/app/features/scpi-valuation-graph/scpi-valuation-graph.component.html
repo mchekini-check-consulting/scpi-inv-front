@@ -1,16 +1,17 @@
 <div class="valuation-section mt-8">
   <div class="section-header">
-    <h2>Trajectoire de valorisation du prix de part et de la valeur de reconstitution</h2>
+    <h1 class="section-title">Trajectoire de valorisation</h1>
+    <p class="section-subtitle text-gray-600 mt-2">
+      Évolution du prix de part et de la valeur de reconstitution
+    </p>
   </div>
 
-  <div class="bg-white rounded-lg shadow-md p-6">
-
-    <div class="h-full">
+  <div class="bg-white">
+    <div class="chart-container">
       <p-chart
         type="line"
         [data]="chartData"
         [options]="chartOptions"
-        class="w-full"
       />
     </div>
   </div>

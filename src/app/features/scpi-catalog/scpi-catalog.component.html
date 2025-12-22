@@ -4,72 +4,82 @@
   </div>
 
   <div class="flex">
-    <aside class="w-64 p-4 border-r">
-      <h2 class="font-bold mb-4">Filtres</h2>
+    <aside class="w-72 p-5 bg-white shadow-sm rounded-xl border border-gray-200 sticky top-6 h-fit">
 
-      <div class="space-y-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+        <span class="w-2 h-2 bg-secondary rounded-full"></span>
+        Filtres
+      </h2>
+
+      <div class="space-y-7">
+
         <div>
-          <label class="block text-sm font-medium mb-1">Pays d’investissement</label>
+          <label class="block text-sm font-medium mb-2 text-gray-700">Pays d’investissement</label>
           <p-multiSelect
             [options]="locations"
             [(ngModel)]="filters.countries"
             placeholder="Sélectionner"
+            class="w-full modern-select"
             (onChange)="updateFilters({ countries: filters.countries })">
           </p-multiSelect>
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Secteurs d’activité</label>
+          <label class="block text-sm font-medium mb-2 text-gray-700">Secteurs d’activité</label>
           <p-multiSelect
             [options]="sectors"
             [(ngModel)]="filters.sectors"
             placeholder="Sélectionner"
+            class="w-full modern-select"
             (onChange)="updateFilters({ sectors: filters.sectors })">
           </p-multiSelect>
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Minimum d'investissement</label>
-          <div class="mb-1 text-sm text-gray-700 text-right">
+          <label class="block text-sm font-medium mb-2 text-gray-700">Minimum d'investissement</label>
+          <div class="text-xs text-gray-500 text-right mb-1">
             {{ filters.minimumSubscription | formatField:"currency" }}
           </div>
           <p-slider
             [(ngModel)]="filters.minimumSubscription"
             [min]="0" [max]="10000"
+            class="modern-slider"
             (onChange)="updateFilters({ minimumSubscription: filters.minimumSubscription })">
           </p-slider>
-
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Rendement</label>
-          <div class="mb-1 text-sm text-gray-700 text-right">
+          <label class="block text-sm font-medium mb-2 text-gray-700">Rendement</label>
+          <div class="text-xs text-gray-500 text-right mb-1">
             {{ filters.yield | formatField:"percent" }}
           </div>
-
           <p-slider
             [(ngModel)]="filters.yield"
             [min]="0" [max]="12"
+            class="modern-slider"
             (onChange)="updateFilters({ yield: filters.yield })">
           </p-slider>
-
         </div>
 
         <div>
-          <label class="block text-sm font-medium mb-1">Fréquence des loyers</label>
+          <label class="block text-sm font-medium mb-2 text-gray-700">Fréquence des loyers</label>
           <p-multiSelect
             [options]="rentFrequencies"
             [(ngModel)]="filters.rentFrequencies"
             placeholder="Sélectionner"
+            class="w-full modern-select"
             (onChange)="updateFilters({ rentFrequencies: filters.rentFrequencies })">
           </p-multiSelect>
         </div>
 
         <div class="pt-2">
-          <button (click)="resetFilters()" class="w-full bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">
+          <button
+            (click)="resetFilters()"
+            class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-4 py-2 rounded-lg transition">
             Réinitialiser les filtres
           </button>
         </div>
+
       </div>
     </aside>
 

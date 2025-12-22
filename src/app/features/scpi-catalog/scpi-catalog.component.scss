@@ -1,13 +1,28 @@
 aside {
-  background-color: #f9fafb;
-  border-right: 1px solid #e5e7eb;
-
-  p-multiSelect, p-slider {
-    width: 100%;
+  .modern-select .p-multiselect {
+    border-radius: 10px !important;
+    border: 1px solid #e5e7eb !important;
+    padding: 4px 8px !important;
   }
 
-  label {
-    font-weight: 600;
+  .modern-select .p-multiselect-label {
+    font-size: 0.85rem;
     color: #374151;
+  }
+
+  .modern-slider .p-slider {
+    height: 4px !important;
+  }
+
+  .modern-slider .p-slider-range {
+    background-color: #6366f1 !important;
+  }
+
+  .modern-slider .p-slider-handle {
+    width: 14px !important;
+    height: 14px !important;
+    border-radius: 50% !important;
+    background: white !important;
+    border: 2px solid #6366f1 !important;
   }
 }
