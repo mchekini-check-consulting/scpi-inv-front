@@ -100,6 +100,7 @@ export interface CountryData {
 
 export interface FiscalityResponse {
   revenuProfil: number
+  revenuScpiBrut: number;
   revenuScpiNet: number
   revenuGlobal: number
   oldTmi: number
@@ -109,4 +110,9 @@ export interface FiscalityResponse {
   prelevementsSociaux: number
   revenuNetApresFiscalite: number
   tauxMoyen: number
+  impotProfilAvantScpi: number
+  impotScpi: number
+
 }
+
+ 

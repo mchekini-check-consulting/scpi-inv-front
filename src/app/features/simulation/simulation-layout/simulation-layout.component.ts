@@ -121,11 +121,11 @@ export class SimulationLayoutComponent implements OnInit {
 
       if (fiscality) {
         this.fiscality = fiscality;
-        this.taxableIncome = fiscality.revenuScpiNet;
-        this.incomeTax = fiscality.impotTotal;
+        this.taxableIncome = fiscality.revenuScpiBrut;
+        this.incomeTax = fiscality.impotScpi;
         this.socialTax = fiscality.prelevementsSociaux;
         this.tmiValue = fiscality.newTmi;
-        this.summary.netRevenue = fiscality.revenuNetApresFiscalite;
+        this.summary.netRevenue = fiscality.revenuScpiNet;
         this.cdr.detectChanges();
       }
     });
